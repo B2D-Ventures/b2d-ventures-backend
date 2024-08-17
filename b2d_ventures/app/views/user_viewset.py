@@ -106,7 +106,7 @@ class UserViewSet(viewsets.ViewSet):
                 status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
             )
 
-        except AuthorizationError as e:
+        except UserError as e:
             logging.error(f"Authorization error: {e}")
             return Response(
                 {"error": str(e)}, status=status.HTTP_400_BAD_REQUEST
