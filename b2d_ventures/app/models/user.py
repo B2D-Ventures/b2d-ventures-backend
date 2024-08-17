@@ -12,13 +12,3 @@ class User(AbstractUser, AbstractModel):
     email = models.EmailField(max_length=254, unique=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
-
-    @property
-    def user_type(self):
-        if hasattr(self, "admin"):
-            return "Admin"
-        elif hasattr(self, "investor"):
-            return "Investor"
-        elif hasattr(self, "startup"):
-            return "Startup"
-        return "Unknown"

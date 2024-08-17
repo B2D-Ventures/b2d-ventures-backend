@@ -11,22 +11,27 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
+APPS_DIR = BASE_DIR / "b2d_ventures"
 
+# GENERAL
+# -----------------------------------------------------------------------------
+DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u#z(_=o$-yus5$w!_ic-%#3i#bl8%wvhyn_=nys(owtslysubk'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+# Read .env file
+READ_DOT_ENV_FILE = config('DJANGO_READ_DOT_ENV_FILE', default=True, cast=bool)
+if READ_DOT_ENV_FILE:
+    from decouple import AutoConfig
+    config = AutoConfig(search_path=BASE_DIR)
+TIME_ZONE = "Asia/Bangkok"
+LANGUAGE_CODE = "en-us"
+SITE_ID = 1
+USE_I18N = True
+USE_TZ = True
+LOCALE_PATHS = [str(BASE_DIR / "locale")]
+SECRET_KEY = config('DJANGO_SECRET_KEY', default='D2jB3AHvBHs86Ugr2xS56r0JMBfHUYV4F9w4nvymgCSXIkkgGOlR8kvAKQvZ7lPz')
 
 # Application definition
 
@@ -86,6 +91,9 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'app.User'
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
