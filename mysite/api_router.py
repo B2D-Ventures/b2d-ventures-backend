@@ -9,3 +9,7 @@ else:
     router = SimpleRouter()
 
 router.register("users", UserViewSet, basename="user")
+
+app_name = "api"
+
+urlpatterns = router.urls
