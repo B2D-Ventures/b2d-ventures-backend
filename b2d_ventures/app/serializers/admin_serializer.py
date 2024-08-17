@@ -9,8 +9,7 @@ class AdminSerializer(UserSerializer):
     Serializer for the Admin model.
     """
 
+    permission = serializers.CharField()
+
     class Meta(UserSerializer.Meta):
         model = Admin
-        fields = UserSerializer.Meta.fields + ["permission"]
-
-    permission = serializers.CharField()

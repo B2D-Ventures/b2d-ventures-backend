@@ -16,10 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from b2d_ventures.app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", views.index, name="index"),
-    path("api/", include("config.api_router", namespace="users")),
+    path("api/", include("mysite.api_router", namespace="users")),
 ]
