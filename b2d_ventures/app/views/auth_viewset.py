@@ -1,33 +1,22 @@
-"""A module that defines the UserViewSet class."""
+"""A module that defines the AuthViewSet class."""
 import logging
 
-from b2d_ventures.app.services import UserService, UserError
 from django.core.exceptions import ObjectDoesNotExist
+from icecream import ic
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from b2d_ventures.app.models import User, Admin, Investor, Startup
-from b2d_ventures.app.serializers import UserSerializer, AdminSerializer, \
+from b2d_ventures.app.serializers import AdminSerializer, \
     InvestorSerializer, StartupSerializer
+from b2d_ventures.app.services import UserService, UserError
 from b2d_ventures.utils import JSONParser, VndJsonParser
-from icecream import ic
 
 
-class UserViewSet(viewsets.ViewSet):
+class AuthViewSet(viewsets.ViewSet):
     """ViewSet for handling User-related operations."""
     parser_classes = [JSONParser, VndJsonParser]
-
-    def list(self, request):
-        """
-        List all User objects.
-
-        :param request: The incoming HTTP request.
-        :return: HTTP Response with list of user data.
-        """
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         """
@@ -62,7 +51,6 @@ class UserViewSet(viewsets.ViewSet):
             user_profile = service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
             ic(user_profile)
-
 
             # Create or update user based on role
             if role == 'admin':
@@ -124,60 +112,6 @@ class UserViewSet(viewsets.ViewSet):
                              "meta": {"message": str(e)}}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-    def retrieve(self, request, pk=None):
-        """
-        Retrieve a User object by ID.
-
-        :param request: The incoming HTTP request.
-        :param pk: The primary key of the user to be retrieved.
-        :return: HTTP Response with user data or an error message.
-        """
-        try:
-            user = User.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            return Response(
-                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def update(self, request, pk=None):
-        """
-        Update an existing User object by ID.
-
-        :param request: The incoming HTTP request with updated User data.
-        :param pk: The primary key of the user to be updated.
-        :return: HTTP Response with updated user data or an error message.
-        """
-        try:
-            user = User.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            return Response(
-                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        """
-        Delete a User object by ID.
-
-        :param request: The incoming HTTP request.
-        :param pk: The primary key of the user to be deleted.
-        :return: HTTP Response indicating successful deletion or an error message.
-        """
-        try:
-            user = User.objects.get(id=pk)
-        except ObjectDoesNotExist:
-            return Response(
-                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['get'])
     def get_user_type(self, request, pk=None):

@@ -1,1 +1,1 @@
-from b2d_ventures.app.views.user_viewset import UserViewSet
+from b2d_ventures.app.views.auth_viewset import AuthViewSet
