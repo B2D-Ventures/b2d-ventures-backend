@@ -52,7 +52,6 @@ class AuthViewSet(viewsets.ViewSet):
             user_email = user_profile.get("email")
             ic(user_profile)
 
-            # Create or update user based on role
             if role == 'admin':
                 user, created = Admin.objects.update_or_create(
                     email=user_email,
