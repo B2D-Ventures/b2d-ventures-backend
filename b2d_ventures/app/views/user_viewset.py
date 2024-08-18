@@ -10,10 +10,13 @@ from rest_framework.response import Response
 from b2d_ventures.app.models import User, Admin, Investor, Startup
 from b2d_ventures.app.serializers import UserSerializer, AdminSerializer, \
     InvestorSerializer, StartupSerializer
+from b2d_ventures.utils import JSONParser, VndJsonParser
+from icecream import ic
 
 
 class UserViewSet(viewsets.ViewSet):
     """ViewSet for handling User-related operations."""
+    parser_classes = [JSONParser, VndJsonParser]
 
     def list(self, request):
         """
@@ -26,30 +29,29 @@ class UserViewSet(viewsets.ViewSet):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         """
         Create or authenticate a user via Google SSO.
 
         :param request: The incoming HTTP request with the full Google auth URL and role.
         :return: HTTP Response with user data and token or an error message.
         """
-        full_url = request.data.get("full_url")
-        role = request.data.get("role")
-        logging.info(f"Full URL: {full_url}")
-        logging.info(f"Role: {role}")
+        request_data = request.data.get('data', {})
+        attributes = request_data.get('attributes', {})
+        full_url = attributes.get("full_url")
+        role = attributes.get("role")
 
         if not full_url or not role:
             return Response(
-                {"error": "Full URL and role are required"},
+                {"errors": [{"detail": "Full URL and role are required"}]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         if role not in ['admin', 'investor', 'startup']:
             return Response(
-                {"error": "Invalid role provided"},
+                {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         try:
             service = UserService()
             authorization_code = service.extract_authorization_code(full_url)
@@ -59,7 +61,8 @@ class UserViewSet(viewsets.ViewSet):
             tokens = service.exchange_code_for_token(authorization_code)
             user_profile = service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
-            logging.info(f"User email: {user_email}")
+            ic(user_profile)
+
 
             # Create or update user based on role
             if role == 'admin':
@@ -68,7 +71,6 @@ class UserViewSet(viewsets.ViewSet):
                     defaults={
                         "email": user_email,
                         "username": user_profile.get("name"),
-                        "role": role,
                         "permission": "full"
                     }
                 )
@@ -79,7 +81,6 @@ class UserViewSet(viewsets.ViewSet):
                     defaults={
                         "email": user_email,
                         "username": user_profile.get("name"),
-                        "role": role,
                         "available_funds": 0,
                         "total_invested": 0
                     }
@@ -91,30 +92,36 @@ class UserViewSet(viewsets.ViewSet):
                     defaults={
                         "email": user_email,
                         "username": user_profile.get("name"),
-                        "role": role,
                         "name": user_profile.get("name"),
                         "description": ""
                     }
                 )
                 serializer = StartupSerializer(user)
 
+            response_data = {
+                "data": {
+                    "type": "users",
+                    "id": str(user.id),
+                    "attributes": serializer.data
+                }
+            }
+
             return Response(
-                {
-                    "user": serializer.data,
-                    "token": tokens["access_token"],
-                },
+                response_data,
                 status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
             )
 
         except UserError as e:
             logging.error(f"Authorization error: {e}")
             return Response(
-                {"error": str(e)}, status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
-                {"error": "Internal Server Error", "message": str(e)},
+                {"errors": [{"detail": "Internal Server Error",
+                             "meta": {"message": str(e)}}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 

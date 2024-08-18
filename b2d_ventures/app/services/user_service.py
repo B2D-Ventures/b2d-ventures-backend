@@ -3,7 +3,7 @@ from urllib.parse import parse_qs, urlparse
 
 from django.conf import settings
 
-from b2d_ventures.utils.request_handler import HTTPRequestHandler
+from b2d_ventures.utils import HTTPRequestHandler
 
 
 class UserError(Exception):
@@ -38,7 +38,7 @@ class UserService:
             "code": authorization_code,
             "client_id": settings.GOOGLE_CLIENT_ID,
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": "https://planme.vercel.app/google-auth",
+            "redirect_uri": "http://localhost:3000/google-auth",
             "grant_type": "authorization_code",
         }
         return HTTPRequestHandler.make_request("POST", token_url, data=data)
