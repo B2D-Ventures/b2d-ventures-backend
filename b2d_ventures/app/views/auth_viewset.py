@@ -1,4 +1,5 @@
 """A module that defines the AuthViewSet class."""
+
 import logging
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,14 +9,18 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from b2d_ventures.app.models import User, Admin, Investor, Startup
-from b2d_ventures.app.serializers import AdminSerializer, \
-    InvestorSerializer, StartupSerializer
+from b2d_ventures.app.serializers import (
+    AdminSerializer,
+    InvestorSerializer,
+    StartupSerializer,
+)
 from b2d_ventures.app.services import UserService, UserError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
 class AuthViewSet(viewsets.ViewSet):
     """ViewSet for handling User-related operations."""
+
     parser_classes = [JSONParser, VndJsonParser]
 
     def create(self, request, *args, **kwargs):
@@ -25,8 +30,8 @@ class AuthViewSet(viewsets.ViewSet):
         :param request: The incoming HTTP request with the full Google auth URL and role.
         :return: HTTP Response with user data and token or an error message.
         """
-        request_data = request.data.get('data', {})
-        attributes = request_data.get('attributes', {})
+        request_data = request.data.get("data", {})
+        attributes = request_data.get("attributes", {})
         full_url = attributes.get("full_url")
         role = attributes.get("role")
 
@@ -36,7 +41,7 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if role not in ['admin', 'investor', 'startup']:
+        if role not in ["admin", "investor", "startup"]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -52,36 +57,36 @@ class AuthViewSet(viewsets.ViewSet):
             user_email = user_profile.get("email")
             ic(user_profile)
 
-            if role == 'admin':
+            if role == "admin":
                 user, created = Admin.objects.update_or_create(
                     email=user_email,
                     defaults={
                         "email": user_email,
                         "username": user_profile.get("name"),
-                        "permission": "full"
-                    }
+                        "permission": "full",
+                    },
                 )
                 serializer = AdminSerializer(user)
-            elif role == 'investor':
+            elif role == "investor":
                 user, created = Investor.objects.update_or_create(
                     email=user_email,
                     defaults={
                         "email": user_email,
                         "username": user_profile.get("name"),
                         "available_funds": 0,
-                        "total_invested": 0
-                    }
+                        "total_invested": 0,
+                    },
                 )
                 serializer = InvestorSerializer(user)
-            elif role == 'startup':
+            elif role == "startup":
                 user, created = Startup.objects.update_or_create(
                     email=user_email,
                     defaults={
                         "email": user_email,
                         "username": user_profile.get("name"),
                         "name": user_profile.get("name"),
-                        "description": ""
-                    }
+                        "description": "",
+                    },
                 )
                 serializer = StartupSerializer(user)
 
@@ -89,30 +94,32 @@ class AuthViewSet(viewsets.ViewSet):
                 "data": {
                     "type": "users",
                     "id": str(user.id),
-                    "attributes": serializer.data
+                    "attributes": serializer.data,
                 }
             }
 
             return Response(
                 response_data,
-                status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
+                status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
             )
 
         except UserError as e:
             logging.error(f"Authorization error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
-                {"errors": [{"detail": "Internal Server Error",
-                             "meta": {"message": str(e)}}]},
+                {
+                    "errors": [
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=["get"])
     def get_user_type(self, request, pk=None):
         """
         Get the type of a user.

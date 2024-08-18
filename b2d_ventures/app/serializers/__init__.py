@@ -4,3 +4,8 @@ from b2d_ventures.app.serializers.investor import InvestorSerializer
 from b2d_ventures.app.serializers.startup import StartupSerializer
 from b2d_ventures.app.serializers.deal import DealSerializer
 from b2d_ventures.app.serializers.deal_investor import DealInvestorSerializer
+from b2d_ventures.app.serializers.dataroom import DataRoomSerializer
+from b2d_ventures.app.serializers.meeting import MeetingSerializer
+from b2d_ventures.app.serializers.meeting_participant import (
+    MeetingParticipantSerializer,
+)

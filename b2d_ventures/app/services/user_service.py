@@ -1,4 +1,5 @@
 """The module defines the AuthorizationService class."""
+
 from urllib.parse import parse_qs, urlparse
 
 from django.conf import settings

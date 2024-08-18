@@ -11,5 +11,5 @@ class DataRoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataRoom
-        fields = '__all__'
-        read_only_fields = ('startup', 'last_updated')
+        fields = "__all__"
+        read_only_fields = ("startup", "last_updated")
