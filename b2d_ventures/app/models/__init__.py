@@ -7,3 +7,4 @@ from b2d_ventures.app.models.deal_investor import DealInvestor
 from b2d_ventures.app.models.dataroom import DataRoom
 from b2d_ventures.app.models.meeting import Meeting
 from b2d_ventures.app.models.meeting_participant import MeetingParticipant
+from b2d_ventures.app.models.investment import Investment
