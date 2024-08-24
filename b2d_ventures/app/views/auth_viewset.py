@@ -91,11 +91,9 @@ class AuthViewSet(viewsets.ViewSet):
                 serializer = StartupSerializer(user)
 
             response_data = {
-                "data": {
-                    "type": "users",
-                    "id": str(user.id),
-                    "attributes": serializer.data,
-                }
+                "type": role,
+                "id": str(user.id),
+                "attributes": serializer.data,
             }
 
             return Response(
