@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from b2d_ventures.utils.model_abstracts import AbstractModel
+from b2d_ventures.app.models.abstract_model import AbstractModel
 
 User = get_user_model()
 
