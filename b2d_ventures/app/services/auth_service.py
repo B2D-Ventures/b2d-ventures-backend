@@ -7,11 +7,11 @@ from django.conf import settings
 from b2d_ventures.utils import HTTPRequestHandler
 
 
-class UserError(Exception):
+class AuthError(Exception):
     """Custom Exception for authorization errors."""
 
 
-class UserService:
+class AuthService:
     """Class definition for AuthorizationService."""
 
     @staticmethod

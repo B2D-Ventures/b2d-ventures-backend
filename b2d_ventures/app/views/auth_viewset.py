@@ -10,17 +10,20 @@ from rest_framework.response import Response
 
 from b2d_ventures.app.models import User, Admin, Investor, Startup
 from b2d_ventures.app.serializers import (
+    UserSerializer,
     AdminSerializer,
     InvestorSerializer,
     StartupSerializer,
 )
-from b2d_ventures.app.services import UserService, UserError
+from b2d_ventures.app.services import AuthService, AuthError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
-class AuthViewSet(viewsets.ViewSet):
-    """ViewSet for handling User-related operations."""
+class AuthViewSet(viewsets.ModelViewSet):
+    """ModelViewSet for handling User-related operations."""
 
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     parser_classes = [JSONParser, VndJsonParser]
 
     def create(self, request, *args, **kwargs):
@@ -47,10 +50,10 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            service = UserService()
+            service = AuthService()
             authorization_code = service.extract_authorization_code(full_url)
             if not authorization_code:
-                raise UserError("Authorization code not found in URL")
+                raise AuthError("Authorization code not found in URL")
 
             tokens = service.exchange_code_for_token(authorization_code)
             user_profile = service.get_user_profile(tokens["access_token"])
@@ -101,17 +104,19 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
             )
 
-        except UserError as e:
+        except AuthError as e:
             logging.error(f"Authorization error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error",
+                         "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -127,7 +132,7 @@ class AuthViewSet(viewsets.ViewSet):
         :return: HTTP Response with the user type.
         """
         try:
-            user = User.objects.get(id=pk)
+            user = self.get_object()
         except ObjectDoesNotExist:
             return Response(
                 {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND

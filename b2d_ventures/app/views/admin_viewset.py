@@ -5,6 +5,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from b2d_ventures.app.models import Admin, Investor
 from b2d_ventures.app.serializers import (
     UserSerializer,
     DealSerializer,
@@ -16,22 +17,27 @@ from b2d_ventures.app.services import AdminService, AdminError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
-class AdminViewSet(viewsets.ViewSet):
+class AdminViewSet(viewsets.ModelViewSet):
     """ViewSet for handling Admin-related operations."""
 
+    queryset = Admin.objects.all()
+    serializer_class = UserSerializer
     parser_classes = [JSONParser, VndJsonParser]
 
     @action(detail=False, methods=['get'], url_path='users')
     def list_users(self, request):
-        """List all users."""
+        """List all users with their roles."""
         try:
             service = AdminService()
             users = service.list_users()
             serializer = UserSerializer(users, many=True)
             response_data = {
                 "data": [
-                    {"type": "users", "id": str(user.id),
-                     "attributes": user_data}
+                    {
+                        "type": self.get_user_role(user),
+                        "id": str(user.id),
+                        "attributes": user_data,
+                    }
                     for user, user_data in zip(users, serializer.data)
                 ]
             }
@@ -57,7 +63,7 @@ class AdminViewSet(viewsets.ViewSet):
             user = service.get_user_details(pk)
             serializer = UserSerializer(user)
             response_data = {
-                "data": {"type": "users", "id": str(user.id),
+                "data": {"type": self.get_user_role(user), "id": str(user.id),
                          "attributes": serializer.data}
             }
             return Response(response_data, status=status.HTTP_200_OK)
@@ -281,3 +287,12 @@ class AdminViewSet(viewsets.ViewSet):
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+    def get_user_role(self, user):
+        """Determine the role of a user."""
+        if isinstance(user, Admin):
+            return "admin"
+        elif isinstance(user, Investor):
+            return "investor"
+        else:
+            return "startup"

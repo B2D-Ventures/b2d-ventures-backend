@@ -7,7 +7,6 @@ class User(AbstractUser, AbstractModel):
     class Meta:
         app_label = "app"
 
-    token = models.CharField(max_length=255)
     username = models.CharField(max_length=150, unique=False)
     email = models.EmailField(max_length=254, unique=True)
     USERNAME_FIELD = "email"
