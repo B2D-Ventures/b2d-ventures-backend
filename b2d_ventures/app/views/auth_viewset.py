@@ -121,27 +121,3 @@ class AuthViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-    @action(detail=True, methods=["get"])
-    def get_user_type(self, request, pk=None):
-        """
-        Get the type of a user.
-
-        :param request: The incoming HTTP request.
-        :param pk: The primary key of the user.
-        :return: HTTP Response with the user type.
-        """
-        try:
-            user = self.get_object()
-        except ObjectDoesNotExist:
-            return Response(
-                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
-            )
-        if isinstance(user, Admin):
-            return Response({"type": "Admin"})
-        elif isinstance(user, Investor):
-            return Response({"type": "Investor"})
-        elif isinstance(user, Startup):
-            return Response({"type": "Startup"})
-        else:
-            return Response({"type": "User"})
