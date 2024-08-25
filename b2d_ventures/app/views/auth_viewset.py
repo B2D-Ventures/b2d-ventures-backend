@@ -1,16 +1,15 @@
 """A module that defines the AuthViewSet class."""
 
 import logging
+from typing import Dict, Any, Union
 
-from django.core.exceptions import ObjectDoesNotExist
 from icecream import ic
 from rest_framework import status, viewsets
-from rest_framework.decorators import action
+from rest_framework.request import Request
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import User, Admin, Investor, Startup
+from b2d_ventures.app.models import Admin, Investor, Startup
 from b2d_ventures.app.serializers import (
-    UserSerializer,
     AdminSerializer,
     InvestorSerializer,
     StartupSerializer,
@@ -19,14 +18,16 @@ from b2d_ventures.app.services import AuthService, AuthError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
-class AuthViewSet(viewsets.ModelViewSet):
-    """ModelViewSet for handling User-related operations."""
+class AuthViewSet(viewsets.ViewSet):
+    """ViewSet for handling User authentication and creation."""
 
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
     parser_classes = [JSONParser, VndJsonParser]
 
-    def create(self, request, *args, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.auth_service = AuthService()
+
+    def create(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         """
         Create or authenticate a user via Google SSO.
 
@@ -50,48 +51,21 @@ class AuthViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            service = AuthService()
-            authorization_code = service.extract_authorization_code(full_url)
+            authorization_code = self.auth_service.extract_authorization_code(
+                full_url)
             if not authorization_code:
                 raise AuthError("Authorization code not found in URL")
 
-            tokens = service.exchange_code_for_token(authorization_code)
-            user_profile = service.get_user_profile(tokens["access_token"])
+            tokens = self.auth_service.exchange_code_for_token(
+                authorization_code)
+            user_profile = self.auth_service.get_user_profile(
+                tokens["access_token"])
             user_email = user_profile.get("email")
             ic(user_profile)
 
-            if role == "admin":
-                user, created = Admin.objects.update_or_create(
-                    email=user_email,
-                    defaults={
-                        "email": user_email,
-                        "username": user_profile.get("name"),
-                        "permission": "full",
-                    },
-                )
-                serializer = AdminSerializer(user)
-            elif role == "investor":
-                user, created = Investor.objects.update_or_create(
-                    email=user_email,
-                    defaults={
-                        "email": user_email,
-                        "username": user_profile.get("name"),
-                        "available_funds": 0,
-                        "total_invested": 0,
-                    },
-                )
-                serializer = InvestorSerializer(user)
-            elif role == "startup":
-                user, created = Startup.objects.update_or_create(
-                    email=user_email,
-                    defaults={
-                        "email": user_email,
-                        "username": user_profile.get("name"),
-                        "name": user_profile.get("name"),
-                        "description": "",
-                    },
-                )
-                serializer = StartupSerializer(user)
+            user, created = self._create_or_update_user(role, user_email,
+                                                        user_profile)
+            serializer = self._get_serializer_for_role(role, user)
 
             response_data = {
                 "type": role,
@@ -121,3 +95,48 @@ class AuthViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+    def _create_or_update_user(self, role: str, user_email: str,
+                               user_profile: Dict[str, Any]) -> Union[
+        Admin, Investor, Startup]:
+        """Create or update a user based on their role."""
+        if role == "admin":
+            return Admin.objects.update_or_create(
+                email=user_email,
+                defaults={
+                    "email": user_email,
+                    "username": user_profile.get("name"),
+                    "permission": "full",
+                },
+            )
+        elif role == "investor":
+            return Investor.objects.update_or_create(
+                email=user_email,
+                defaults={
+                    "email": user_email,
+                    "username": user_profile.get("name"),
+                    "available_funds": 0,
+                    "total_invested": 0,
+                },
+            )
+        elif role == "startup":
+            return Startup.objects.update_or_create(
+                email=user_email,
+                defaults={
+                    "email": user_email,
+                    "username": user_profile.get("name"),
+                    "name": user_profile.get("name"),
+                    "description": "",
+                },
+            )
+
+    def _get_serializer_for_role(self, role: str,
+                                 user: Union[Admin, Investor, Startup]) -> \
+    Union[AdminSerializer, InvestorSerializer, StartupSerializer]:
+        """Get the appropriate serializer based on the user's role."""
+        if role == "admin":
+            return AdminSerializer(user)
+        elif role == "investor":
+            return InvestorSerializer(user)
+        elif role == "startup":
+            return StartupSerializer(user)
