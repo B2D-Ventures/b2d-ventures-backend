@@ -69,7 +69,6 @@ class AuthViewSet(viewsets.ViewSet):
 
             response_data = {
                 "type": role,
-                "id": str(user.id),
                 "attributes": serializer.data,
             }
 

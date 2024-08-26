@@ -34,7 +34,6 @@ class AdminViewSet(viewsets.ModelViewSet):
             response_data = [
                     {
                         "type": get_user_role(user),
-                        "id": str(user.id),
                         "attributes": user_data,
                     }
                     for user, user_data in zip(users, serializer.data)
@@ -60,7 +59,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             user = service.get_user_details(pk)
             serializer = UserSerializer(user)
-            response_data = {"role": get_user_role(user), "id": str(user.id),
+            response_data = {"role": get_user_role(user),
                              "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
@@ -114,7 +113,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             deal = service.approve_deal(deal_id)
             serializer = DealSerializer(deal)
-            response_data = {"type": "deals", "id": str(deal.id),
+            response_data = {"type": "deals",
                              "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
@@ -143,7 +142,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             deal = service.reject_deal(deal_id)
             serializer = DealSerializer(deal)
-            response_data = {"type": "deals", "id": str(deal.id),
+            response_data = {"type": "deals",
                              "attributes": serializer.data}
 
             return Response(response_data, status=status.HTTP_200_OK)
@@ -173,7 +172,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             investments = service.list_investments()
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                    {"type": "investments", "id": str(investment.id),
+                    {"type": "investments",
                      "attributes": investment_data}
                     for investment, investment_data in
                     zip(investments, serializer.data)
@@ -200,7 +199,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             datarooms = service.list_datarooms()
             serializer = DataRoomSerializer(datarooms, many=True)
             response_data = [
-                    {"type": "datarooms", "id": str(dataroom.id),
+                    {"type": "datarooms",
                      "attributes": dataroom_data}
                     for dataroom, dataroom_data in
                     zip(datarooms, serializer.data)
@@ -227,7 +226,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             meetings = service.list_meetings()
             serializer = MeetingSerializer(meetings, many=True)
             response_data = [
-                    {"type": "meetings", "id": str(meeting.id),
+                    {"type": "meetings",
                      "attributes": meeting_data}
                     for meeting, meeting_data in zip(meetings, serializer.data)
                 ]
@@ -253,7 +252,6 @@ class AdminViewSet(viewsets.ModelViewSet):
             dashboard_data = service.get_dashboard_data()
             response_data = {
                 "type": "dashboard",
-                "id": "admin_dashboard",
                 "attributes": dashboard_data
             }
             return Response(response_data, status=status.HTTP_200_OK)
