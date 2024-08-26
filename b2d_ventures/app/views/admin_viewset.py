@@ -31,16 +31,14 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             users = service.list_users()
             serializer = UserSerializer(users, many=True)
-            response_data = {
-                "data": [
+            response_data = [
                     {
-                        "role": get_user_role(user),
+                        "type": get_user_role(user),
                         "id": str(user.id),
                         "attributes": user_data,
                     }
                     for user, user_data in zip(users, serializer.data)
                 ]
-            }
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
@@ -62,10 +60,8 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             user = service.get_user_details(pk)
             serializer = UserSerializer(user)
-            response_data = {
-                "data": {"role": get_user_role(user), "id": str(user.id),
-                         "attributes": serializer.data}
-            }
+            response_data = {"role": get_user_role(user), "id": str(user.id),
+                             "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response(
@@ -92,13 +88,10 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             deals = service.list_deals()
             serializer = DealSerializer(deals, many=True)
-            response_data = {
-                "data": [
-                    {"type": "deals", "id": str(deal.id),
-                     "attributes": deal_data}
-                    for deal, deal_data in zip(deals, serializer.data)
-                ]
-            }
+            response_data = [
+                   {"type": "deals", "id": str(deal.id), "attributes": deal_data}
+                   for deal, deal_data in zip(deals, serializer.data)
+               ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
@@ -121,10 +114,8 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             deal = service.approve_deal(deal_id)
             serializer = DealSerializer(deal)
-            response_data = {
-                "data": {"type": "deals", "id": str(deal.id),
-                         "attributes": serializer.data}
-            }
+            response_data = {"type": "deals", "id": str(deal.id),
+                             "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response(
@@ -152,10 +143,9 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             deal = service.reject_deal(deal_id)
             serializer = DealSerializer(deal)
-            response_data = {
-                "data": {"type": "deals", "id": str(deal.id),
-                         "attributes": serializer.data}
-            }
+            response_data = {"type": "deals", "id": str(deal.id),
+                             "attributes": serializer.data}
+
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response(
@@ -182,14 +172,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             investments = service.list_investments()
             serializer = InvestmentSerializer(investments, many=True)
-            response_data = {
-                "data": [
+            response_data = [
                     {"type": "investments", "id": str(investment.id),
                      "attributes": investment_data}
                     for investment, investment_data in
                     zip(investments, serializer.data)
                 ]
-            }
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
@@ -211,14 +199,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             datarooms = service.list_datarooms()
             serializer = DataRoomSerializer(datarooms, many=True)
-            response_data = {
-                "data": [
+            response_data = [
                     {"type": "datarooms", "id": str(dataroom.id),
                      "attributes": dataroom_data}
                     for dataroom, dataroom_data in
                     zip(datarooms, serializer.data)
                 ]
-            }
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
@@ -240,13 +226,11 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             meetings = service.list_meetings()
             serializer = MeetingSerializer(meetings, many=True)
-            response_data = {
-                "data": [
+            response_data = [
                     {"type": "meetings", "id": str(meeting.id),
                      "attributes": meeting_data}
                     for meeting, meeting_data in zip(meetings, serializer.data)
                 ]
-            }
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
@@ -268,11 +252,9 @@ class AdminViewSet(viewsets.ModelViewSet):
             service = AdminService()
             dashboard_data = service.get_dashboard_data()
             response_data = {
-                "data": {
-                    "type": "dashboard",
-                    "id": "admin_dashboard",
-                    "attributes": dashboard_data
-                }
+                "type": "dashboard",
+                "id": "admin_dashboard",
+                "attributes": dashboard_data
             }
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:

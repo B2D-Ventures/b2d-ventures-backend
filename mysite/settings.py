@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
-from icecream import ic
 
 # Build paths inside the project like this: ROOT_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -25,43 +25,43 @@ LOCALE_PATHS = [str(ROOT_DIR / "locale")]
 # Application definition
 
 INSTALLED_APPS = [
-  "b2d_ventures.apps.B2DVenturesConfig",
-  "b2d_ventures.app",
-  "django.contrib.admin",
-  "django.contrib.auth",
-  "django.contrib.contenttypes",
-  "django.contrib.sessions",
-  "django.contrib.messages",
-  "django.contrib.staticfiles",
-  "rest_framework",
+    "b2d_ventures.apps.B2DVenturesConfig",
+    "b2d_ventures.app",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
-  'django.middleware.security.SecurityMiddleware',
-  'django.contrib.sessions.middleware.SessionMiddleware',
-  'django.middleware.common.CommonMiddleware',
-  'django.middleware.csrf.CsrfViewMiddleware',
-  'django.contrib.auth.middleware.AuthenticationMiddleware',
-  'django.contrib.messages.middleware.MessageMiddleware',
-  'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
-  {
-      'BACKEND': 'django.template.backends.django.DjangoTemplates',
-      'DIRS': [],
-      'APP_DIRS': True,
-      'OPTIONS': {
-          'context_processors': [
-              'django.template.context_processors.debug',
-              'django.template.context_processors.request',
-              'django.contrib.auth.context_processors.auth',
-              'django.contrib.messages.context_processors.messages',
-          ],
-      },
-  },
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
@@ -70,35 +70,35 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-  'default': {
-      'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
-      'NAME': os.getenv('DB_NAME', ROOT_DIR / 'db.sqlite3'),
-      'USER': os.getenv('DB_USER', ''),
-      'PASSWORD': os.getenv('DB_PASSWORD', ''),
-      'HOST': os.getenv('DB_HOST', ''),
-      'PORT': os.getenv('DB_PORT', ''),
-  }
+    'default': {
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.getenv('DB_NAME', ROOT_DIR / 'db.sqlite3'),
+        'USER': os.getenv('DB_USER', ''),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', ''),
+    }
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
-  "django.contrib.auth.backends.ModelBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 AUTH_PASSWORD_VALIDATORS = [
-  {
-      'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-  },
-  {
-      'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-  },
-  {
-      'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-  },
-  {
-      'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-  },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # Internationalization
@@ -123,24 +123,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # django-rest-framework
 # -----------------------------------------------------------------------------
 REST_FRAMEWORK = {
-  "EXCEPTION_HANDLER": "rest_framework_json_api.exceptions.exception_handler",
-  "DEFAULT_PARSER_CLASSES": ("rest_framework_json_api.parsers.JSONParser",),
-  "DEFAULT_RENDERER_CLASSES": (
-      "rest_framework_json_api.renderers.JSONRenderer",
-      "rest_framework.renderers.BrowsableAPIRenderer",
-  ),
-  "DEFAULT_METADATA_CLASS": "rest_framework_json_api.metadata.JSONAPIMetadata",
-  "DEFAULT_FILTER_BACKENDS": (
-      "rest_framework_json_api.filters.QueryParameterValidationFilter",
-      "rest_framework_json_api.filters.OrderingFilter",
-      "rest_framework_json_api.django_filters.DjangoFilterBackend",
-      "rest_framework.filters.SearchFilter",
-  ),
-  "SEARCH_PARAM": "filter[search]",
-  "TEST_REQUEST_RENDERER_CLASSES": (
-      "rest_framework_json_api.renderers.JSONRenderer",
-  ),
-  "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
+    "EXCEPTION_HANDLER": "rest_framework_json_api.exceptions.exception_handler",
+    "DEFAULT_PARSER_CLASSES": ("rest_framework_json_api.parsers.JSONParser",),
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework_json_api.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
+    "DEFAULT_METADATA_CLASS": "rest_framework_json_api.metadata.JSONAPIMetadata",
+    "DEFAULT_FILTER_BACKENDS": (
+        "rest_framework_json_api.filters.QueryParameterValidationFilter",
+        "rest_framework_json_api.filters.OrderingFilter",
+        "rest_framework_json_api.django_filters.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+    ),
+    "SEARCH_PARAM": "filter[search]",
+    "TEST_REQUEST_RENDERER_CLASSES": (
+        "rest_framework_json_api.renderers.JSONRenderer",
+    ),
+    "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 # Google OAuth Configuration
@@ -150,4 +152,8 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 REDIRECT_URI = os.getenv("REDIRECT_URI", "")
 
 # ALLOWED_HOSTS configuration
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(
+    ',')
+CSRF_TRUSTED_ORIGINS = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS',
+                                 'http://localhost,http://127.0.0.1').split(
+    ',')
