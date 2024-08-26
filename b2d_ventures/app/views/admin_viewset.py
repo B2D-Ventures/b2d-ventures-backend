@@ -89,7 +89,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             deals = service.list_deals()
             serializer = DealSerializer(deals, many=True)
             response_data = [
-                   {"type": "deals", "id": str(deal.id), "attributes": deal_data}
+                   {"type": "deals", "attributes": deal_data}
                    for deal, deal_data in zip(deals, serializer.data)
                ]
             return Response(response_data, status=status.HTTP_200_OK)
