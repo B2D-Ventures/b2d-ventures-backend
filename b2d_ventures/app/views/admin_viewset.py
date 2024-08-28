@@ -105,7 +105,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=['put'],
+    @action(detail=False, methods=['put'],
             url_path='deals/(?P<deal_id>[^/.]+)/approve')
     def approve_deal(self, request, deal_id=None):
         """Approve a deal."""
@@ -134,7 +134,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=['put'],
+    @action(detail=False, methods=['put'],
             url_path='deals/(?P<deal_id>[^/.]+)/reject')
     def reject_deal(self, request, deal_id=None):
         """Reject a deal."""
