@@ -51,15 +51,25 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["get"], url_path="users")
-    def get_user(self, request, pk=None):
-        """Get a specific user."""
+    @action(detail=True, methods=["get", "put", "delete"], url_path="users")
+    def user_operations(self, request, pk=None):
+        """Get, update or delete a specific user."""
         try:
             service = AdminService()
-            user = service.get_user_details(pk)
-            serializer = UserSerializer(user)
-            response_data = {"role": get_user_role(user), "attributes": serializer.data}
-            return Response(response_data, status=status.HTTP_200_OK)
+            if request.method == "GET":
+                user = service.get_user_details(pk)
+                serializer = UserSerializer(user)
+                response_data = {"role": get_user_role(user), "attributes": serializer.data}
+                return Response(response_data, status=status.HTTP_200_OK)
+            elif request.method == "PUT":
+                attributes = request.data.get("data", {}).get("attributes", {})
+                user = service.edit_user(pk, attributes)
+                serializer = UserSerializer(user)
+                response_data = {"role": get_user_role(user), "attributes": serializer.data}
+                return Response(response_data, status=status.HTTP_200_OK)
+            elif request.method == "DELETE":
+                service.delete_user(pk)
+                return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist:
             return Response(
                 {"errors": [{"detail": "User not found"}]},
@@ -101,42 +111,28 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=["put"], url_path="deals/(?P<deal_id>[^/.]+)/approve")
-    def approve_deal(self, request, deal_id=None):
-        """Approve a deal."""
+    @action(detail=True, methods=["put", "delete"], url_path="deals")
+    def deal_operations(self, request, pk=None):
+        """Approve, reject or delete a deal."""
         try:
             service = AdminService()
-            deal = service.approve_deal(deal_id)
-            serializer = DealSerializer(deal)
-            response_data = {"type": "deals", "attributes": serializer.data}
-            return Response(response_data, status=status.HTTP_200_OK)
-        except ObjectDoesNotExist:
-            return Response(
-                {"errors": [{"detail": "Deal not found"}]},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except AdminError as e:
-            logging.error(f"Admin error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {"errors": [{"detail": "Internal Server Error"}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(detail=False, methods=["put"], url_path="deals/(?P<deal_id>[^/.]+)/reject")
-    def reject_deal(self, request, deal_id=None):
-        """Reject a deal."""
-        try:
-            service = AdminService()
-            deal = service.reject_deal(deal_id)
-            serializer = DealSerializer(deal)
-            response_data = {"type": "deals", "attributes": serializer.data}
-
-            return Response(response_data, status=status.HTTP_200_OK)
+            if request.method == "PUT":
+                action = request.data.get("data", {}).get("attributes", {}).get("action")
+                if action == "approve":
+                    deal = service.approve_deal(pk)
+                elif action == "reject":
+                    deal = service.reject_deal(pk)
+                else:
+                    return Response(
+                        {"errors": [{"detail": "Invalid action"}]},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                serializer = DealSerializer(deal)
+                response_data = {"type": "deals", "attributes": serializer.data}
+                return Response(response_data, status=status.HTTP_200_OK)
+            elif request.method == "DELETE":
+                service.delete_deal(pk)
+                return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist:
             return Response(
                 {"errors": [{"detail": "Deal not found"}]},
@@ -178,6 +174,30 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+    @action(detail=True, methods=["delete"], url_path="investments")
+    def delete_investment(self, request, pk=None):
+        """Delete an investment."""
+        try:
+            service = AdminService()
+            service.delete_investment(pk)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist:
+            return Response(
+                {"errors": [{"detail": "Investment not found"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except AdminError as e:
+            logging.error(f"Admin error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {"errors": [{"detail": "Internal Server Error"}]},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
     @action(detail=False, methods=["get"], url_path="datarooms")
     def list_datarooms(self, request):
         """List all data rooms."""
@@ -202,6 +222,30 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+    @action(detail=True, methods=["delete"], url_path="datarooms")
+    def delete_dataroom(self, request, pk=None):
+        """Delete a data room."""
+        try:
+            service = AdminService()
+            service.delete_dataroom(pk)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist:
+            return Response(
+                {"errors": [{"detail": "Data room not found"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except AdminError as e:
+            logging.error(f"Admin error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {"errors": [{"detail": "Internal Server Error"}]},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
     @action(detail=False, methods=["get"], url_path="meetings")
     def list_meetings(self, request):
         """List all meetings."""
@@ -214,6 +258,30 @@ class AdminViewSet(viewsets.ModelViewSet):
                 for meeting, meeting_data in zip(meetings, serializer.data)
             ]
             return Response(response_data, status=status.HTTP_200_OK)
+        except AdminError as e:
+            logging.error(f"Admin error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {"errors": [{"detail": "Internal Server Error"}]},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=True, methods=["delete"], url_path="meetings")
+    def delete_meeting(self, request, pk=None):
+        """Delete a meeting."""
+        try:
+            service = AdminService()
+            service.delete_meeting(pk)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except ObjectDoesNotExist:
+            return Response(
+                {"errors": [{"detail": "Meeting not found"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(

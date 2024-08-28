@@ -164,3 +164,101 @@ class AdminService:
             }
         except Exception as e:
             raise AdminError(f"Error getting dashboard data: {str(e)}")
+
+    @staticmethod
+    def edit_user(user_id, data):
+        """
+        Edit a specific user.
+
+        :param user_id: ID of the user to edit.
+        :param data: Dictionary containing updated user data.
+        :return: Updated User object.
+        """
+        try:
+            user = User.objects.get(id=user_id)
+            for key, value in data.items():
+                setattr(user, key, value)
+            user.save()
+            return user
+        except User.DoesNotExist:
+            raise ObjectDoesNotExist(f"User with id {user_id} does not exist")
+        except Exception as e:
+            raise AdminError(f"Error editing user: {str(e)}")
+
+    @staticmethod
+    def delete_user(user_id):
+        """
+        Delete a specific user.
+
+        :param user_id: ID of the user to delete.
+        """
+        try:
+            user = User.objects.get(id=user_id)
+            user.delete()
+        except User.DoesNotExist:
+            raise ObjectDoesNotExist(f"User with id {user_id} does not exist")
+        except Exception as e:
+            raise AdminError(f"Error deleting user: {str(e)}")
+
+    @staticmethod
+    def delete_meeting(meeting_id):
+        """
+        Delete a specific meeting.
+
+        :param meeting_id: ID of the meeting to delete.
+        """
+        try:
+            meeting = Meeting.objects.get(id=meeting_id)
+            meeting.delete()
+        except Meeting.DoesNotExist:
+            raise ObjectDoesNotExist(
+                f"Meeting with id {meeting_id} does not exist")
+        except Exception as e:
+            raise AdminError(f"Error deleting meeting: {str(e)}")
+
+    @staticmethod
+    def delete_dataroom(dataroom_id):
+        """
+        Delete a specific dataroom.
+
+        :param dataroom_id: ID of the dataroom to delete.
+        """
+        try:
+            dataroom = DataRoom.objects.get(id=dataroom_id)
+            dataroom.delete()
+        except DataRoom.DoesNotExist:
+            raise ObjectDoesNotExist(
+                f"DataRoom with id {dataroom_id} does not exist")
+        except Exception as e:
+            raise AdminError(f"Error deleting dataroom: {str(e)}")
+
+    @staticmethod
+    def delete_investment(investment_id):
+        """
+        Delete a specific investment.
+
+        :param investment_id: ID of the investment to delete.
+        """
+        try:
+            investment = Investment.objects.get(id=investment_id)
+            investment.delete()
+        except Investment.DoesNotExist:
+            raise ObjectDoesNotExist(
+                f"Investment with id {investment_id} does not exist")
+        except Exception as e:
+            raise AdminError(f"Error deleting investment: {str(e)}")
+
+    @staticmethod
+    def delete_deal(deal_id):
+        """
+        Delete a specific deal.
+
+        :param deal_id: ID of the deal to delete.
+        """
+        try:
+            deal = Deal.objects.get(id=deal_id)
+            deal.delete()
+        except Deal.DoesNotExist:
+            raise ObjectDoesNotExist(f"Deal with id {deal_id} does not exist")
+        except Exception as e:
+            raise AdminError(f"Error deleting deal: {str(e)}")
