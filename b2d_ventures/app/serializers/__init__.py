@@ -10,4 +10,3 @@ from b2d_ventures.app.serializers.meeting_participant import (
     MeetingParticipantSerializer,
 )
 from b2d_ventures.app.serializers.investment import InvestmentSerializer
-

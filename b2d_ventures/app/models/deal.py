@@ -14,7 +14,9 @@ class Deal(AbstractModel):
     image_content_url = models.URLField(max_length=255, default="")
     allocation = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    minimum_investment = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    minimum_investment = models.DecimalField(
+        max_digits=15, decimal_places=2, default=0.00
+    )
     type = models.TextField(default="")
     raised = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     start_date = models.DateTimeField(default=timezone.now)

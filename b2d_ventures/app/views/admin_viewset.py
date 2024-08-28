@@ -24,7 +24,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     parser_classes = [JSONParser, VndJsonParser]
 
-    @action(detail=False, methods=['get'], url_path='users')
+    @action(detail=False, methods=["get"], url_path="users")
     def list_users(self, request):
         """List all users with their roles."""
         try:
@@ -32,18 +32,17 @@ class AdminViewSet(viewsets.ModelViewSet):
             users = service.list_users()
             serializer = UserSerializer(users, many=True)
             response_data = [
-                    {
-                        "type": get_user_role(user),
-                        "attributes": user_data,
-                    }
-                    for user, user_data in zip(users, serializer.data)
-                ]
+                {
+                    "type": get_user_role(user),
+                    "attributes": user_data,
+                }
+                for user, user_data in zip(users, serializer.data)
+            ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -52,15 +51,14 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=['get'], url_path='users')
+    @action(detail=True, methods=["get"], url_path="users")
     def get_user(self, request, pk=None):
         """Get a specific user."""
         try:
             service = AdminService()
             user = service.get_user_details(pk)
             serializer = UserSerializer(user)
-            response_data = {"role": get_user_role(user),
-                             "attributes": serializer.data}
+            response_data = {"role": get_user_role(user), "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response(
@@ -70,8 +68,7 @@ class AdminViewSet(viewsets.ModelViewSet):
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -80,7 +77,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['get'], url_path='deals')
+    @action(detail=False, methods=["get"], url_path="deals")
     def list_deals(self, request):
         """List all deals."""
         try:
@@ -88,15 +85,14 @@ class AdminViewSet(viewsets.ModelViewSet):
             deals = service.list_deals()
             serializer = DealSerializer(deals, many=True)
             response_data = [
-                   {"type": "deals", "attributes": deal_data}
-                   for deal, deal_data in zip(deals, serializer.data)
-               ]
+                {"type": "deals", "attributes": deal_data}
+                for deal, deal_data in zip(deals, serializer.data)
+            ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -105,16 +101,14 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['put'],
-            url_path='deals/(?P<deal_id>[^/.]+)/approve')
+    @action(detail=False, methods=["put"], url_path="deals/(?P<deal_id>[^/.]+)/approve")
     def approve_deal(self, request, deal_id=None):
         """Approve a deal."""
         try:
             service = AdminService()
             deal = service.approve_deal(deal_id)
             serializer = DealSerializer(deal)
-            response_data = {"type": "deals",
-                             "attributes": serializer.data}
+            response_data = {"type": "deals", "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response(
@@ -124,8 +118,7 @@ class AdminViewSet(viewsets.ModelViewSet):
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -134,16 +127,14 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['put'],
-            url_path='deals/(?P<deal_id>[^/.]+)/reject')
+    @action(detail=False, methods=["put"], url_path="deals/(?P<deal_id>[^/.]+)/reject")
     def reject_deal(self, request, deal_id=None):
         """Reject a deal."""
         try:
             service = AdminService()
             deal = service.reject_deal(deal_id)
             serializer = DealSerializer(deal)
-            response_data = {"type": "deals",
-                             "attributes": serializer.data}
+            response_data = {"type": "deals", "attributes": serializer.data}
 
             return Response(response_data, status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
@@ -154,8 +145,7 @@ class AdminViewSet(viewsets.ModelViewSet):
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -164,7 +154,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['get'], url_path='investments')
+    @action(detail=False, methods=["get"], url_path="investments")
     def list_investments(self, request):
         """List all investments."""
         try:
@@ -172,17 +162,14 @@ class AdminViewSet(viewsets.ModelViewSet):
             investments = service.list_investments()
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                    {"type": "investments",
-                     "attributes": investment_data}
-                    for investment, investment_data in
-                    zip(investments, serializer.data)
-                ]
+                {"type": "investments", "attributes": investment_data}
+                for investment, investment_data in zip(investments, serializer.data)
+            ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -191,7 +178,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['get'], url_path='datarooms')
+    @action(detail=False, methods=["get"], url_path="datarooms")
     def list_datarooms(self, request):
         """List all data rooms."""
         try:
@@ -199,17 +186,14 @@ class AdminViewSet(viewsets.ModelViewSet):
             datarooms = service.list_datarooms()
             serializer = DataRoomSerializer(datarooms, many=True)
             response_data = [
-                    {"type": "datarooms",
-                     "attributes": dataroom_data}
-                    for dataroom, dataroom_data in
-                    zip(datarooms, serializer.data)
-                ]
+                {"type": "datarooms", "attributes": dataroom_data}
+                for dataroom, dataroom_data in zip(datarooms, serializer.data)
+            ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -218,7 +202,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['get'], url_path='meetings')
+    @action(detail=False, methods=["get"], url_path="meetings")
     def list_meetings(self, request):
         """List all meetings."""
         try:
@@ -226,16 +210,14 @@ class AdminViewSet(viewsets.ModelViewSet):
             meetings = service.list_meetings()
             serializer = MeetingSerializer(meetings, many=True)
             response_data = [
-                    {"type": "meetings",
-                     "attributes": meeting_data}
-                    for meeting, meeting_data in zip(meetings, serializer.data)
-                ]
+                {"type": "meetings", "attributes": meeting_data}
+                for meeting, meeting_data in zip(meetings, serializer.data)
+            ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
@@ -244,22 +226,18 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=['get'], url_path='dashboard')
+    @action(detail=False, methods=["get"], url_path="dashboard")
     def get_dashboard(self, request):
         """Get admin dashboard data."""
         try:
             service = AdminService()
             dashboard_data = service.get_dashboard_data()
-            response_data = {
-                "type": "dashboard",
-                "attributes": dashboard_data
-            }
+            response_data = {"type": "dashboard", "attributes": dashboard_data}
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")

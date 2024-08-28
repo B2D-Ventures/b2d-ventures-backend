@@ -51,20 +51,16 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            authorization_code = self.auth_service.extract_authorization_code(
-                full_url)
+            authorization_code = self.auth_service.extract_authorization_code(full_url)
             if not authorization_code:
                 raise AuthError("Authorization code not found in URL")
 
-            tokens = self.auth_service.exchange_code_for_token(
-                authorization_code)
-            user_profile = self.auth_service.get_user_profile(
-                tokens["access_token"])
+            tokens = self.auth_service.exchange_code_for_token(authorization_code)
+            user_profile = self.auth_service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
             ic(user_profile)
 
-            user, created = self._create_or_update_user(role, user_email,
-                                                        user_profile)
+            user, created = self._create_or_update_user(role, user_email, user_profile)
             serializer = self._get_serializer_for_role(role, user)
 
             response_data = {
@@ -80,24 +76,22 @@ class AuthViewSet(viewsets.ViewSet):
         except AuthError as e:
             logging.error(f"Authorization error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error",
-                         "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    def _create_or_update_user(self, role: str, user_email: str,
-                               user_profile: Dict[str, Any]) -> Union[
-        Admin, Investor, Startup]:
+    def _create_or_update_user(
+        self, role: str, user_email: str, user_profile: Dict[str, Any]
+    ) -> Union[Admin, Investor, Startup]:
         """Create or update a user based on their role."""
         if role == "admin":
             return Admin.objects.update_or_create(
@@ -129,9 +123,9 @@ class AuthViewSet(viewsets.ViewSet):
                 },
             )
 
-    def _get_serializer_for_role(self, role: str,
-                                 user: Union[Admin, Investor, Startup]) -> \
-    Union[AdminSerializer, InvestorSerializer, StartupSerializer]:
+    def _get_serializer_for_role(
+        self, role: str, user: Union[Admin, Investor, Startup]
+    ) -> Union[AdminSerializer, InvestorSerializer, StartupSerializer]:
         """Get the appropriate serializer based on the user's role."""
         if role == "admin":
             return AdminSerializer(user)
