@@ -6,3 +6,4 @@ python-decouple
 djangorestframework-jsonapi
 django-filter
 python-dotenv
+icecream
