@@ -140,12 +140,15 @@ class StartupViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["get", "put"], url_path="dataroom")
+    @action(detail=True, methods=["get", "post", "put"], url_path="dataroom")
     def dataroom(self, request, pk=None):
-        """Get or update startup's data room."""
+        """Get, create or update startup's data room."""
         try:
             if request.method == "GET":
                 return StartupService.get_dataroom(pk)
+            elif request.method == "POST":
+                attributes = request.data.get("data", {}).get("attributes", {})
+                return StartupService.create_dataroom(pk, attributes)
             elif request.method == "PUT":
                 attributes = request.data.get("data", {}).get("attributes", {})
                 return StartupService.update_dataroom(pk, attributes)
@@ -157,14 +160,16 @@ class StartupViewSet(viewsets.ModelViewSet):
         except StartupError as e:
             logging.error(f"Startup error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error",
+                         "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

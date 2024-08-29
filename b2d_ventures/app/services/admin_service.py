@@ -211,8 +211,7 @@ class AdminService:
             meeting = Meeting.objects.get(id=meeting_id)
             meeting.delete()
         except Meeting.DoesNotExist:
-            raise ObjectDoesNotExist(
-                f"Meeting with id {meeting_id} does not exist")
+            raise ObjectDoesNotExist(f"Meeting with id {meeting_id} does not exist")
         except Exception as e:
             raise AdminError(f"Error deleting meeting: {str(e)}")
 
@@ -227,8 +226,7 @@ class AdminService:
             dataroom = DataRoom.objects.get(id=dataroom_id)
             dataroom.delete()
         except DataRoom.DoesNotExist:
-            raise ObjectDoesNotExist(
-                f"DataRoom with id {dataroom_id} does not exist")
+            raise ObjectDoesNotExist(f"DataRoom with id {dataroom_id} does not exist")
         except Exception as e:
             raise AdminError(f"Error deleting dataroom: {str(e)}")
 
@@ -244,7 +242,8 @@ class AdminService:
             investment.delete()
         except Investment.DoesNotExist:
             raise ObjectDoesNotExist(
-                f"Investment with id {investment_id} does not exist")
+                f"Investment with id {investment_id} does not exist"
+            )
         except Exception as e:
             raise AdminError(f"Error deleting investment: {str(e)}")
 
