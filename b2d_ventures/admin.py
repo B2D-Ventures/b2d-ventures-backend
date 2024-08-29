@@ -56,14 +56,6 @@ class UserAdmin(UserAdmin):
     list_display = ('email', 'username', 'is_staff', 'is_superuser')
 
 
-class DataRoomAdmin(admin.ModelAdmin):
-    model = DataRoom
-    list_display = (
-        'startup', 'revenue', 'ebitda', 'net_profit', 'burn_rate', 'runway',
-        'current_valuation', 'last_updated')
-    search_fields = ('startup__username', 'startup__email')
-
-
 class DealInvestorAdmin(admin.ModelAdmin):
     model = DealInvestor
     list_display = ('deal', 'investor', 'investment_amount', 'investment_date')
@@ -96,7 +88,6 @@ admin.site.register(Investor, InvestorUserAdmin)
 admin.site.register(Startup, StartupUserAdmin)
 admin.site.register(Deal, DealAdmin)
 admin.site.register(User, UserAdmin)
-admin.site.register(DataRoom, DataRoomAdmin)
 admin.site.register(DealInvestor, DealInvestorAdmin)
 admin.site.register(Investment, InvestmentAdmin)
 admin.site.register(Meeting, MeetingAdmin)
