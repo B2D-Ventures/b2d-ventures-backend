@@ -51,22 +51,13 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["get", "put", "delete"], url_path="users")
+    @action(detail=True, methods=["get", "delete"], url_path="users")
     def user_operations(self, request, pk=None):
         """Get, update or delete a specific user."""
         try:
             service = AdminService()
             if request.method == "GET":
                 user = service.get_user_details(pk)
-                serializer = UserSerializer(user)
-                response_data = {
-                    "role": get_user_role(user),
-                    "attributes": serializer.data,
-                }
-                return Response(response_data, status=status.HTTP_200_OK)
-            elif request.method == "PUT":
-                attributes = request.data.get("data", {}).get("attributes", {})
-                user = service.edit_user(pk, attributes)
                 serializer = UserSerializer(user)
                 response_data = {
                     "role": get_user_role(user),

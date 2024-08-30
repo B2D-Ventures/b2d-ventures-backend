@@ -166,26 +166,6 @@ class AdminService:
             raise AdminError(f"Error getting dashboard data: {str(e)}")
 
     @staticmethod
-    def edit_user(user_id, data):
-        """
-        Edit a specific user.
-
-        :param user_id: ID of the user to edit.
-        :param data: Dictionary containing updated user data.
-        :return: Updated User object.
-        """
-        try:
-            user = User.objects.get(id=user_id)
-            for key, value in data.items():
-                setattr(user, key, value)
-            user.save()
-            return user
-        except User.DoesNotExist:
-            raise ObjectDoesNotExist(f"User with id {user_id} does not exist")
-        except Exception as e:
-            raise AdminError(f"Error editing user: {str(e)}")
-
-    @staticmethod
     def delete_user(user_id):
         """
         Delete a specific user.
