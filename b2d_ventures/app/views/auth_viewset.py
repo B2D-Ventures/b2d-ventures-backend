@@ -1,18 +1,18 @@
 """A module that defines the AuthViewSet class."""
 
 import logging
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Tuple
 
-from icecream import ic
 from rest_framework import status, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import Admin, Investor, Startup
+from b2d_ventures.app.models import Admin, Investor, Startup, User
 from b2d_ventures.app.serializers import (
     AdminSerializer,
     InvestorSerializer,
     StartupSerializer,
+    UserSerializer,
 )
 from b2d_ventures.app.services import AuthService, AuthError
 from b2d_ventures.utils import JSONParser, VndJsonParser
@@ -39,17 +39,18 @@ class AuthViewSet(viewsets.ViewSet):
         full_url = attributes.get("full_url")
         role = attributes.get("role")
 
-        if not full_url or not role:
+        if not full_url:
             return Response(
-                {"errors": [{"detail": "Full URL and role are required"}]},
+                {"errors": [{"detail": "Full URL is required"}]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if role not in ["admin", "investor", "startup"]:
+        if role not in ["admin", "investor", "startup", "null"]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
         try:
             authorization_code = self.auth_service.extract_authorization_code(full_url)
             if not authorization_code:
@@ -58,14 +59,15 @@ class AuthViewSet(viewsets.ViewSet):
             tokens = self.auth_service.exchange_code_for_token(authorization_code)
             user_profile = self.auth_service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
-            ic(user_profile)
 
-            user, created = self._create_or_update_user(role, user_email, user_profile)
-            serializer = self._get_serializer_for_role(role, user)
+            user, created, actual_role = self._create_or_update_user(role, user_email, user_profile)
+
+            serializer = self._get_serializer_for_role(actual_role, user)
 
             response_data = {
-                "type": role,
+                "type": actual_role,
                 "attributes": serializer.data,
+                "is_new_user": created,
             }
 
             return Response(
@@ -89,12 +91,48 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+    def _check_existing_user(self, user_email: str) -> Tuple[Union[Admin, Investor, Startup, None], str]:
+        """Check if a user exists and return their instance and role."""
+        try:
+            admin = Admin.objects.get(email=user_email)
+            return admin, "admin"
+        except Admin.DoesNotExist:
+            pass
+
+        try:
+            investor = Investor.objects.get(email=user_email)
+            return investor, "investor"
+        except Investor.DoesNotExist:
+            pass
+
+        try:
+            startup = Startup.objects.get(email=user_email)
+            return startup, "startup"
+        except Startup.DoesNotExist:
+            pass
+
+        return None, "null"
+
     def _create_or_update_user(
         self, role: str, user_email: str, user_profile: Dict[str, Any]
-    ) -> Union[Admin, Investor, Startup]:
+    ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
+        existing_user, existing_role = self._check_existing_user(user_email)
+
+        if existing_user and role == "null":
+            return existing_user, False, existing_role
+
+        if role == "null":
+            user, created = User.objects.get_or_create(
+                email=user_email,
+                defaults={
+                    "username": user_profile.get("name"),
+                }
+            )
+            return user, created, "null"
+
         if role == "admin":
-            return Admin.objects.update_or_create(
+            user, created = Admin.objects.update_or_create(
                 email=user_email,
                 defaults={
                     "email": user_email,
@@ -103,7 +141,7 @@ class AuthViewSet(viewsets.ViewSet):
                 },
             )
         elif role == "investor":
-            return Investor.objects.update_or_create(
+            user, created = Investor.objects.update_or_create(
                 email=user_email,
                 defaults={
                     "email": user_email,
@@ -113,7 +151,7 @@ class AuthViewSet(viewsets.ViewSet):
                 },
             )
         elif role == "startup":
-            return Startup.objects.update_or_create(
+            user, created = Startup.objects.update_or_create(
                 email=user_email,
                 defaults={
                     "email": user_email,
@@ -122,10 +160,14 @@ class AuthViewSet(viewsets.ViewSet):
                     "description": "",
                 },
             )
+        else:
+            raise AuthError("Invalid role provided")
+
+        return user, created, role
 
     def _get_serializer_for_role(
-        self, role: str, user: Union[Admin, Investor, Startup]
-    ) -> Union[AdminSerializer, InvestorSerializer, StartupSerializer]:
+        self, role: str, user: Union[Admin, Investor, Startup, User]
+    ) -> Union[AdminSerializer, InvestorSerializer, StartupSerializer, UserSerializer]:
         """Get the appropriate serializer based on the user's role."""
         if role == "admin":
             return AdminSerializer(user)
@@ -133,3 +175,5 @@ class AuthViewSet(viewsets.ViewSet):
             return InvestorSerializer(user)
         elif role == "startup":
             return StartupSerializer(user)
+        else:
+            return UserSerializer(user)
