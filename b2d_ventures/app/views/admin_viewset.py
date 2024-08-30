@@ -14,7 +14,7 @@ from b2d_ventures.app.serializers import (
     MeetingSerializer,
 )
 from b2d_ventures.app.services import AdminService, AdminError
-from b2d_ventures.utils import JSONParser, VndJsonParser, get_user_role
+from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
 class AdminViewSet(viewsets.ModelViewSet):
@@ -33,7 +33,6 @@ class AdminViewSet(viewsets.ModelViewSet):
             serializer = UserSerializer(users, many=True)
             response_data = [
                 {
-                    "type": get_user_role(user),
                     "attributes": user_data,
                 }
                 for user, user_data in zip(users, serializer.data)
@@ -60,7 +59,6 @@ class AdminViewSet(viewsets.ModelViewSet):
                 user = service.get_user_details(pk)
                 serializer = UserSerializer(user)
                 response_data = {
-                    "role": get_user_role(user),
                     "attributes": serializer.data,
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
@@ -92,7 +90,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             deals = service.list_deals()
             serializer = DealSerializer(deals, many=True)
             response_data = [
-                {"type": "deals", "attributes": deal_data}
+                {"attributes": deal_data}
                 for deal, deal_data in zip(deals, serializer.data)
             ]
             return Response(response_data, status=status.HTTP_200_OK)
@@ -127,7 +125,7 @@ class AdminViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 serializer = DealSerializer(deal)
-                response_data = {"type": "deals", "attributes": serializer.data}
+                response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
             elif request.method == "DELETE":
                 service.delete_deal(pk)
@@ -157,7 +155,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             investments = service.list_investments()
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                {"type": "investments", "attributes": investment_data}
+                {"attributes": investment_data}
                 for investment, investment_data in zip(investments, serializer.data)
             ]
             return Response(response_data, status=status.HTTP_200_OK)
@@ -205,7 +203,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             datarooms = service.list_datarooms()
             serializer = DataRoomSerializer(datarooms, many=True)
             response_data = [
-                {"type": "datarooms", "attributes": dataroom_data}
+                {"attributes": dataroom_data}
                 for dataroom, dataroom_data in zip(datarooms, serializer.data)
             ]
             return Response(response_data, status=status.HTTP_200_OK)
@@ -253,7 +251,7 @@ class AdminViewSet(viewsets.ModelViewSet):
             meetings = service.list_meetings()
             serializer = MeetingSerializer(meetings, many=True)
             response_data = [
-                {"type": "meetings", "attributes": meeting_data}
+                {"attributes": meeting_data}
                 for meeting, meeting_data in zip(meetings, serializer.data)
             ]
             return Response(response_data, status=status.HTTP_200_OK)
@@ -299,7 +297,7 @@ class AdminViewSet(viewsets.ModelViewSet):
         try:
             service = AdminService()
             dashboard_data = service.get_dashboard_data()
-            response_data = {"type": "dashboard", "attributes": dashboard_data}
+            response_data = {"attributes": dashboard_data}
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")

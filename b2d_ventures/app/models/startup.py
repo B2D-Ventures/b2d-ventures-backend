@@ -7,3 +7,8 @@ class Startup(User):
     description = models.TextField()
     fundraising_goal = models.DecimalField(max_digits=15, decimal_places=2, default=0)
     total_raised = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.role = 'startup'
+        super().save(*args, **kwargs)

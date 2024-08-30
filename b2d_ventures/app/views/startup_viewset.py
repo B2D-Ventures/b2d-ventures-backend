@@ -147,11 +147,9 @@ class StartupViewSet(viewsets.ModelViewSet):
             if request.method == "GET":
                 return StartupService.get_dataroom(pk)
             elif request.method == "POST":
-                attributes = request.data.get("data", {}).get("attributes", {})
-                return StartupService.create_dataroom(pk, attributes)
+                return StartupService.create_dataroom(pk, request)
             elif request.method == "PUT":
-                attributes = request.data.get("data", {}).get("attributes", {})
-                return StartupService.update_dataroom(pk, attributes)
+                return StartupService.update_dataroom(pk, request)
         except ObjectDoesNotExist as e:
             return Response(
                 {"errors": [{"detail": str(e)}]},

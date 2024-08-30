@@ -26,7 +26,7 @@ class StartupService:
         try:
             startup = Startup.objects.get(id=pk)
             serializer = StartupSerializer(startup)
-            response_data = {"type": "startups", "attributes": serializer.data}
+            response_data = { "attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
@@ -42,8 +42,7 @@ class StartupService:
                                            partial=True)
             if serializer.is_valid():
                 serializer.save()
-                response_data = {"type": "startups",
-                                 "attributes": serializer.data}
+                response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors,
@@ -61,7 +60,7 @@ class StartupService:
             deals = Deal.objects.filter(startup=startup)
             serializer = DealSerializer(deals, many=True)
             response_data = [
-                {"type": "deals", "attributes": deal_data}
+                {"attributes": deal_data}
                 for deal_data in serializer.data
             ]
             return Response(response_data, status=status.HTTP_200_OK)
@@ -79,8 +78,7 @@ class StartupService:
             serializer = DealSerializer(data=attributes)
             if serializer.is_valid():
                 serializer.save()
-                response_data = {"type": "deals",
-                                 "attributes": serializer.data}
+                response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors,
@@ -97,7 +95,7 @@ class StartupService:
             startup = Startup.objects.get(id=pk)
             deal = Deal.objects.get(id=deal_id, startup=startup)
             serializer = DealSerializer(deal)
-            response_data = {"type": "deals", "attributes": serializer.data}
+            response_data = {"attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
@@ -117,8 +115,7 @@ class StartupService:
             serializer = DealSerializer(deal, data=attributes, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                response_data = {"type": "deals",
-                                 "attributes": serializer.data}
+                response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors,
@@ -157,7 +154,7 @@ class StartupService:
             investments = Investment.objects.filter(deal__startup=startup)
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                {"type": "investments", "attributes": investment_data}
+                {"attributes": investment_data}
                 for investment_data in serializer.data
             ]
             return Response(response_data, status=status.HTTP_200_OK)
@@ -173,8 +170,7 @@ class StartupService:
             startup = Startup.objects.get(id=pk)
             dataroom = DataRoom.objects.get(startup=startup)
             serializer = DataRoomSerializer(dataroom)
-            response_data = {"type": "datarooms",
-                             "attributes": serializer.data}
+            response_data = {"attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
@@ -185,29 +181,31 @@ class StartupService:
             raise StartupError(f"Error getting data room: {str(e)}")
 
     @staticmethod
-    def create_dataroom(pk, attributes):
+    def create_dataroom(pk, request):
         """Create a new data room for the startup."""
         try:
             startup = Startup.objects.get(id=pk)
-
             if DataRoom.objects.filter(startup=startup).exists():
-                raise StartupError("Data room already exists for this startup")
+                raise StartupError(
+                    "A data room already exists for this startup")
+            data_room_pdf = request.FILES.get('data_room_pdf')
+            access_permissions = request.data.get('access_permissions', '')
 
-            data = {
-                'startup': startup.id,
-                'data_room_pdf': attributes.get('data_room_pdf'),
-                'access_permissions': attributes.get('access_permissions', '')
-            }
+            if not data_room_pdf:
+                return Response(
+                    {'error': 'Missing required data: data_room_pdf'},
+                    status=status.HTTP_400_BAD_REQUEST)
 
-            serializer = DataRoomSerializer(data=data)
-            if serializer.is_valid():
-                serializer.save()
-                response_data = {"type": "datarooms",
-                                 "attributes": serializer.data}
-                return Response(response_data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+            data_room = DataRoom.objects.create(
+                startup=startup,
+                data_room_pdf=data_room_pdf,
+                access_permissions=access_permissions
+            )
+
+            serializer = DataRoomSerializer(data_room)
+
+            response_data = {"attributes": serializer.data}
+            return Response(response_data, status=status.HTTP_201_CREATED)
 
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
@@ -225,8 +223,7 @@ class StartupService:
                                             partial=True)
             if serializer.is_valid():
                 serializer.save()
-                response_data = {"type": "datarooms",
-                                 "attributes": serializer.data}
+                response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors,
@@ -259,7 +256,6 @@ class StartupService:
             dataroom.save()
 
             response_data = {
-                "type": "dataroom_access",
                 "attributes": {
                     "success": True,
                     "message": "Data room access updated successfully",
