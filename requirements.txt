@@ -7,3 +7,5 @@ djangorestframework-jsonapi
 django-filter
 python-dotenv
 icecream
+django-cors-headers
+Pillow
