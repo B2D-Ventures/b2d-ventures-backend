@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: ROOT_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 APPS_DIR = ROOT_DIR / "b2d_ventures"
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Load environment variables from .env file
 load_dotenv(ROOT_DIR / '.env')

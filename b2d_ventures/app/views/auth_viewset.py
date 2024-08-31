@@ -46,7 +46,7 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if role not in ["admin", "investor", "startup", "null"]:
+        if role not in ["admin", "investor", "startup", "unassigned"]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -106,7 +106,7 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if new_role not in ["admin", "investor", "startup"]:
+        if new_role not in ["investor", "startup"]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST

@@ -172,30 +172,3 @@ class StartupViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-
-    @action(detail=True, methods=["post"], url_path="dataroom/access")
-    def manage_dataroom_access(self, request, pk=None):
-        """Grant or revoke investor access to data room."""
-        try:
-            attributes = request.data.get("data", {}).get("attributes", {})
-            return StartupService.manage_dataroom_access(pk, attributes)
-        except ObjectDoesNotExist as e:
-            return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except StartupError as e:
-            logging.error(f"Startup error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {
-                    "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
-                    ]
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
