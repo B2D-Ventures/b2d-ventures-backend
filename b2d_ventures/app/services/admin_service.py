@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 from django.utils import timezone
 
-from b2d_ventures.app.models import User, Deal, Investment, DataRoom, Meeting
+from b2d_ventures.app.models import User, Deal, Investment, Meeting
 
 
 class AdminError(Exception):
@@ -102,18 +102,6 @@ class AdminService:
             raise AdminError(f"Error listing investments: {str(e)}")
 
     @staticmethod
-    def list_datarooms():
-        """
-        List all data rooms.
-
-        :return: QuerySet of all data rooms.
-        """
-        try:
-            return DataRoom.objects.all()
-        except Exception as e:
-            raise AdminError(f"Error listing data rooms: {str(e)}")
-
-    @staticmethod
     def list_meetings():
         """
         List all meetings.
@@ -195,20 +183,6 @@ class AdminService:
         except Exception as e:
             raise AdminError(f"Error deleting meeting: {str(e)}")
 
-    @staticmethod
-    def delete_dataroom(dataroom_id):
-        """
-        Delete a specific dataroom.
-
-        :param dataroom_id: ID of the dataroom to delete.
-        """
-        try:
-            dataroom = DataRoom.objects.get(id=dataroom_id)
-            dataroom.delete()
-        except DataRoom.DoesNotExist:
-            raise ObjectDoesNotExist(f"DataRoom with id {dataroom_id} does not exist")
-        except Exception as e:
-            raise AdminError(f"Error deleting dataroom: {str(e)}")
 
     @staticmethod
     def delete_investment(investment_id):

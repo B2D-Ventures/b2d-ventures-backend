@@ -10,7 +10,6 @@ from b2d_ventures.app.serializers import (
     UserSerializer,
     DealSerializer,
     InvestmentSerializer,
-    DataRoomSerializer,
     MeetingSerializer,
 )
 from b2d_ventures.app.services import AdminService, AdminError
@@ -195,118 +194,71 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=False, methods=["get"], url_path="datarooms")
-    def list_datarooms(self, request):
-        """List all data rooms."""
-        try:
-            service = AdminService()
-            datarooms = service.list_datarooms()
-            serializer = DataRoomSerializer(datarooms, many=True)
-            response_data = [
-                {"attributes": dataroom_data}
-                for dataroom, dataroom_data in zip(datarooms, serializer.data)
-            ]
-            return Response(response_data, status=status.HTTP_200_OK)
-        except AdminError as e:
-            logging.error(f"Admin error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {"errors": [{"detail": "Internal Server Error"}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(detail=True, methods=["delete"], url_path="datarooms")
-    def delete_dataroom(self, request, pk=None):
-        """Delete a data room."""
-        try:
-            service = AdminService()
-            service.delete_dataroom(pk)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except ObjectDoesNotExist:
-            return Response(
-                {"errors": [{"detail": "Data room not found"}]},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except AdminError as e:
-            logging.error(f"Admin error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {"errors": [{"detail": "Internal Server Error"}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(detail=False, methods=["get"], url_path="meetings")
-    def list_meetings(self, request):
-        """List all meetings."""
-        try:
-            service = AdminService()
-            meetings = service.list_meetings()
-            serializer = MeetingSerializer(meetings, many=True)
-            response_data = [
-                {"attributes": meeting_data}
-                for meeting, meeting_data in zip(meetings, serializer.data)
-            ]
-            return Response(response_data, status=status.HTTP_200_OK)
-        except AdminError as e:
-            logging.error(f"Admin error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {"errors": [{"detail": "Internal Server Error"}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(detail=True, methods=["delete"], url_path="meetings")
-    def delete_meeting(self, request, pk=None):
-        """Delete a meeting."""
-        try:
-            service = AdminService()
-            service.delete_meeting(pk)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except ObjectDoesNotExist:
-            return Response(
-                {"errors": [{"detail": "Meeting not found"}]},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except AdminError as e:
-            logging.error(f"Admin error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {"errors": [{"detail": "Internal Server Error"}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(detail=False, methods=["get"], url_path="dashboard")
-    def get_dashboard(self, request):
-        """Get admin dashboard data."""
-        try:
-            service = AdminService()
-            dashboard_data = service.get_dashboard_data()
-            response_data = {"attributes": dashboard_data}
-            return Response(response_data, status=status.HTTP_200_OK)
-        except AdminError as e:
-            logging.error(f"Admin error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {"errors": [{"detail": "Internal Server Error"}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+    #
+    # @action(detail=False, methods=["get"], url_path="meetings")
+    # def list_meetings(self, request):
+    #     """List all meetings."""
+    #     try:
+    #         service = AdminService()
+    #         meetings = service.list_meetings()
+    #         serializer = MeetingSerializer(meetings, many=True)
+    #         response_data = [
+    #             {"attributes": meeting_data}
+    #             for meeting, meeting_data in zip(meetings, serializer.data)
+    #         ]
+    #         return Response(response_data, status=status.HTTP_200_OK)
+    #     except AdminError as e:
+    #         logging.error(f"Admin error: {e}")
+    #         return Response(
+    #             {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+    #         )
+    #     except Exception as e:
+    #         logging.error(f"Internal Server Error: {e}")
+    #         return Response(
+    #             {"errors": [{"detail": "Internal Server Error"}]},
+    #             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    #         )
+    #
+    # @action(detail=True, methods=["delete"], url_path="meetings")
+    # def delete_meeting(self, request, pk=None):
+    #     """Delete a meeting."""
+    #     try:
+    #         service = AdminService()
+    #         service.delete_meeting(pk)
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     except ObjectDoesNotExist:
+    #         return Response(
+    #             {"errors": [{"detail": "Meeting not found"}]},
+    #             status=status.HTTP_404_NOT_FOUND,
+    #         )
+    #     except AdminError as e:
+    #         logging.error(f"Admin error: {e}")
+    #         return Response(
+    #             {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+    #         )
+    #     except Exception as e:
+    #         logging.error(f"Internal Server Error: {e}")
+    #         return Response(
+    #             {"errors": [{"detail": "Internal Server Error"}]},
+    #             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    #         )
+    #
+    # @action(detail=False, methods=["get"], url_path="dashboard")
+    # def get_dashboard(self, request):
+    #     """Get admin dashboard data."""
+    #     try:
+    #         service = AdminService()
+    #         dashboard_data = service.get_dashboard_data()
+    #         response_data = {"attributes": dashboard_data}
+    #         return Response(response_data, status=status.HTTP_200_OK)
+    #     except AdminError as e:
+    #         logging.error(f"Admin error: {e}")
+    #         return Response(
+    #             {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+    #         )
+    #     except Exception as e:
+    #         logging.error(f"Internal Server Error: {e}")
+    #         return Response(
+    #             {"errors": [{"detail": "Internal Server Error"}]},
+    #             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    #         )

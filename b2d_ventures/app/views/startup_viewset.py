@@ -1,12 +1,12 @@
 import logging
-
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from b2d_ventures.app.models import Startup
-from b2d_ventures.app.serializers import StartupSerializer
+from b2d_ventures.app.serializers import StartupSerializer, DealSerializer
 from b2d_ventures.app.services import StartupService, StartupError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
@@ -16,7 +16,7 @@ class StartupViewSet(viewsets.ModelViewSet):
 
     queryset = Startup.objects.all()
     serializer_class = StartupSerializer
-    parser_classes = [JSONParser, VndJsonParser]
+    parser_classes = [JSONParser, VndJsonParser, MultiPartParser, FormParser]
 
     @action(detail=True, methods=["get", "put"], url_path="profile")
     def profile(self, request, pk=None):
@@ -55,8 +55,7 @@ class StartupViewSet(viewsets.ModelViewSet):
             if request.method == "GET":
                 return StartupService.list_deals(pk)
             elif request.method == "POST":
-                attributes = request.data.get("data", {}).get("attributes", {})
-                return StartupService.create_deal(pk, attributes)
+                return self.create_deal(request, pk)
         except ObjectDoesNotExist as e:
             return Response(
                 {"errors": [{"detail": str(e)}]},
@@ -65,14 +64,16 @@ class StartupViewSet(viewsets.ModelViewSet):
         except StartupError as e:
             logging.error(f"Startup error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error",
+                         "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -80,19 +81,18 @@ class StartupViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=["get", "put", "delete"],
+        methods=["put", "delete"],
         url_path="deals/(?P<deal_id>[^/.]+)",
     )
-    def deal_details(self, request, pk=None, deal_id=None):
+    def deal_operations(self, request, pk=None, deal_id=None):
         """Get, update or delete a specific deal."""
         try:
-            if request.method == "GET":
-                return StartupService.get_deal_details(pk, deal_id)
-            elif request.method == "PUT":
+            service = StartupService()
+            if request.method == "PUT":
                 attributes = request.data.get("data", {}).get("attributes", {})
-                return StartupService.update_deal(pk, deal_id, attributes)
+                return service.update_deal(pk, deal_id, attributes)
             elif request.method == "DELETE":
-                return StartupService.delete_deal(pk, deal_id)
+                return service.delete_deal(pk, deal_id)
         except ObjectDoesNotExist as e:
             return Response(
                 {"errors": [{"detail": str(e)}]},
@@ -140,35 +140,26 @@ class StartupViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["get", "post", "put"], url_path="dataroom")
-    def dataroom(self, request, pk=None):
-        """Get, create or update startup's data room."""
+    def create_deal(self, request, pk):
         try:
-            if request.method == "GET":
-                return StartupService.get_dataroom(pk)
-            elif request.method == "POST":
-                return StartupService.create_dataroom(pk, request)
-            elif request.method == "PUT":
-                return StartupService.update_dataroom(pk, request)
-        except ObjectDoesNotExist as e:
+            startup = Startup.objects.get(pk=pk)
+            deal_data = request.data.copy()
+            dataroom_file = request.FILES.get('dataroom')
+            if dataroom_file:
+                deal_data['dataroom'] = dataroom_file
+            deal_data['startup_id'] = startup.id
+
+            serializer = DealSerializer(data=deal_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data,
+                                status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors,
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        except Startup.DoesNotExist:
             return Response(
-                {"errors": [{"detail": str(e)}]},
+                {"errors": [{"detail": "Startup not found"}]},
                 status=status.HTTP_404_NOT_FOUND,
-            )
-        except StartupError as e:
-            logging.error(f"Startup error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {
-                    "errors": [
-                        {"detail": "Internal Server Error",
-                         "meta": {"message": str(e)}}
-                    ]
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )

@@ -4,13 +4,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import Startup, User, Deal, Investment, DataRoom
+from b2d_ventures.app.models import Startup, User, Deal, Investment
 from b2d_ventures.app.serializers import (
     StartupSerializer,
     DealSerializer,
     InvestmentSerializer,
-    DataRoomSerializer,
 )
+from icecream import ic
 
 
 class StartupError(Exception):
@@ -132,6 +132,7 @@ class StartupService:
     @staticmethod
     def delete_deal(pk, deal_id):
         """Delete a specific deal."""
+        ic("deleting")
         try:
             startup = Startup.objects.get(id=pk)
             deal = Deal.objects.get(id=deal_id, startup=startup)
@@ -163,108 +164,38 @@ class StartupService:
         except Exception as e:
             raise StartupError(f"Error listing investments: {str(e)}")
 
-    @staticmethod
-    def get_dataroom(pk):
-        """Get startup's data room."""
-        try:
-            startup = Startup.objects.get(id=pk)
-            dataroom = DataRoom.objects.get(startup=startup)
-            serializer = DataRoomSerializer(dataroom)
-            response_data = {"attributes": serializer.data}
-            return Response(response_data, status=status.HTTP_200_OK)
-        except Startup.DoesNotExist:
-            raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
-        except DataRoom.DoesNotExist:
-            raise ObjectDoesNotExist(
-                f"Data room for startup {pk} does not exist")
-        except Exception as e:
-            raise StartupError(f"Error getting data room: {str(e)}")
-
-    @staticmethod
-    def create_dataroom(pk, request):
-        """Create a new data room for the startup."""
-        try:
-            startup = Startup.objects.get(id=pk)
-            if DataRoom.objects.filter(startup=startup).exists():
-                raise StartupError(
-                    "A data room already exists for this startup")
-            data_room_pdf = request.FILES.get('data_room_pdf')
-            access_permissions = request.data.get('access_permissions', '')
-
-            if not data_room_pdf:
-                return Response(
-                    {'error': 'Missing required data: data_room_pdf'},
-                    status=status.HTTP_400_BAD_REQUEST)
-
-            data_room = DataRoom.objects.create(
-                startup=startup,
-                data_room_pdf=data_room_pdf,
-                access_permissions=access_permissions
-            )
-
-            serializer = DataRoomSerializer(data_room)
-
-            response_data = {"attributes": serializer.data}
-            return Response(response_data, status=status.HTTP_201_CREATED)
-
-        except Startup.DoesNotExist:
-            raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
-        except Exception as e:
-            raise StartupError(f"Error creating data room: {str(e)}")
-
-    @staticmethod
-    def update_dataroom(pk, attributes):
-        """Update startup's data room."""
-        try:
-            startup = Startup.objects.get(id=pk)
-            dataroom, created = DataRoom.objects.get_or_create(startup=startup)
-
-            serializer = DataRoomSerializer(dataroom, data=attributes,
-                                            partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                response_data = {"attributes": serializer.data}
-                return Response(response_data, status=status.HTTP_200_OK)
-            else:
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
-        except Startup.DoesNotExist:
-            raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
-        except Exception as e:
-            raise StartupError(f"Error updating data room: {str(e)}")
-
-    @staticmethod
-    def manage_dataroom_access(pk, attributes):
-        """Grant or revoke investor access to data room."""
-        try:
-            startup = Startup.objects.get(id=pk)
-            dataroom = DataRoom.objects.get(startup=startup)
-            investor = User.objects.get(id=attributes["investor_id"],
-                                        role="investor")
-
-            current_permissions = dataroom.access_permissions.split(
-                ',') if dataroom.access_permissions else []
-
-            if attributes["grant_access"]:
-                if str(investor.id) not in current_permissions:
-                    current_permissions.append(str(investor.id))
-            else:
-                if str(investor.id) in current_permissions:
-                    current_permissions.remove(str(investor.id))
-
-            dataroom.access_permissions = ','.join(current_permissions)
-            dataroom.save()
-
-            response_data = {
-                "attributes": {
-                    "success": True,
-                    "message": "Data room access updated successfully",
-                },
-            }
-            return Response(response_data, status=status.HTTP_200_OK)
-        except Startup.DoesNotExist:
-            raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
-        except (DataRoom.DoesNotExist, User.DoesNotExist):
-            raise ObjectDoesNotExist("Data room or investor not found")
-        except Exception as e:
-            raise StartupError(f"Error managing data room access: {str(e)}")
+    # @staticmethod
+    # def request_dataroom_access(pk, attributes):
+    #     """Grant or revoke investor access to data room."""
+    #     try:
+    #         startup = Startup.objects.get(id=pk)
+    #         dataroom = DataRoom.objects.get(startup=startup)
+    #         investor = User.objects.get(id=attributes["investor_id"],
+    #                                     role="investor")
+    #
+    #         current_permissions = dataroom.access_permissions.split(
+    #             ',') if dataroom.access_permissions else []
+    #
+    #         if attributes["grant_access"]:
+    #             if str(investor.id) not in current_permissions:
+    #                 current_permissions.append(str(investor.id))
+    #         else:
+    #             if str(investor.id) in current_permissions:
+    #                 current_permissions.remove(str(investor.id))
+    #
+    #         dataroom.access_permissions = ','.join(current_permissions)
+    #         dataroom.save()
+    #
+    #         response_data = {
+    #             "attributes": {
+    #                 "success": True,
+    #                 "message": "Data room access updated successfully",
+    #             },
+    #         }
+    #         return Response(response_data, status=status.HTTP_200_OK)
+    #     except Startup.DoesNotExist:
+    #         raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
+    #     except (DataRoom.DoesNotExist, User.DoesNotExist):
+    #         raise ObjectDoesNotExist("Data room or investor not found")
+    #     except Exception as e:
+    #         raise StartupError(f"Error managing data room access: {str(e)}")
