@@ -36,9 +36,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -146,6 +148,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
+CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOW_ALL_ORIGINS = True
+SPECTACULAR_SETTINGS = {
+    "TITLE": "B2D-Ventures API",
+    "DESCRIPTION": "Documentation of API endpoints of B2D-Ventures",
+    "VERSION": "1.0.0",
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+}
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
 # Google OAuth Configuration
 TOKEN_URL = os.getenv("TOKEN_URL", "")
