@@ -1,6 +1,6 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
-from django.core.validators import FileExtensionValidator
 
 from b2d_ventures.app.models import Startup
 from b2d_ventures.app.models.abstract_model import AbstractModel
@@ -10,13 +10,34 @@ def dataroom_upload_path(instance, filename):
     return f"datarooms/{instance.startup.name}/{filename}"
 
 
+def deal_image_upload_path(instance, filename):
+    return f"deals/{instance.startup.name}/{instance.name}/{filename}"
+
+
 class Deal(AbstractModel):
     startup = models.ForeignKey(Startup, on_delete=models.CASCADE, related_name="deals")
     name = models.CharField(max_length=255, default="")
+
+    description = models.TextField(default="")
     content = models.TextField(default="")
-    image_background_url = models.URLField(max_length=255, default="")
-    image_logo_url = models.URLField(max_length=255, default="")
-    image_content_url = models.URLField(max_length=255, default="")
+    image_background = models.ImageField(
+        upload_to=deal_image_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=["png"])],
+        blank=True,
+        null=True,
+    )
+    image_logo = models.ImageField(
+        upload_to=deal_image_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=["png"])],
+        blank=True,
+        null=True,
+    )
+    image_content = models.ImageField(
+        upload_to=deal_image_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=["png"])],
+        blank=True,
+        null=True,
+    )
     allocation = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     minimum_investment = models.DecimalField(

@@ -10,7 +10,6 @@ from b2d_ventures.app.serializers import (
     UserSerializer,
     DealSerializer,
     InvestmentSerializer,
-    MeetingSerializer,
 )
 from b2d_ventures.app.services import AdminService, AdminError
 from b2d_ventures.utils import JSONParser, VndJsonParser
