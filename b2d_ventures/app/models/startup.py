@@ -10,5 +10,5 @@ class Startup(User):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.role = 'startup'
+            self.role = "startup"
         super().save(*args, **kwargs)

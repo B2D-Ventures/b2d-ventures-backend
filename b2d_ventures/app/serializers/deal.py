@@ -8,9 +8,7 @@ from b2d_ventures.app.serializers import StartupSerializer
 class DealSerializer(serializers.ModelSerializer):
     startup = StartupSerializer(read_only=True)
     startup_id = serializers.PrimaryKeyRelatedField(
-        queryset=Startup.objects.all(),
-        source='startup',
-        write_only=True
+        queryset=Startup.objects.all(), source="startup", write_only=True
     )
     dataroom_url = serializers.SerializerMethodField()
 
@@ -55,7 +53,7 @@ class DealSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        dataroom = validated_data.pop('dataroom', None)
+        dataroom = validated_data.pop("dataroom", None)
         instance = super().create(validated_data)
         if dataroom:
             instance.dataroom = dataroom
@@ -63,7 +61,7 @@ class DealSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        dataroom = validated_data.pop('dataroom', None)
+        dataroom = validated_data.pop("dataroom", None)
         instance = super().update(instance, validated_data)
         if dataroom:
             instance.dataroom = dataroom

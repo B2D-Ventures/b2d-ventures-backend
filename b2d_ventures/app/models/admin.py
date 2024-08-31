@@ -7,5 +7,5 @@ class Admin(User):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.role = 'admin'
+            self.role = "admin"
         super().save(*args, **kwargs)

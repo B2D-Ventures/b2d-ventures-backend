@@ -183,7 +183,6 @@ class AdminService:
         except Exception as e:
             raise AdminError(f"Error deleting meeting: {str(e)}")
 
-
     @staticmethod
     def delete_investment(investment_id):
         """

@@ -61,7 +61,9 @@ class AuthViewSet(viewsets.ViewSet):
             user_profile = self.auth_service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
 
-            user, created, actual_role = self._create_or_update_user(role, user_email, user_profile)
+            user, created, actual_role = self._create_or_update_user(
+                role, user_email, user_profile
+            )
 
             serializer = self._get_serializer_for_role(actual_role, user)
 
@@ -97,19 +99,19 @@ class AuthViewSet(viewsets.ViewSet):
         """
         request_data = request.data.get("data", {})
         attributes = request_data.get("attributes", {})
-        user_token = attributes.get('user_token')
-        new_role = attributes.get('role')
+        user_token = attributes.get("user_token")
+        new_role = attributes.get("role")
 
         if not user_token or not new_role:
             return Response(
                 {"errors": [{"detail": "User token and role are required"}]},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if new_role not in ["investor", "startup"]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
@@ -119,7 +121,7 @@ class AuthViewSet(viewsets.ViewSet):
                 if not existing_user:
                     return Response(
                         {"errors": [{"detail": "User not found"}]},
-                        status=status.HTTP_404_NOT_FOUND
+                        status=status.HTTP_404_NOT_FOUND,
                     )
 
                 email = existing_user.email
@@ -129,28 +131,34 @@ class AuthViewSet(viewsets.ViewSet):
 
                 existing_user.delete()
                 new_user, created, actual_role = self._create_or_update_user(
-                    new_role, email, user_profile)
+                    new_role, email, user_profile
+                )
 
-                serializer = self._get_serializer_for_role(actual_role,
-                                                           new_user)
+                serializer = self._get_serializer_for_role(actual_role, new_user)
 
                 return Response(
                     {
                         "attributes": serializer.data,
                     },
-                    status=status.HTTP_200_OK
+                    status=status.HTTP_200_OK,
                 )
 
         except Exception as e:
             logging.error(f"Error updating user role: {e}")
             return Response(
-                {"errors": [{"detail": "Error updating user role",
-                             "meta": {"message": str(e)}}]},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {
+                    "errors": [
+                        {
+                            "detail": "Error updating user role",
+                            "meta": {"message": str(e)},
+                        }
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
     def _create_or_update_user(
-            self, role: str, user_email: str, user_profile: Dict[str, Any]
+        self, role: str, user_email: str, user_profile: Dict[str, Any]
     ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
         existing_user, existing_role = self._check_existing_user(user_email)
@@ -176,14 +184,15 @@ class AuthViewSet(viewsets.ViewSet):
             )
         else:
             user = User.objects.create(
-                email=user_email,
-                username=user_profile.get("name")
+                email=user_email, username=user_profile.get("name")
             )
             role = "Unassigned"
 
         return user, True, role
 
-    def _check_existing_user(self, user_email: str) -> Tuple[Union[Admin, Investor, Startup, None], str]:
+    def _check_existing_user(
+        self, user_email: str
+    ) -> Tuple[Union[Admin, Investor, Startup, None], str]:
         """Check if a user exists and return their instance and role."""
         try:
             admin = Admin.objects.get(email=user_email)
@@ -204,7 +213,6 @@ class AuthViewSet(viewsets.ViewSet):
             pass
 
         return None, "Unassigned"
-
 
     def _get_serializer_for_role(
         self, role: str, user: Union[Admin, Investor, Startup, User]

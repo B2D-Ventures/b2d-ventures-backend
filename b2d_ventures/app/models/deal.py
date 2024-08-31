@@ -7,7 +7,7 @@ from b2d_ventures.app.models.abstract_model import AbstractModel
 
 
 def dataroom_upload_path(instance, filename):
-  return f'datarooms/{instance.startup.name}/{filename}'
+    return f"datarooms/{instance.startup.name}/{filename}"
 
 
 class Deal(AbstractModel):
@@ -29,9 +29,9 @@ class Deal(AbstractModel):
     investor_count = models.PositiveIntegerField(default=0)
     dataroom = models.FileField(
         upload_to=dataroom_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
+        validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
         null=True,
-        blank=True
+        blank=True,
     )
     status = models.CharField(
         max_length=20,

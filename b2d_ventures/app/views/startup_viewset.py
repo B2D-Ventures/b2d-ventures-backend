@@ -9,6 +9,7 @@ from b2d_ventures.app.models import Startup
 from b2d_ventures.app.serializers import StartupSerializer, DealSerializer
 from b2d_ventures.app.services import StartupService, StartupError
 from b2d_ventures.utils import JSONParser, VndJsonParser
+from icecream import ic
 
 
 class StartupViewSet(viewsets.ModelViewSet):
@@ -64,16 +65,14 @@ class StartupViewSet(viewsets.ModelViewSet):
         except StartupError as e:
             logging.error(f"Startup error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error",
-                         "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -89,7 +88,7 @@ class StartupViewSet(viewsets.ModelViewSet):
         try:
             service = StartupService()
             if request.method == "PUT":
-                attributes = request.data.get("data", {}).get("attributes", {})
+                attributes = request.data
                 return service.update_deal(pk, deal_id, attributes)
             elif request.method == "DELETE":
                 return service.delete_deal(pk, deal_id)
@@ -144,19 +143,17 @@ class StartupViewSet(viewsets.ModelViewSet):
         try:
             startup = Startup.objects.get(pk=pk)
             deal_data = request.data.copy()
-            dataroom_file = request.FILES.get('dataroom')
+            dataroom_file = request.FILES.get("dataroom")
             if dataroom_file:
-                deal_data['dataroom'] = dataroom_file
-            deal_data['startup_id'] = startup.id
+                deal_data["dataroom"] = dataroom_file
+            deal_data["startup_id"] = startup.id
 
             serializer = DealSerializer(data=deal_data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data,
-                                status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         except Startup.DoesNotExist:
             return Response(

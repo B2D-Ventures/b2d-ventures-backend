@@ -8,5 +8,5 @@ class Investor(User):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.role = 'investor'
+            self.role = "investor"
         super().save(*args, **kwargs)

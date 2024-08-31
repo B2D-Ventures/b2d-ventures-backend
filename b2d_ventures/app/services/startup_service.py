@@ -26,7 +26,7 @@ class StartupService:
         try:
             startup = Startup.objects.get(id=pk)
             serializer = StartupSerializer(startup)
-            response_data = { "attributes": serializer.data}
+            response_data = {"attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
@@ -38,15 +38,13 @@ class StartupService:
         """Update startup's profile."""
         try:
             startup_obj = Startup.objects.get(id=pk)
-            serializer = StartupSerializer(startup_obj, data=attributes,
-                                           partial=True)
+            serializer = StartupSerializer(startup_obj, data=attributes, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
         except Exception as e:
@@ -59,10 +57,7 @@ class StartupService:
             startup = Startup.objects.get(id=pk)
             deals = Deal.objects.filter(startup=startup)
             serializer = DealSerializer(deals, many=True)
-            response_data = [
-                {"attributes": deal_data}
-                for deal_data in serializer.data
-            ]
+            response_data = [{"attributes": deal_data} for deal_data in serializer.data]
             return Response(response_data, status=status.HTTP_200_OK)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
@@ -81,8 +76,7 @@ class StartupService:
                 response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
         except Exception as e:
@@ -118,8 +112,7 @@ class StartupService:
                 response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
             else:
-                return Response(serializer.errors,
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Startup.DoesNotExist:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
         except Deal.DoesNotExist:
@@ -155,8 +148,7 @@ class StartupService:
             investments = Investment.objects.filter(deal__startup=startup)
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                {"attributes": investment_data}
-                for investment_data in serializer.data
+                {"attributes": investment_data} for investment_data in serializer.data
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except Startup.DoesNotExist:
