@@ -155,39 +155,3 @@ class StartupService:
             raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
         except Exception as e:
             raise StartupError(f"Error listing investments: {str(e)}")
-
-    # @staticmethod
-    # def request_dataroom_access(pk, attributes):
-    #     """Grant or revoke investor access to data room."""
-    #     try:
-    #         startup = Startup.objects.get(id=pk)
-    #         dataroom = DataRoom.objects.get(startup=startup)
-    #         investor = User.objects.get(id=attributes["investor_id"],
-    #                                     role="investor")
-    #
-    #         current_permissions = dataroom.access_permissions.split(
-    #             ',') if dataroom.access_permissions else []
-    #
-    #         if attributes["grant_access"]:
-    #             if str(investor.id) not in current_permissions:
-    #                 current_permissions.append(str(investor.id))
-    #         else:
-    #             if str(investor.id) in current_permissions:
-    #                 current_permissions.remove(str(investor.id))
-    #
-    #         dataroom.access_permissions = ','.join(current_permissions)
-    #         dataroom.save()
-    #
-    #         response_data = {
-    #             "attributes": {
-    #                 "success": True,
-    #                 "message": "Data room access updated successfully",
-    #             },
-    #         }
-    #         return Response(response_data, status=status.HTTP_200_OK)
-    #     except Startup.DoesNotExist:
-    #         raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
-    #     except (DataRoom.DoesNotExist, User.DoesNotExist):
-    #         raise ObjectDoesNotExist("Data room or investor not found")
-    #     except Exception as e:
-    #         raise StartupError(f"Error managing data room access: {str(e)}")

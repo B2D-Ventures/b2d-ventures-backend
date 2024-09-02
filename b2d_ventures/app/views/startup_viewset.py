@@ -9,7 +9,6 @@ from b2d_ventures.app.models import Startup
 from b2d_ventures.app.serializers import StartupSerializer, DealSerializer
 from b2d_ventures.app.services import StartupService, StartupError
 from b2d_ventures.utils import JSONParser, VndJsonParser
-from icecream import ic
 
 
 class StartupViewSet(viewsets.ModelViewSet):

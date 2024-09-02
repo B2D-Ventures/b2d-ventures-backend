@@ -13,14 +13,10 @@ class InvestmentSerializer(serializers.ModelSerializer):
             "id",
             "investor",
             "deal",
-            "amount",
-            "date",
-            "created_at",
-            "updated_at",
+            "investment_amount",
+            "investment_date",
         ]
         read_only_fields = [
             "id",
             "date",
-            "created_at",
-            "updated_at",
         ]
