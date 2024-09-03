@@ -99,34 +99,6 @@ class InvestorViewSet(viewsets.ModelViewSet):
             )
 
     @action(
-        detail=True, methods=["get"], url_path="investments/(?P<investment_id>[^/.]+)"
-    )
-    def get_investment(self, request, pk=None, investment_id=None):
-        """Get details of a specific investment."""
-        try:
-            return InvestorService.get_investment(pk, investment_id)
-        except ObjectDoesNotExist as e:
-            return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except InvestorError as e:
-            logging.error(f"Investor error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {
-                    "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
-                    ]
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(
         detail=True,
         methods=["post"],
         url_path="deals/(?P<deal_id>[^/.]+)/request-dataroom",
@@ -188,32 +160,6 @@ class InvestorViewSet(viewsets.ModelViewSet):
         try:
             attributes = request.data.get("data", {}).get("attributes", {})
             return InvestorService.request_meeting(pk, attributes)
-        except ObjectDoesNotExist as e:
-            return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        except InvestorError as e:
-            logging.error(f"Investor error: {e}")
-            return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
-            return Response(
-                {
-                    "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
-                    ]
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-    @action(detail=True, methods=["get"], url_path="meetings/(?P<meeting_id>[^/.]+)")
-    def get_meeting(self, request, pk=None, meeting_id=None):
-        """Get details of a specific meeting."""
-        try:
-            return InvestorService.get_meeting(pk, meeting_id)
         except ObjectDoesNotExist as e:
             return Response(
                 {"errors": [{"detail": str(e)}]},

@@ -48,8 +48,8 @@ class AdminViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["get", "delete"], url_path="users")
-    def user_operations(self, request, pk=None):
+    @action(detail=True, methods=["delete"], url_path="users")
+    def delete_user(self, request, pk=None):
         """Get, update or delete a specific user."""
         try:
             service = AdminService()
