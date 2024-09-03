@@ -22,19 +22,16 @@ class Deal(AbstractModel):
     content = models.TextField(default="")
     image_background = models.ImageField(
         upload_to=deal_image_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=["png"])],
         blank=True,
         null=True,
     )
     image_logo = models.ImageField(
         upload_to=deal_image_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=["png"])],
         blank=True,
         null=True,
     )
     image_content = models.ImageField(
         upload_to=deal_image_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=["png"])],
         blank=True,
         null=True,
     )
