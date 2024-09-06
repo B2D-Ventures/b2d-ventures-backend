@@ -1,8 +1,9 @@
 """The module defines the InvestorService class and InvestorError."""
-
-from django.db import transaction
 from decimal import Decimal
+from django.utils import timezone
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.db import transaction
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -42,7 +43,8 @@ class InvestorService:
             investments = Investment.objects.filter(investor=investor)
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                {"attributes": investment_data} for investment_data in serializer.data
+                {"attributes": investment_data} for investment_data in
+                serializer.data
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except Investor.DoesNotExist:
@@ -78,7 +80,8 @@ class InvestorService:
             deal.save()
 
             investment = Investment.objects.create(
-                deal=deal, investor=investor, investment_amount=investment_amount
+                deal=deal, investor=investor,
+                investment_amount=investment_amount
             )
 
             serializer = InvestmentSerializer(investment)
@@ -101,7 +104,8 @@ class InvestorService:
         """Get details of a specific investment."""
         try:
             investor = Investor.objects.get(id=pk)
-            investment = Investment.objects.get(id=investment_id, investor=investor)
+            investment = Investment.objects.get(id=investment_id,
+                                                investor=investor)
             serializer = InvestmentSerializer(investment)
             response_data = {"attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
@@ -142,7 +146,8 @@ class InvestorService:
             meetings = Meeting.objects.filter(investor=investor)
             serializer = MeetingSerializer(meetings, many=True)
             response_data = [
-                {"attributes": meeting_data} for meeting_data in serializer.data
+                {"attributes": meeting_data} for meeting_data in
+                serializer.data
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except Investor.DoesNotExist:
@@ -162,7 +167,8 @@ class InvestorService:
                 response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_201_CREATED)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors,
+                                status=status.HTTP_400_BAD_REQUEST)
         except Investor.DoesNotExist:
             raise ObjectDoesNotExist(f"Investor with id {pk} does not exist")
         except Exception as e:
@@ -185,3 +191,79 @@ class InvestorService:
             )
         except Exception as e:
             raise InvestorError(f"Error getting meeting details: {str(e)}")
+
+    @staticmethod
+    @transaction.atomic
+    def schedule_meeting(pk, deal_id, date, start_time, end_time, note):
+        """Schedule a meeting with a startup."""
+        try:
+            investor = Investor.objects.get(id=pk)
+            deal = Deal.objects.get(id=deal_id)
+            startup = deal.startup
+
+            # Combine date and time
+            start_datetime = datetime.combine(
+                datetime.strptime(date, "%Y-%m-%d").date(),
+                datetime.strptime(start_time, "%H:%M").time()
+            )
+            end_datetime = datetime.combine(
+                datetime.strptime(date, "%Y-%m-%d").date(),
+                datetime.strptime(end_time, "%H:%M").time()
+            )
+
+            # Check if the meeting time is in the future
+            if start_datetime <= timezone.now():
+                raise InvestorError("Meeting time must be in the future")
+
+            # Check if there's an active deal between the investor and the startup
+            if not Deal.objects.filter(
+                    id=deal_id,
+                    startup=startup,
+                    status="approved"
+            ).exists():
+                raise InvestorError(
+                    "No active deal found between the investor and the startup")
+
+            # Check for conflicting meetings
+            if Meeting.objects.filter(
+                    investor=investor,
+                    date__range=(start_datetime, end_datetime)
+            ).exists() or Meeting.objects.filter(
+                startup=startup,
+                date__range=(start_datetime, end_datetime)
+            ).exists():
+                raise InvestorError(
+                    "The proposed time slot conflicts with an existing meeting")
+
+            # Create the meeting
+            # TODO: มาแก้ตาม meeting model ด้วย จะไปเล่นเกม สู้ๆ
+            meeting = Meeting.objects.create(
+                investor=investor,
+                startup=startup,
+                deal=deal,
+                date=start_datetime,
+                end_time=end_datetime,
+                status="pending",
+                note=note
+            )
+
+            # Here you would typically send notifications to both parties
+            # For now, we'll just print a message
+            print(
+                f"Meeting scheduled: Investor {investor.id} with Startup {startup.id}")
+
+            serializer = MeetingSerializer(meeting)
+            return {
+                "status": "success",
+                "message": "Meeting scheduled successfully",
+                "meeting": serializer.data
+            }
+
+        except Investor.DoesNotExist:
+            raise ObjectDoesNotExist(f"Investor with id {pk} does not exist")
+        except Deal.DoesNotExist:
+            raise ObjectDoesNotExist(f"Deal with id {deal_id} does not exist")
+        except InvestorError as e:
+            return {"status": "error", "message": str(e)}
+        except Exception as e:
+            raise InvestorError(f"Error scheduling meeting: {str(e)}")

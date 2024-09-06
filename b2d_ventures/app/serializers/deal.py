@@ -44,7 +44,6 @@ class DealSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
-            "raised",
             "investor_count",
             "dataroom_url",
             "image_background_url",

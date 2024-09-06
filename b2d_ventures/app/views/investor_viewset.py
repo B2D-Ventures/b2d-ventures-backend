@@ -154,12 +154,38 @@ class InvestorViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["post"], url_path="meetings")
-    def request_meeting(self, request, pk=None):
-        """Request a new meeting."""
+    @action(detail=True, methods=["post"],
+            url_path="schedule-meeting/(?P<deal_id>[^/.]+)")
+    def schedule_meeting(self, request, pk=None, deal_id=None):
+        """Schedule a meeting with a startup."""
         try:
             attributes = request.data.get("data", {}).get("attributes", {})
-            return InvestorService.request_meeting(pk, attributes)
+            date = attributes.get("date")
+            start_time = attributes.get("start_time")
+            end_time = attributes.get("end_time")
+            note = attributes.get("note", "")
+
+            if not all([date, start_time, end_time]):
+                return Response(
+                    {"errors": [{"detail": "Missing required fields"}]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            result = InvestorService.schedule_meeting(
+                pk, deal_id, date, start_time, end_time, note
+            )
+
+            if result.get("status") == "success":
+                return Response(
+                    {"data": {"attributes": result}},
+                    status=status.HTTP_201_CREATED,
+                )
+            else:
+                return Response(
+                    {"errors": [{"detail": result.get("message")}]},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         except ObjectDoesNotExist as e:
             return Response(
                 {"errors": [{"detail": str(e)}]},
@@ -168,14 +194,16 @@ class InvestorViewSet(viewsets.ModelViewSet):
         except InvestorError as e:
             logging.error(f"Investor error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error",
+                         "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
