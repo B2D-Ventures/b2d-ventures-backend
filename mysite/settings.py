@@ -165,7 +165,7 @@ INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 TOKEN_URL = os.getenv("TOKEN_URL", "")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
-REDIRECT_URL = os.getenv("REDIRECT_URL", "")
+REDIRECT_URI = os.getenv("REDIRECT_URI", "")
 
 # ALLOWED_HOSTS configuration
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(

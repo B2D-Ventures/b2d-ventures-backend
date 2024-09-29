@@ -39,7 +39,7 @@ class AuthService:
             "code": authorization_code,
             "client_id": settings.GOOGLE_CLIENT_ID,
             "client_secret": settings.GOOGLE_CLIENT_SECRET,
-            "redirect_uri": "http://localhost:3000/google-auth",
+            "redirect_uri": settings.REDIRECT_URI,
             "grant_type": "authorization_code",
         }
         return HTTPRequestHandler.make_request("POST", token_url, data=data)
