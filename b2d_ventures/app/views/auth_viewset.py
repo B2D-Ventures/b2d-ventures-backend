@@ -5,6 +5,7 @@ from typing import Dict, Any, Union, Tuple
 
 from django.db import transaction
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -94,18 +95,17 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    def put(self, request: Request) -> Response:
+    @action(detail=True, methods=["put"], url_path="update-role")
+    def update_role(self, request, pk=None):
         """
         Update a user's role by deleting the existing User and creating a new role-specific user.
         """
-        request_data = request.data.get("data", {})
-        attributes = request_data.get("attributes", {})
-        user_token = attributes.get("user_token")
+        attributes = request.data.get("data", {}).get("attributes", {})
         new_role = attributes.get("role")
 
-        if not user_token or not new_role:
+        if not new_role:
             return Response(
-                {"errors": [{"detail": "User token and role are required"}]},
+                {"errors": [{"detail": "New role is required"}]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -117,7 +117,7 @@ class AuthViewSet(viewsets.ViewSet):
 
         try:
             with transaction.atomic():
-                existing_user = User.objects.filter(id=user_token).first()
+                existing_user = User.objects.filter(id=pk).first()
 
                 if not existing_user:
                     return Response(
@@ -129,10 +129,11 @@ class AuthViewSet(viewsets.ViewSet):
                 user_profile = {
                     "name": existing_user.username,
                 }
+                refresh_token = existing_user.refresh_token
 
                 existing_user.delete()
                 new_user, created, actual_role = self._create_or_update_user(
-                    new_role, email, user_profile
+                    new_role, email, user_profile, refresh_token
                 )
 
                 serializer = self._get_serializer_for_role(actual_role,
@@ -140,7 +141,11 @@ class AuthViewSet(viewsets.ViewSet):
 
                 return Response(
                     {
-                        "attributes": serializer.data,
+                        "data": {
+                            "type": actual_role,
+                            "id": new_user.id,
+                            "attributes": serializer.data,
+                        }
                     },
                     status=status.HTTP_200_OK,
                 )
@@ -158,6 +163,7 @@ class AuthViewSet(viewsets.ViewSet):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
 
     def _create_or_update_user(
             self, role: str, user_email: str, user_profile: Dict[str, Any],
@@ -197,6 +203,7 @@ class AuthViewSet(viewsets.ViewSet):
 
         return user, True, role
 
+
     def _check_existing_user(
             self, user_email: str
     ) -> Tuple[Union[Admin, Investor, Startup, None], str]:
@@ -220,6 +227,7 @@ class AuthViewSet(viewsets.ViewSet):
             pass
 
         return None, "Unassigned"
+
 
     def _get_serializer_for_role(
             self, role: str, user: Union[Admin, Investor, Startup, User]
