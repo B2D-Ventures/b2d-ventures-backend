@@ -8,3 +8,7 @@ python-dotenv
 icecream
 django-cors-headers
 Pillow
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
