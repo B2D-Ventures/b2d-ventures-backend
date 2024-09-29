@@ -18,14 +18,17 @@ class MeetingSerializer(serializers.ModelSerializer):
         model = Meeting
         fields = [
             "id",
-            "date",
             "investor",
             "investor_id",
             "startup",
             "startup_id",
-            "status",
+            "title",
+            "description",
+            "start_time",
+            "end_time",
+            "investor_event_id",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "investor_event_id"]
 
     def create(self, validated_data):
         return Meeting.objects.create(**validated_data)

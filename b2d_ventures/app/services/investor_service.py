@@ -1,15 +1,20 @@
 """The module defines the InvestorService class and InvestorError."""
+
 from decimal import Decimal
+from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import transaction
 from rest_framework import status
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import Investor, Deal, Investment
+from b2d_ventures.app.models import Investor, Deal, Investment, Startup, Meeting
 from b2d_ventures.app.serializers import (
     InvestorSerializer,
     InvestmentSerializer,
+    MeetingSerializer,
 )
+from b2d_ventures.app.services.calendar_service import CalendarService, CalendarError
+from b2d_ventures.app.services import AuthService, AuthError
 from b2d_ventures.utils import EmailService
 
 
@@ -41,8 +46,7 @@ class InvestorService:
             investments = Investment.objects.filter(investor=investor)
             serializer = InvestmentSerializer(investments, many=True)
             response_data = [
-                {"attributes": investment_data} for investment_data in
-                serializer.data
+                {"attributes": investment_data} for investment_data in serializer.data
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except Investor.DoesNotExist:
@@ -78,8 +82,7 @@ class InvestorService:
             deal.save()
 
             investment = Investment.objects.create(
-                deal=deal, investor=investor,
-                investment_amount=investment_amount
+                deal=deal, investor=investor, investment_amount=investment_amount
             )
 
             serializer = InvestmentSerializer(investment)
@@ -102,8 +105,7 @@ class InvestorService:
         """Get details of a specific investment."""
         try:
             investor = Investor.objects.get(id=pk)
-            investment = Investment.objects.get(id=investment_id,
-                                                investor=investor)
+            investment = Investment.objects.get(id=investment_id, investor=investor)
             serializer = InvestmentSerializer(investment)
             response_data = {"attributes": serializer.data}
             return Response(response_data, status=status.HTTP_200_OK)
@@ -124,8 +126,7 @@ class InvestorService:
             deal = Deal.objects.get(id=deal_id)
 
             if not deal.dataroom:
-                raise InvestorError(
-                    "No dataroom file available for this deal.")
+                raise InvestorError("No dataroom file available for this deal.")
 
             investor_email = investor.email
             dataroom_file = deal.dataroom
@@ -139,7 +140,7 @@ class InvestorService:
                 subject=email_subject,
                 body=email_body,
                 attachment=dataroom_file,
-                filename=f"{deal.name}_dataroom.pdf"
+                filename=f"{deal.name}_dataroom.pdf",
             )
 
             return Response(
@@ -154,3 +155,48 @@ class InvestorService:
             raise InvestorError(str(e))
         except Exception as e:
             raise InvestorError(f"Error sending dataroom: {str(e)}")
+
+    @staticmethod
+    def schedule_meeting(investor_id, startup_id, attributes):
+        try:
+            investor = Investor.objects.get(id=investor_id)
+            startup = Startup.objects.get(id=startup_id)
+
+            start_time = datetime.fromisoformat(attributes.get("start_time"))
+            end_time = datetime.fromisoformat(attributes.get("end_time"))
+            title = attributes.get("title", "Investor-Startup Meeting")
+            description = attributes.get("description", "")
+
+            refresh_token = investor.refresh_token
+            if not refresh_token:
+                raise InvestorError("Investor does not have a valid refresh token")
+
+            auth_service = AuthService()
+            access_token = auth_service.refresh_access_token(refresh_token)
+
+            event = CalendarService.schedule_investor_startup_meeting(
+                access_token, title, description, start_time, end_time, startup.email
+            )
+
+            meeting = Meeting.objects.create(
+                investor=investor,
+                startup=startup,
+                start_time=start_time,
+                end_time=end_time,
+                title=title,
+                description=description,
+                investor_event_id=event["id"],
+            )
+
+            serializer = MeetingSerializer(meeting)
+            response_data = {"attributes": serializer.data}
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+        except Investor.DoesNotExist:
+            raise ObjectDoesNotExist(f"Investor with id {investor_id} does not exist")
+        except Startup.DoesNotExist:
+            raise ObjectDoesNotExist(f"Startup with id {startup_id} does not exist")
+        except CalendarError as e:
+            raise InvestorError(str(e))
+        except Exception as e:
+            raise InvestorError(f"Error scheduling meeting: {str(e)}")

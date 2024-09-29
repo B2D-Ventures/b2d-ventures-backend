@@ -7,7 +7,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 
 from b2d_ventures.app.models import Investor
-from b2d_ventures.app.serializers import InvestorSerializer
+from b2d_ventures.app.serializers import InvestorSerializer, MeetingSerializer
 from b2d_ventures.app.services import InvestorService, InvestorError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
@@ -123,6 +123,70 @@ class InvestorViewSet(viewsets.ModelViewSet):
                 {
                     "errors": [
                         {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="schedule-meeting/(?P<startup_id>[^/.]+)",
+    )
+    def schedule_meeting(self, request, pk=None, startup_id=None):
+        """Schedule a meeting with a startup."""
+        try:
+            attributes = request.data.get("data", {}).get("attributes", {})
+            return InvestorService.schedule_meeting(pk, startup_id, attributes)
+        except ObjectDoesNotExist as e:
+            return Response(
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except InvestorError as e:
+            logging.error(f"Investor error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=True, methods=["get"], url_path="meetings")
+    def meetings(self, request, pk=None):
+        """Get all meetings that belong to the investor."""
+        try:
+            investor = Investor.objects.get(pk=pk)
+            meetings = investor.meetings.all().order_by("start_time")
+            serializer = MeetingSerializer(meetings, many=True)
+            response_data = {
+                "data": [
+                    {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                    for meeting in serializer.data
+                ]
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Investor.DoesNotExist:
+            return Response(
+                {"errors": [{"detail": f"Investor with id {pk} does not exist"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            logging.error(f"Error getting investor meetings: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {
+                            "detail": "Error getting investor meetings",
+                            "meta": {"message": str(e)},
+                        }
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

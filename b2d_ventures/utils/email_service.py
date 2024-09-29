@@ -9,24 +9,22 @@ from django.conf import settings
 
 class EmailService:
     def __init__(self):
-        self.smtp_host = getattr(settings, 'SMTP_HOST')
-        self.smtp_port = getattr(settings, 'SMTP_PORT')
-        self.smtp_user = getattr(settings, 'SMTP_USER')
-        self.smtp_password = getattr(settings, 'SMTP_PASSWORD')
+        self.smtp_host = getattr(settings, "SMTP_HOST")
+        self.smtp_port = getattr(settings, "SMTP_PORT")
+        self.smtp_user = getattr(settings, "SMTP_USER")
+        self.smtp_password = getattr(settings, "SMTP_PASSWORD")
 
-    def send_email_with_attachment(self, to_email, subject, body, attachment,
-                                   filename):
+    def send_email_with_attachment(self, to_email, subject, body, attachment, filename):
         msg = MIMEMultipart()
-        msg['From'] = self.smtp_user
-        msg['To'] = to_email
-        msg['Subject'] = subject
+        msg["From"] = self.smtp_user
+        msg["To"] = to_email
+        msg["Subject"] = subject
 
-        msg.attach(MIMEText(body, 'plain'))
+        msg.attach(MIMEText(body, "plain"))
 
         with open(attachment.path, "rb") as file:
-            part = MIMEApplication(file.read(),
-                                   Name=os.path.basename(filename))
-        part['Content-Disposition'] = f'attachment; filename="{filename}"'
+            part = MIMEApplication(file.read(), Name=os.path.basename(filename))
+        part["Content-Disposition"] = f'attachment; filename="{filename}"'
         msg.attach(part)
 
         try:

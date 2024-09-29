@@ -6,7 +6,11 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from b2d_ventures.app.models import Startup
-from b2d_ventures.app.serializers import StartupSerializer, DealSerializer
+from b2d_ventures.app.serializers import (
+    StartupSerializer,
+    DealSerializer,
+    MeetingSerializer,
+)
 from b2d_ventures.app.services import StartupService, StartupError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
@@ -55,7 +59,7 @@ class StartupViewSet(viewsets.ModelViewSet):
             if request.method == "GET":
                 return StartupService.list_deals(pk)
             elif request.method == "POST":
-                return self.create_deal(request, pk)
+                return self._create_deal(request, pk)
         except ObjectDoesNotExist as e:
             return Response(
                 {"errors": [{"detail": str(e)}]},
@@ -138,7 +142,43 @@ class StartupViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    def create_deal(self, request, pk):
+    @action(detail=True, methods=["get"], url_path="meetings")
+    def list_meetings(self, request, pk=None):
+        """List all meetings for the startup."""
+        try:
+            startup = Startup.objects.get(pk=pk)
+            meetings = startup.meetings.all().order_by("start_time")
+            serializer = MeetingSerializer(meetings, many=True)
+            response_data = {
+                "data": [
+                    {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                    for meeting in serializer.data
+                ]
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Startup.DoesNotExist:
+            return Response(
+                {"errors": [{"detail": f"Startup with id {pk} does not exist"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except StartupError as e:
+            logging.error(f"Startup error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @staticmethod
+    def _create_deal(request, pk):
         try:
             startup = Startup.objects.get(pk=pk)
             deal_data = request.data.copy()

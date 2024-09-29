@@ -10,6 +10,7 @@ from b2d_ventures.app.serializers import (
     UserSerializer,
     DealSerializer,
     InvestmentSerializer,
+    MeetingSerializer,
 )
 from b2d_ventures.app.services import AdminService, AdminError
 from b2d_ventures.utils import JSONParser, VndJsonParser
@@ -181,6 +182,32 @@ class AdminViewSet(viewsets.ModelViewSet):
                 {"errors": [{"detail": "Investment not found"}]},
                 status=status.HTTP_404_NOT_FOUND,
             )
+        except AdminError as e:
+            logging.error(f"Admin error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {"errors": [{"detail": "Internal Server Error"}]},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=False, methods=["get"], url_path="meetings")
+    def list_meetings(self, request):
+        """List all meetings."""
+        try:
+            service = AdminService()
+            meetings = service.list_meetings()
+            serializer = MeetingSerializer(meetings, many=True)
+            response_data = {
+                "data": [
+                    {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                    for meeting in serializer.data
+                ]
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
