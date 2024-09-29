@@ -39,7 +39,6 @@ class AuthViewSet(viewsets.ViewSet):
         attributes = request_data.get("attributes", {})
         full_url = attributes.get("full_url")
         role = attributes.get("role")
-
         if not full_url:
             return Response(
                 {"errors": [{"detail": "Full URL is required"}]},
@@ -51,23 +50,20 @@ class AuthViewSet(viewsets.ViewSet):
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
         try:
             authorization_code = self.auth_service.extract_authorization_code(
                 full_url)
             if not authorization_code:
                 raise AuthError("Authorization code not found in URL")
-
             tokens = self.auth_service.exchange_code_for_token(
                 authorization_code)
+            refresh_token = tokens.get("refresh_token", "")
             user_profile = self.auth_service.get_user_profile(
                 tokens["access_token"])
             user_email = user_profile.get("email")
-
             user, created, actual_role = self._create_or_update_user(
-                role, user_email, user_profile
+                role, user_email, user_profile, refresh_token
             )
-
             serializer = self._get_serializer_for_role(actual_role, user)
 
             response_data = {
@@ -164,7 +160,8 @@ class AuthViewSet(viewsets.ViewSet):
             )
 
     def _create_or_update_user(
-            self, role: str, user_email: str, user_profile: Dict[str, Any]
+            self, role: str, user_email: str, user_profile: Dict[str, Any],
+            refresh_token: str
     ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
         existing_user, existing_role = self._check_existing_user(user_email)
@@ -176,21 +173,25 @@ class AuthViewSet(viewsets.ViewSet):
             user = Admin.objects.create(
                 email=user_email,
                 username=user_profile.get("name"),
+                refresh_token=refresh_token
             )
         elif role == "investor":
             user = Investor.objects.create(
                 email=user_email,
                 username=user_profile.get("name"),
+                refresh_token=refresh_token
             )
         elif role == "startup":
             user = Startup.objects.create(
                 email=user_email,
                 username=user_profile.get("name"),
                 name=user_profile.get("name"),
+                refresh_token=refresh_token
             )
         else:
             user = User.objects.create(
-                email=user_email, username=user_profile.get("name")
+                email=user_email, username=user_profile.get("name"),
+                refresh_token=refresh_token
             )
             role = "Unassigned"
 
