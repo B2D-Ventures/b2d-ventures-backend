@@ -131,8 +131,11 @@ class InvestorViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=['post'],
-            url_path='schedule-meeting/(?P<startup_id>[^/.]+)')
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="schedule-meeting/(?P<startup_id>[^/.]+)",
+    )
     def schedule_meeting(self, request, pk=None, startup_id=None):
         """Schedule a meeting with a startup."""
         try:
@@ -146,16 +149,14 @@ class InvestorViewSet(viewsets.ModelViewSet):
         except InvestorError as e:
             logging.error(f"Investor error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error",
-                         "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

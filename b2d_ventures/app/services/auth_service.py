@@ -55,3 +55,26 @@ class AuthService:
         url = "https://www.googleapis.com/oauth2/v2/userinfo"
         headers = {"Authorization": f"Bearer {access_token}"}
         return HTTPRequestHandler.make_request("GET", url, headers=headers)
+
+    @staticmethod
+    def refresh_access_token(refresh_token):
+        """
+        Refresh an access token using a refresh token.
+
+        :param refresh_token: Refresh token to use for getting a new access token.
+        :return: New access token.
+        """
+        token_url = settings.TOKEN_URL
+        data = {
+            "refresh_token": refresh_token,
+            "client_id": settings.GOOGLE_CLIENT_ID,
+            "client_secret": settings.GOOGLE_CLIENT_SECRET,
+            "grant_type": "refresh_token",
+        }
+        try:
+            response = HTTPRequestHandler.make_request("POST", token_url, data=data)
+            if "access_token" not in response:
+                raise AuthError("Failed to refresh access token")
+            return response["access_token"]
+        except Exception as e:
+            raise AuthError(f"Error refreshing access token: {str(e)}")

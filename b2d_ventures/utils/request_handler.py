@@ -1,4 +1,5 @@
 """The module for handling HTTP requests."""
+
 import logging
 
 import requests
@@ -11,9 +12,7 @@ class HTTPRequestHandler:
     def make_request(method, url, headers=None, data=None):
         """Make a HTTP request."""
         try:
-            response = requests.request(
-                method, url, headers=headers, data=data
-            )
+            response = requests.request(method, url, headers=headers, data=data)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as e:

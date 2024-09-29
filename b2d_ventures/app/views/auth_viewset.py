@@ -52,15 +52,12 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            authorization_code = self.auth_service.extract_authorization_code(
-                full_url)
+            authorization_code = self.auth_service.extract_authorization_code(full_url)
             if not authorization_code:
                 raise AuthError("Authorization code not found in URL")
-            tokens = self.auth_service.exchange_code_for_token(
-                authorization_code)
+            tokens = self.auth_service.exchange_code_for_token(authorization_code)
             refresh_token = tokens.get("refresh_token", "")
-            user_profile = self.auth_service.get_user_profile(
-                tokens["access_token"])
+            user_profile = self.auth_service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
             user, created, actual_role = self._create_or_update_user(
                 role, user_email, user_profile, refresh_token
@@ -80,16 +77,14 @@ class AuthViewSet(viewsets.ViewSet):
         except AuthError as e:
             logging.error(f"Authorization error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]},
-                status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
-                        {"detail": "Internal Server Error",
-                         "meta": {"message": str(e)}}
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -136,8 +131,7 @@ class AuthViewSet(viewsets.ViewSet):
                     new_role, email, user_profile, refresh_token
                 )
 
-                serializer = self._get_serializer_for_role(actual_role,
-                                                           new_user)
+                serializer = self._get_serializer_for_role(actual_role, new_user)
 
                 return Response(
                     {
@@ -164,10 +158,12 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-
     def _create_or_update_user(
-            self, role: str, user_email: str, user_profile: Dict[str, Any],
-            refresh_token: str
+        self,
+        role: str,
+        user_email: str,
+        user_profile: Dict[str, Any],
+        refresh_token: str,
     ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
         existing_user, existing_role = self._check_existing_user(user_email)
@@ -179,33 +175,33 @@ class AuthViewSet(viewsets.ViewSet):
             user = Admin.objects.create(
                 email=user_email,
                 username=user_profile.get("name"),
-                refresh_token=refresh_token
+                refresh_token=refresh_token,
             )
         elif role == "investor":
             user = Investor.objects.create(
                 email=user_email,
                 username=user_profile.get("name"),
-                refresh_token=refresh_token
+                refresh_token=refresh_token,
             )
         elif role == "startup":
             user = Startup.objects.create(
                 email=user_email,
                 username=user_profile.get("name"),
                 name=user_profile.get("name"),
-                refresh_token=refresh_token
+                refresh_token=refresh_token,
             )
         else:
             user = User.objects.create(
-                email=user_email, username=user_profile.get("name"),
-                refresh_token=refresh_token
+                email=user_email,
+                username=user_profile.get("name"),
+                refresh_token=refresh_token,
             )
             role = "Unassigned"
 
         return user, True, role
 
-
     def _check_existing_user(
-            self, user_email: str
+        self, user_email: str
     ) -> Tuple[Union[Admin, Investor, Startup, None], str]:
         """Check if a user exists and return their instance and role."""
         try:
@@ -228,11 +224,9 @@ class AuthViewSet(viewsets.ViewSet):
 
         return None, "Unassigned"
 
-
     def _get_serializer_for_role(
-            self, role: str, user: Union[Admin, Investor, Startup, User]
-    ) -> Union[
-        AdminSerializer, InvestorSerializer, StartupSerializer, UserSerializer]:
+        self, role: str, user: Union[Admin, Investor, Startup, User]
+    ) -> Union[AdminSerializer, InvestorSerializer, StartupSerializer, UserSerializer]:
         """Get the appropriate serializer based on the user's role."""
         if role == "admin":
             return AdminSerializer(user)

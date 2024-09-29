@@ -6,12 +6,12 @@ from b2d_ventures.app.models.abstract_model import AbstractModel
 
 class Meeting(AbstractModel):
     investor = models.ForeignKey(
-        Investor, on_delete=models.CASCADE, related_name='meetings'
+        Investor, on_delete=models.CASCADE, related_name="meetings"
     )
     startup = models.ForeignKey(
-        Startup, on_delete=models.CASCADE, related_name='meetings'
+        Startup, on_delete=models.CASCADE, related_name="meetings"
     )
-    title = models.CharField(max_length=255, default='Investor-Startup Meeting')
+    title = models.CharField(max_length=255, default="Investor-Startup Meeting")
     description = models.TextField(null=True)
     start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True)
@@ -22,4 +22,4 @@ class Meeting(AbstractModel):
 
     class Meta:
         app_label = "app"
-        ordering = ['-start_time']
+        ordering = ["-start_time"]
