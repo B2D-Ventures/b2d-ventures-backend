@@ -1,16 +1,13 @@
 import logging
-from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from google.oauth2.credentials import Credentials
-
 
 from b2d_ventures.app.models import Investor
-from b2d_ventures.app.serializers import InvestorSerializer
+from b2d_ventures.app.serializers import InvestorSerializer, MeetingSerializer
 from b2d_ventures.app.services import InvestorService, InvestorError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
@@ -157,6 +154,39 @@ class InvestorViewSet(viewsets.ModelViewSet):
                 {
                     "errors": [
                         {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=True, methods=["get"], url_path="meetings")
+    def meetings(self, request, pk=None):
+        """Get all meetings that belong to the investor."""
+        try:
+            investor = Investor.objects.get(pk=pk)
+            meetings = investor.meetings.all().order_by("start_time")
+            serializer = MeetingSerializer(meetings, many=True)
+            response_data = {
+                "data": [
+                    {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                    for meeting in serializer.data
+                ]
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        except Investor.DoesNotExist:
+            return Response(
+                {"errors": [{"detail": f"Investor with id {pk} does not exist"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            logging.error(f"Error getting investor meetings: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {
+                            "detail": "Error getting investor meetings",
+                            "meta": {"message": str(e)},
+                        }
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,

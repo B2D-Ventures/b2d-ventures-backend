@@ -1,8 +1,7 @@
-from datetime import datetime, timezone
+from datetime import timezone
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
-from b2d_ventures.app.services.authorization_service import AuthorizationService
 
 
 class CalendarError(Exception):
