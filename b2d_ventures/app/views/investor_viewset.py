@@ -1,13 +1,19 @@
 import logging
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from django.db.models import Sum
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import Investor
-from b2d_ventures.app.serializers import InvestorSerializer, MeetingSerializer
+from b2d_ventures.app.models import Investor, Deal, Meeting, Investment
+from b2d_ventures.app.serializers import (
+    InvestorSerializer,
+    MeetingSerializer,
+    DealSerializer,
+)
 from b2d_ventures.app.services import InvestorService, InvestorError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
@@ -166,12 +172,10 @@ class InvestorViewSet(viewsets.ModelViewSet):
             investor = Investor.objects.get(pk=pk)
             meetings = investor.meetings.all().order_by("start_time")
             serializer = MeetingSerializer(meetings, many=True)
-            response_data = {
-                "data": [
-                    {"type": "meeting", "id": meeting["id"], "attributes": meeting}
-                    for meeting in serializer.data
-                ]
-            }
+            response_data = [
+                {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                for meeting in serializer.data
+            ]
             return Response(response_data, status=status.HTTP_200_OK)
         except Investor.DoesNotExist:
             return Response(
@@ -187,6 +191,75 @@ class InvestorViewSet(viewsets.ModelViewSet):
                             "detail": "Error getting investor meetings",
                             "meta": {"message": str(e)},
                         }
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=True, methods=["get"], url_path="dashboard")
+    def dashboard(self, request, pk=None):
+        """
+        Get a comprehensive dashboard for the investor, including profile, investments, meetings, and other relevant data.
+        """
+        try:
+            investor = self.get_object()
+            profile_response = self.get_profile(request, pk)
+            investments_response = self.list_investments(request, pk)
+            meetings_response = self.meetings(request, pk)
+            total_invested = (
+                Investment.objects.filter(investor=investor).aggregate(
+                    Sum("investment_amount")
+                )["investment_amount__sum"]
+                or 0
+            )
+            investment_count = Investment.objects.filter(investor=investor).count()
+            active_deals = Deal.objects.filter(status="approved")
+            active_deals_serializer = DealSerializer(active_deals, many=True)
+            upcoming_meetings = Meeting.objects.filter(
+                investor=investor, start_time__gt=timezone.now()
+            ).order_by("start_time")[:5]
+            upcoming_meetings_serializer = MeetingSerializer(
+                upcoming_meetings, many=True
+            )
+            dashboard_data = {
+                "type": "investor_dashboard",
+                "id": str(investor.id),
+                "attributes": {
+                    "profile": profile_response.get("data", {}).get("attributes", {}),
+                    "investments": investments_response.get("data", []),
+                    "meetings": meetings_response.get("data", []),
+                    "total_invested": float(total_invested),
+                    "investment_count": investment_count,
+                    "available_funds": float(investor.available_funds),
+                    "active_deals": [
+                        {"type": "deal", "id": deal["id"], "attributes": deal}
+                        for deal in active_deals_serializer.data
+                    ],
+                    "upcoming_meetings": [
+                        {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                        for meeting in upcoming_meetings_serializer.data
+                    ],
+                },
+            }
+
+            return Response(dashboard_data, status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist as e:
+            return Response(
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except InvestorError as e:
+            logging.error(f"Investor error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
