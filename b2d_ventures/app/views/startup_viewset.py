@@ -1,15 +1,18 @@
 import logging
+
+from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 
-from b2d_ventures.app.models import Startup
+from b2d_ventures.app.models import Startup, Deal, Meeting, Investment
 from b2d_ventures.app.serializers import (
     StartupSerializer,
     DealSerializer,
     MeetingSerializer,
+    InvestmentSerializer,
 )
 from b2d_ventures.app.services import StartupService, StartupError
 from b2d_ventures.utils import JSONParser, VndJsonParser
@@ -159,6 +162,96 @@ class StartupViewSet(viewsets.ModelViewSet):
         except Startup.DoesNotExist:
             return Response(
                 {"errors": [{"detail": f"Startup with id {pk} does not exist"}]},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except StartupError as e:
+            logging.error(f"Startup error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=True, methods=["get"], url_path="dashboard")
+    def dashboard(self, request, pk=None):
+        """
+        Get a comprehensive dashboard for the startup, including profile, deals, investments, meetings, and other relevant data.
+        """
+        try:
+            startup = self.get_object()
+            profile_response = self.profile(request, pk)
+            deals_response = self.deals(request, pk)
+            investments_response = self.list_investments(request, pk)
+            meetings_response = self.list_meetings(request, pk)
+
+            total_raised = startup.total_raised
+            deal_count = Deal.objects.filter(startup=startup).count()
+            active_deals = Deal.objects.filter(startup=startup, status="approved")
+            active_deals_serializer = DealSerializer(active_deals, many=True)
+
+            upcoming_meetings = Meeting.objects.filter(
+                startup=startup, start_time__gt=timezone.now()
+            ).order_by("start_time")[:5]
+            upcoming_meetings_serializer = MeetingSerializer(
+                upcoming_meetings, many=True
+            )
+
+            recent_investments = Investment.objects.filter(
+                deal__startup=startup
+            ).order_by("-investment_date")[:5]
+            recent_investments_serializer = InvestmentSerializer(
+                recent_investments, many=True
+            )
+
+            dashboard_data = {
+                "type": "startup_dashboard",
+                "id": str(startup.id),
+                "attributes": {
+                    "profile": profile_response.data.get("attributes", {}),
+                    "deals": (
+                        deals_response.data if hasattr(deals_response, "data") else []
+                    ),
+                    "investments": (
+                        investments_response.data
+                        if hasattr(investments_response, "data")
+                        else []
+                    ),
+                    "meetings": meetings_response.data.get("data", []),
+                    "total_raised": float(total_raised),
+                    "deal_count": deal_count,
+                    "fundraising_goal": float(startup.fundraising_goal),
+                    "active_deals": [
+                        {"type": "deal", "id": deal["id"], "attributes": deal}
+                        for deal in active_deals_serializer.data
+                    ],
+                    "upcoming_meetings": [
+                        {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                        for meeting in upcoming_meetings_serializer.data
+                    ],
+                    "recent_investments": [
+                        {
+                            "type": "investment",
+                            "id": investment["id"],
+                            "attributes": investment,
+                        }
+                        for investment in recent_investments_serializer.data
+                    ],
+                },
+            }
+
+            return Response(dashboard_data, status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist as e:
+            return Response(
+                {"errors": [{"detail": str(e)}]},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except StartupError as e:

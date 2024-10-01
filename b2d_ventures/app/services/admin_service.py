@@ -125,24 +125,23 @@ class AdminService:
             thirty_days_ago = today - timezone.timedelta(days=30)
 
             total_users = User.objects.count()
-            new_users_last_30_days = User.objects.filter(
-                created_at__gte=thirty_days_ago
-            ).count()
 
             total_deals = Deal.objects.count()
             active_deals = Deal.objects.filter(status="active").count()
 
             total_investments = Investment.objects.count()
             total_investment_amount = (
-                Investment.objects.aggregate(Sum("amount"))["amount__sum"] or 0
+                Investment.objects.aggregate(Sum("investment_amount"))[
+                    "investment_amount__sum"
+                ]
+                or 0
             )
 
             total_meetings = Meeting.objects.count()
-            upcoming_meetings = Meeting.objects.filter(date__gte=today).count()
+            upcoming_meetings = Meeting.objects.filter(start_time__gt=today).count()
 
             return {
                 "total_users": total_users,
-                "new_users_last_30_days": new_users_last_30_days,
                 "total_deals": total_deals,
                 "active_deals": active_deals,
                 "total_investments": total_investments,

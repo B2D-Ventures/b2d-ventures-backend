@@ -11,15 +11,24 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from b2d_ventures.app.models import Startup, Deal
 
+
 def create_placeholder_image(folder, filename):
     content = ContentFile(b"placeholder_image_content")
-    path = default_storage.save(f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}", content)
+    path = default_storage.save(
+        f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
+        content,
+    )
     return path
+
 
 def create_placeholder_pdf(folder, filename):
     content = ContentFile(b"placeholder_pdf_content")
-    path = default_storage.save(f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}", content)
+    path = default_storage.save(
+        f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
+        content,
+    )
     return path
+
 
 def create_mock_deals(startup_id):
     startup = Startup.objects.get(id=startup_id)
@@ -32,13 +41,13 @@ def create_mock_deals(startup_id):
         name="NeurAI Series A",
         description="Revolutionizing human-computer interaction with direct neural interfaces",
         content="NeurAI is developing cutting-edge neural interface technology that allows direct communication between the human brain and computers. Our technology has applications in healthcare, gaming, and productivity tools.",
-        image_background=create_placeholder_image("NeurAI","neurai_background.jpg"),
-        image_logo=create_placeholder_image("NeurAI","neurai_logo.png"),
-        image_content=create_placeholder_image("NeurAI","neurai_content.jpg"),
-        dataroom=create_placeholder_pdf("NeurAI","neurai_dataroom.pdf"),
-        allocation=Decimal('5000000.00'),
-        price_per_unit=Decimal('100.00'),
-        minimum_investment=Decimal('10000.00'),
+        image_background=create_placeholder_image("NeurAI", "neurai_background.jpg"),
+        image_logo=create_placeholder_image("NeurAI", "neurai_logo.png"),
+        image_content=create_placeholder_image("NeurAI", "neurai_content.jpg"),
+        dataroom=create_placeholder_pdf("NeurAI", "neurai_dataroom.pdf"),
+        allocation=Decimal("5000000.00"),
+        price_per_unit=Decimal("100.00"),
+        minimum_investment=Decimal("10000.00"),
         type="Equity",
         start_date=timezone.now(),
         end_date=timezone.now() + timedelta(days=90),
@@ -51,13 +60,17 @@ def create_mock_deals(startup_id):
         name="SolarFlare Seed Round",
         description="Efficient and affordable solar solutions for residential use",
         content="SolarFlare is developing a new generation of solar panels that are 50% more efficient and 30% cheaper than current market leaders. Our technology will make solar energy accessible to millions of homeowners.",
-        image_background=create_placeholder_image("SolarFlare","solarflare_background.png"),
-        image_logo=create_placeholder_image("SolarFlare","solarflare_logo.png"),
-        image_content=create_placeholder_image("SolarFlare","solarflare_background.png"),
-        dataroom=create_placeholder_pdf("SolarFlare","solarflare_dataroom.pdf"),
-        allocation=Decimal('2000000.00'),
-        price_per_unit=Decimal('50.00'),
-        minimum_investment=Decimal('5000.00'),
+        image_background=create_placeholder_image(
+            "SolarFlare", "solarflare_background.png"
+        ),
+        image_logo=create_placeholder_image("SolarFlare", "solarflare_logo.png"),
+        image_content=create_placeholder_image(
+            "SolarFlare", "solarflare_background.png"
+        ),
+        dataroom=create_placeholder_pdf("SolarFlare", "solarflare_dataroom.pdf"),
+        allocation=Decimal("2000000.00"),
+        price_per_unit=Decimal("50.00"),
+        minimum_investment=Decimal("5000.00"),
         type="Convertible Note",
         start_date=timezone.now() - timedelta(days=30),
         end_date=timezone.now() + timedelta(days=60),
@@ -70,13 +83,15 @@ def create_mock_deals(startup_id):
         name="GeneCure Series B",
         description="Advancing personalized medicine through innovative gene therapies",
         content="GeneCure is at the forefront of personalized medicine, developing gene therapies tailored to individual genetic profiles. Our treatments show promise in addressing previously incurable genetic disorders.",
-        image_background=create_placeholder_image("GeneCure","genecure_background.jpg"),
-        image_logo=create_placeholder_image("GeneCure","genecure_logo.jpg"),
-        image_content=create_placeholder_image("GeneCure","genecure_background.jpg"),
-        dataroom=create_placeholder_pdf("GeneCure","genecure_dataroom.pdf"),
-        allocation=Decimal('20000000.00'),
-        price_per_unit=Decimal('500.00'),
-        minimum_investment=Decimal('50000.00'),
+        image_background=create_placeholder_image(
+            "GeneCure", "genecure_background.jpg"
+        ),
+        image_logo=create_placeholder_image("GeneCure", "genecure_logo.jpg"),
+        image_content=create_placeholder_image("GeneCure", "genecure_background.jpg"),
+        dataroom=create_placeholder_pdf("GeneCure", "genecure_dataroom.pdf"),
+        allocation=Decimal("20000000.00"),
+        price_per_unit=Decimal("500.00"),
+        minimum_investment=Decimal("50000.00"),
         type="Equity",
         start_date=timezone.now() - timedelta(days=60),
         end_date=timezone.now() + timedelta(days=30),
@@ -89,13 +104,15 @@ def create_mock_deals(startup_id):
         name="CryptoBank ICO",
         description="Bringing traditional banking services to the blockchain",
         content="CryptoBank is building a decentralized banking platform that offers traditional banking services using blockchain technology. Our platform will provide secure, transparent, and accessible financial services to anyone with an internet connection.",
-        image_background=create_placeholder_image("CryptoBank","cryptobank_background.jpeg"),
-        image_logo=create_placeholder_image("CryptoBank","cryptobank_logo.jpeg"),
-        image_content=create_placeholder_image("CryptoBank","cryptobank_content.jpeg"),
-        dataroom=create_placeholder_pdf("CryptoBank","cryptobank_dataroom.pdf"),
-        allocation=Decimal('10000000.00'),
-        price_per_unit=Decimal('1.00'),
-        minimum_investment=Decimal('1000.00'),
+        image_background=create_placeholder_image(
+            "CryptoBank", "cryptobank_background.jpeg"
+        ),
+        image_logo=create_placeholder_image("CryptoBank", "cryptobank_logo.jpeg"),
+        image_content=create_placeholder_image("CryptoBank", "cryptobank_content.jpeg"),
+        dataroom=create_placeholder_pdf("CryptoBank", "cryptobank_dataroom.pdf"),
+        allocation=Decimal("10000000.00"),
+        price_per_unit=Decimal("1.00"),
+        minimum_investment=Decimal("1000.00"),
         type="Token Sale",
         start_date=timezone.now() - timedelta(days=15),
         end_date=timezone.now() + timedelta(days=15),
@@ -108,13 +125,15 @@ def create_mock_deals(startup_id):
         name="VertiFarm Series A",
         description="Revolutionizing urban agriculture with AI-powered vertical farms",
         content="VertiFarm is developing AI-controlled vertical farming systems that can produce 100 times more food per square foot than traditional farming. Our technology enables fresh, local produce to be grown year-round in any urban environment.",
-        image_background=create_placeholder_image("VertiFarm","vertifarm_background.png"),
-        image_logo=create_placeholder_image("VertiFarm","vertifarm_logo.png"),
-        image_content=create_placeholder_image("VertiFarm","vertifarm_background.png"),
-        dataroom=create_placeholder_pdf("VertiFarm","vertifarm_dataroom.pdf"),
-        allocation=Decimal('8000000.00'),
-        price_per_unit=Decimal('200.00'),
-        minimum_investment=Decimal('20000.00'),
+        image_background=create_placeholder_image(
+            "VertiFarm", "vertifarm_background.png"
+        ),
+        image_logo=create_placeholder_image("VertiFarm", "vertifarm_logo.png"),
+        image_content=create_placeholder_image("VertiFarm", "vertifarm_background.png"),
+        dataroom=create_placeholder_pdf("VertiFarm", "vertifarm_dataroom.pdf"),
+        allocation=Decimal("8000000.00"),
+        price_per_unit=Decimal("200.00"),
+        minimum_investment=Decimal("20000.00"),
         type="Equity",
         start_date=timezone.now() - timedelta(days=45),
         end_date=timezone.now() + timedelta(days=45),
@@ -122,6 +141,7 @@ def create_mock_deals(startup_id):
     deals.append(deal5)
 
     return deals
+
 
 startup_id = "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8"
 mock_deals = create_mock_deals(startup_id)

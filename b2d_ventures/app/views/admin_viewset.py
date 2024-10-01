@@ -1,11 +1,12 @@
 import logging
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import Admin
+from b2d_ventures.app.models import User, Deal, Investment, Meeting, Admin
 from b2d_ventures.app.serializers import (
     UserSerializer,
     DealSerializer,
@@ -217,5 +218,75 @@ class AdminViewSet(viewsets.ModelViewSet):
             logging.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=False, methods=["get"], url_path="dashboard")
+    def dashboard(self, request):
+        """
+        Get a comprehensive dashboard for the admin, including user statistics, deals, investments, meetings, and other relevant data.
+        """
+        try:
+            service = AdminService()
+            dashboard_data = service.get_dashboard_data()
+
+            recent_users = User.objects.order_by("-date_joined")[:5]
+            recent_deals = Deal.objects.order_by("-start_date")[:5]
+            recent_investments = Investment.objects.order_by("-investment_date")[:5]
+            upcoming_meetings = Meeting.objects.filter(
+                start_time__gt=timezone.now()
+            ).order_by("start_time")[:5]
+
+            recent_users_serializer = UserSerializer(recent_users, many=True)
+            recent_deals_serializer = DealSerializer(recent_deals, many=True)
+            recent_investments_serializer = InvestmentSerializer(
+                recent_investments, many=True
+            )
+            upcoming_meetings_serializer = MeetingSerializer(
+                upcoming_meetings, many=True
+            )
+
+            response_data = {
+                "type": "admin_dashboard",
+                "attributes": {
+                    "statistics": dashboard_data,
+                    "recent_users": [
+                        {"type": "user", "id": user["id"], "attributes": user}
+                        for user in recent_users_serializer.data
+                    ],
+                    "recent_deals": [
+                        {"type": "deal", "id": deal["id"], "attributes": deal}
+                        for deal in recent_deals_serializer.data
+                    ],
+                    "recent_investments": [
+                        {
+                            "type": "investment",
+                            "id": investment["id"],
+                            "attributes": investment,
+                        }
+                        for investment in recent_investments_serializer.data
+                    ],
+                    "upcoming_meetings": [
+                        {"type": "meeting", "id": meeting["id"], "attributes": meeting}
+                        for meeting in upcoming_meetings_serializer.data
+                    ],
+                },
+            }
+
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except AdminError as e:
+            logging.error(f"Admin error: {e}")
+            return Response(
+                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logging.error(f"Internal Server Error: {e}")
+            return Response(
+                {
+                    "errors": [
+                        {"detail": "Internal Server Error", "meta": {"message": str(e)}}
+                    ]
+                },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
