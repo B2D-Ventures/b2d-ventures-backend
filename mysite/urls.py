@@ -22,6 +22,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("mysite.api_router", namespace="users")),
+    path('api/stub/', include('b2d_ventures.stub_api.urls')),
 ]
 
 if settings.DEBUG:
