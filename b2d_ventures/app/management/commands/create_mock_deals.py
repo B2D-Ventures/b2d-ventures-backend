@@ -162,7 +162,7 @@ class Command(BaseCommand):
 
             return deals
 
-        startup_id = "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8"
+        startup_id = "7e737e1f-38ed-4285-8657-1ab3f41b2096"
         mock_deals = create_mock_deals(startup_id)
         self.stdout.write(
             self.style.SUCCESS(
