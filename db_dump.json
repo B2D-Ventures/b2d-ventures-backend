@@ -1,0 +1,894 @@
+[
+  {
+    "model": "app.user",
+    "pk": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-09-29T14:09:23.122Z",
+      "username": "Yanatchara JERAJA",
+      "email": "yanatchara.j@ku.th",
+      "role": "startup",
+      "refresh_token": "1//0gn5rH-urlSYvCgYIARAAGBASNwF-L9IrmjUvAW3ke9cHWp4XTzTblqD_fJBYC_9Phb7SZ75GKlDgshET_dUzwr-bgB1fjKpo1EM",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "3f7127d0-75c3-4132-9e2b-ee56f642d2ab",
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-09-29T14:09:01.482Z",
+      "username": "Krittin SETDHAVANICH",
+      "email": "krittin.set@ku.th",
+      "role": "investor",
+      "refresh_token": "1//0gojHwEotiTzoCgYIARAAGBASNwF-L9Ir2tBQpMViBkoNsZ2ZGwHxDftP_Aw1HFPsSYH02P64J_Zr9CBZ0v2nDZn7junohgY2nNg",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+    "fields": {
+      "password": "pbkdf2_sha256$600000$7YFZaWiEA9fmDfved0FzLM$6YyB2Bq9HbJfRHGJtiMI05QZElpxKiSgtnLOn/aeKnI=",
+      "last_login": "2024-09-30T06:21:01.275Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-09-30T06:20:57.342Z",
+      "username": "admin",
+      "email": "admin@admin.com",
+      "role": "unassigned",
+      "refresh_token": "",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.investor",
+    "pk": "3f7127d0-75c3-4132-9e2b-ee56f642d2ab",
+    "fields": {
+      "available_funds": "0.00",
+      "total_invested": "44400.00"
+    }
+  },
+  {
+    "model": "app.startup",
+    "pk": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+    "fields": {
+      "name": "Yanatchara JERAJA",
+      "description": "",
+      "fundraising_goal": "0.00",
+      "total_raised": "43068.00"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "17c75059-fc1f-48a0-bf15-da22eea59510",
+    "fields": {
+      "startup": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+      "name": "GeneCure Series B",
+      "description": "Advancing personalized medicine through innovative gene therapies",
+      "content": "GeneCure is at the forefront of personalized medicine, developing gene therapies tailored to individual genetic profiles. Our treatments show promise in addressing previously incurable genetic disorders.",
+      "image_background": "contentMockup/GeneCure/genecure_background_ZwAQP7w.jpg",
+      "image_logo": "contentMockup/GeneCure/genecure_logo_JnLm03c.jpg",
+      "image_content": "contentMockup/GeneCure/genecure_background_HaijOhP.jpg",
+      "allocation": "20000000.00",
+      "price_per_unit": "500.00",
+      "minimum_investment": "50000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-08-02T02:40:50.440Z",
+      "end_date": "2024-10-31T02:40:50.440Z",
+      "investor_count": 0,
+      "dataroom": "contentMockup/GeneCure/genecure_dataroom_EW7d69u.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "2e89f5fa-a819-4d0c-b10f-8d2bb194106d",
+    "fields": {
+      "startup": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+      "name": "CryptoBank ICO",
+      "description": "Bringing traditional banking services to the blockchain",
+      "content": "CryptoBank is building a decentralized banking platform that offers traditional banking services using blockchain technology. Our platform will provide secure, transparent, and accessible financial services to anyone with an internet connection.",
+      "image_background": "contentMockup/CryptoBank/cryptobank_background_kmPIBTp.jpeg",
+      "image_logo": "contentMockup/CryptoBank/cryptobank_logo_Ieh1r9i.jpeg",
+      "image_content": "contentMockup/CryptoBank/cryptobank_content_VVH7qmo.jpeg",
+      "allocation": "10000000.00",
+      "price_per_unit": "1.00",
+      "minimum_investment": "1000.00",
+      "type": "Token Sale",
+      "raised": "0.00",
+      "start_date": "2024-09-16T02:40:50.443Z",
+      "end_date": "2024-10-16T02:40:50.443Z",
+      "investor_count": 0,
+      "dataroom": "contentMockup/CryptoBank/cryptobank_dataroom_PgknWOx.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "841dc0ad-debb-4e2a-b92d-1506e88c34bd",
+    "fields": {
+      "startup": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+      "name": "VertiFarm Series A",
+      "description": "Revolutionizing urban agriculture with AI-powered vertical farms",
+      "content": "VertiFarm is developing AI-controlled vertical farming systems that can produce 100 times more food per square foot than traditional farming. Our technology enables fresh, local produce to be grown year-round in any urban environment.",
+      "image_background": "contentMockup/VertiFarm/vertifarm_background_nj6UzJ6.png",
+      "image_logo": "contentMockup/VertiFarm/vertifarm_logo_hklkn4N.png",
+      "image_content": "contentMockup/VertiFarm/vertifarm_background_Ph1548P.png",
+      "allocation": "8000000.00",
+      "price_per_unit": "200.00",
+      "minimum_investment": "20000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-08-17T02:40:50.446Z",
+      "end_date": "2024-11-15T02:40:50.446Z",
+      "investor_count": 0,
+      "dataroom": "contentMockup/VertiFarm/vertifarm_dataroom_Am8GHVf.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "abbac202-0a31-453a-9db6-e6acde91f723",
+    "fields": {
+      "startup": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+      "name": "SolarFlare Seed Round",
+      "description": "Efficient and affordable solar solutions for residential use",
+      "content": "SolarFlare is developing a new generation of solar panels that are 50% more efficient and 30% cheaper than current market leaders. Our technology will make solar energy accessible to millions of homeowners.",
+      "image_background": "contentMockup/SolarFlare/solarflare_background_2u2GQD0.png",
+      "image_logo": "contentMockup/SolarFlare/solarflare_logo_zTSbqx3.png",
+      "image_content": "contentMockup/SolarFlare/solarflare_background_f8Bi9nQ.png",
+      "allocation": "2000000.00",
+      "price_per_unit": "50.00",
+      "minimum_investment": "5000.00",
+      "type": "Convertible Note",
+      "raised": "0.00",
+      "start_date": "2024-09-01T02:40:50.436Z",
+      "end_date": "2024-11-30T02:40:50.436Z",
+      "investor_count": 0,
+      "dataroom": "contentMockup/SolarFlare/solarflare_dataroom_uZb8ZLe.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "ace85ea7-a229-481b-8890-2e18e56a44cb",
+    "fields": {
+      "startup": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+      "name": "NeurAI Series A",
+      "description": "Revolutionizing human-computer interaction with direct neural interfaces",
+      "content": "NeurAI is developing cutting-edge neural interface technology that allows direct communication between the human brain and computers. Our technology has applications in healthcare, gaming, and productivity tools.",
+      "image_background": "contentMockup/NeurAI/neurai_background.jpeg",
+      "image_logo": "contentMockup/NeurAI/neurai_logo_GHyNc19.png",
+      "image_content": "contentMockup/NeurAI/neurai_content.jpeg",
+      "allocation": "5000000.00",
+      "price_per_unit": "100.00",
+      "minimum_investment": "10000.00",
+      "type": "Equity",
+      "raised": "43068.00",
+      "start_date": "2024-10-01T02:40:50.432Z",
+      "end_date": "2024-12-30T02:40:50.432Z",
+      "investor_count": 2,
+      "dataroom": "contentMockup/NeurAI/neurai_dataroom_sVULIQa.pdf",
+      "status": "approved"
+    }
+  },
+  {
+    "model": "app.meeting",
+    "pk": "4f0beb4a-9120-4339-a603-530ad512eded",
+    "fields": {
+      "investor": "3f7127d0-75c3-4132-9e2b-ee56f642d2ab",
+      "startup": "0d3b7d0e-9e10-4254-b94d-30cfbab66ed8",
+      "title": "Investor-Startup Meeting",
+      "description": "Hi, we would like to ...",
+      "start_time": "2024-10-28T15:00:00Z",
+      "end_time": "2024-10-28T20:00:00Z",
+      "investor_event_id": "29qaqid88e4oi63ohrklf3o17o"
+    }
+  },
+  {
+    "model": "app.investment",
+    "pk": "0bbb5d28-16ed-4f52-92d4-638fa3cb2ddb",
+    "fields": {
+      "deal": "ace85ea7-a229-481b-8890-2e18e56a44cb",
+      "investor": "3f7127d0-75c3-4132-9e2b-ee56f642d2ab",
+      "investment_amount": "22200.00",
+      "investment_date": "2024-10-01T03:15:11.602Z"
+    }
+  },
+  {
+    "model": "app.investment",
+    "pk": "96bc0d85-63e8-42ba-9a58-df1b7f156087",
+    "fields": {
+      "deal": "ace85ea7-a229-481b-8890-2e18e56a44cb",
+      "investor": "3f7127d0-75c3-4132-9e2b-ee56f642d2ab",
+      "investment_amount": "22200.00",
+      "investment_date": "2024-10-01T03:15:08.089Z"
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+      "action_time": "2024-09-30T06:21:15.696Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "3883c0e2-9b16-43ae-a10e-ba9b10349f52",
+      "object_repr": "NeurAI - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+      "action_time": "2024-09-30T06:24:44.700Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "782be0fd-759d-461a-9b07-f15045cfa3f9",
+      "object_repr": "NeurAI - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+      "action_time": "2024-09-30T06:25:53.889Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "b3684a9c-e54d-4b4a-b4ee-ef2ebbc689d4",
+      "object_repr": "NeurAI - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+      "action_time": "2024-09-30T06:25:58.604Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "9bcad608-6e78-4125-b9a0-da4267d688d3",
+      "object_repr": "NeurAI - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+      "action_time": "2024-10-01T02:17:29.009Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "90aa387c-93fe-463d-a556-9266dab93680",
+      "object_repr": "NeurAI - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+      "action_time": "2024-10-01T02:38:42.864Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "c18d945e-ac14-4aef-99a4-40b5b87a7841",
+      "object_repr": "VertiFarm Series A - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+      "action_time": "2024-10-01T02:38:42.867Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "ab57d874-c02e-4732-a3a6-77fb7c6b86d5",
+      "object_repr": "SolarFlare Seed Round - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+      "action_time": "2024-10-01T02:38:42.869Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "6c821b42-7908-427f-8423-8f802975fc87",
+      "object_repr": "GeneCure Series B - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+      "action_time": "2024-10-01T02:38:42.871Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "21697974-ca1e-4c03-b318-0b5fbeabe489",
+      "object_repr": "NeurAI Series A - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+      "action_time": "2024-10-01T02:38:42.872Z",
+      "user": "c39a2190-656b-4f63-b816-cd2b556da6ad",
+      "content_type": 5,
+      "object_id": "09023b03-b6c2-4972-8cfb-f82c04a8dcbd",
+      "object_repr": "CryptoBank ICO - Yanatchara JERAJA",
+      "action_flag": 3,
+      "change_message": ""
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 1,
+      "codename": "add_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 1,
+      "codename": "change_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 1,
+      "codename": "delete_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 1,
+      "codename": "view_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 2,
+      "codename": "add_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 2,
+      "codename": "change_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 2,
+      "codename": "delete_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 2,
+      "codename": "view_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 3,
+      "codename": "add_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 3,
+      "codename": "change_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 3,
+      "codename": "delete_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 3,
+      "codename": "view_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 4,
+      "codename": "add_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 4,
+      "codename": "change_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 4,
+      "codename": "delete_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 4,
+      "codename": "view_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+      "name": "Can add deal",
+      "content_type": 5,
+      "codename": "add_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+      "name": "Can change deal",
+      "content_type": 5,
+      "codename": "change_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+      "name": "Can delete deal",
+      "content_type": 5,
+      "codename": "delete_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+      "name": "Can view deal",
+      "content_type": 5,
+      "codename": "view_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+      "name": "Can add meeting",
+      "content_type": 6,
+      "codename": "add_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+      "name": "Can change meeting",
+      "content_type": 6,
+      "codename": "change_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+      "name": "Can delete meeting",
+      "content_type": 6,
+      "codename": "delete_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+      "name": "Can view meeting",
+      "content_type": 6,
+      "codename": "view_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+      "name": "Can add investment",
+      "content_type": 7,
+      "codename": "add_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+      "name": "Can change investment",
+      "content_type": 7,
+      "codename": "change_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+      "name": "Can delete investment",
+      "content_type": 7,
+      "codename": "delete_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+      "name": "Can view investment",
+      "content_type": 7,
+      "codename": "view_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+      "name": "Can add log entry",
+      "content_type": 8,
+      "codename": "add_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+      "name": "Can change log entry",
+      "content_type": 8,
+      "codename": "change_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+      "name": "Can delete log entry",
+      "content_type": 8,
+      "codename": "delete_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+      "name": "Can view log entry",
+      "content_type": 8,
+      "codename": "view_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+      "name": "Can add permission",
+      "content_type": 9,
+      "codename": "add_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+      "name": "Can change permission",
+      "content_type": 9,
+      "codename": "change_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+      "name": "Can delete permission",
+      "content_type": 9,
+      "codename": "delete_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+      "name": "Can view permission",
+      "content_type": 9,
+      "codename": "view_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+      "name": "Can add group",
+      "content_type": 10,
+      "codename": "add_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+      "name": "Can change group",
+      "content_type": 10,
+      "codename": "change_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+      "name": "Can delete group",
+      "content_type": 10,
+      "codename": "delete_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+      "name": "Can view group",
+      "content_type": 10,
+      "codename": "view_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": {
+      "name": "Can add content type",
+      "content_type": 11,
+      "codename": "add_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": {
+      "name": "Can change content type",
+      "content_type": 11,
+      "codename": "change_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": {
+      "name": "Can delete content type",
+      "content_type": 11,
+      "codename": "delete_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": {
+      "name": "Can view content type",
+      "content_type": 11,
+      "codename": "view_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 45,
+    "fields": {
+      "name": "Can add session",
+      "content_type": 12,
+      "codename": "add_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 46,
+    "fields": {
+      "name": "Can change session",
+      "content_type": 12,
+      "codename": "change_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 47,
+    "fields": {
+      "name": "Can delete session",
+      "content_type": 12,
+      "codename": "delete_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 48,
+    "fields": {
+      "name": "Can view session",
+      "content_type": 12,
+      "codename": "view_session"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+      "app_label": "app",
+      "model": "user"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+      "app_label": "app",
+      "model": "admin"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+      "app_label": "app",
+      "model": "investor"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+      "app_label": "app",
+      "model": "startup"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+      "app_label": "app",
+      "model": "deal"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+      "app_label": "app",
+      "model": "meeting"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+      "app_label": "app",
+      "model": "investment"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+      "app_label": "admin",
+      "model": "logentry"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+      "app_label": "auth",
+      "model": "permission"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+      "app_label": "auth",
+      "model": "group"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+      "app_label": "contenttypes",
+      "model": "contenttype"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": {
+      "app_label": "sessions",
+      "model": "session"
+    }
+  },
+  {
+    "model": "sessions.session",
+    "pk": "6dw5k2ase5wn4i2gb5lvr1mtm0mlupz3",
+    "fields": {
+      "session_data": ".eJxVjksOwjAMBe-SNY2axDYpS_acobKdhBZQK_WzQtydVuoC1m9m9N6m5XXp2nXOU9snczEaGvauqStCkgoKhUqio0qTF0RKTJzM6VcT1mcedjc9eLiPVsdhmXqxO2KPdba3MeXX9WD_Ah3P3WYjhlA3AtFHT1AyF1WUyDVqOG-XBEBipAyMqShpjlEdZ0wKjrWA-XwB4AxBpg:1sv9mH:xqzzm754FI0bpSpIur2iiH5f8WTlAQpiTbCHqjmTIeQ",
+      "expire_date": "2024-10-14T06:21:01.276Z"
+    }
+  }
+]
