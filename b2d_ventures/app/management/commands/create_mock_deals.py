@@ -25,7 +25,6 @@ class Command(BaseCommand):
             return full_path
 
         def create_placeholder_pdf(folder, filename):
-            # Use a small valid PDF file as a placeholder
             with open(
                 f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
                 "rb",
