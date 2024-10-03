@@ -14,7 +14,7 @@ from b2d_ventures.app.serializers import (
     MeetingSerializer,
 )
 from b2d_ventures.app.services import AdminService, AdminError
-from b2d_ventures.utils import JSONParser, VndJsonParser
+from b2d_ventures.utils import JSONParser, VndJsonParser, EmailService
 
 
 class AdminViewSet(viewsets.ModelViewSet):
@@ -111,19 +111,33 @@ class AdminViewSet(viewsets.ModelViewSet):
         """Approve, reject or delete a deal."""
         try:
             service = AdminService()
+            email_service = EmailService()
             if request.method == "PUT":
-                action = (
-                    request.data.get("data", {}).get("attributes", {}).get("action")
-                )
+                action = request.data.get("data", {}).get("attributes",
+                                                          {}).get("action")
                 if action == "approve":
                     deal = service.approve_deal(pk)
+                    subject, body = email_service.build_deal_notification_content(
+                        deal, "approved")
                 elif action == "reject":
                     deal = service.reject_deal(pk)
+                    subject, body = email_service.build_deal_notification_content(
+                        deal, "rejected")
                 else:
                     return Response(
                         {"errors": [{"detail": "Invalid action"}]},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
+
+                email_sent = email_service.send_email_with_attachment(
+                    to_email=deal.startup.email,
+                    subject=subject,
+                    body=body
+                )
+                if not email_sent:
+                    logging.warning(
+                        f"Failed to send notification email for deal {deal.id}")
+
                 serializer = DealSerializer(deal)
                 response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
@@ -138,7 +152,8 @@ class AdminViewSet(viewsets.ModelViewSet):
         except AdminError as e:
             logging.error(f"Admin error: {e}")
             return Response(
-                {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
+                {"errors": [{"detail": str(e)}]},
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logging.error(f"Internal Server Error: {e}")
