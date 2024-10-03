@@ -15,6 +15,10 @@ class EmailService:
         self.smtp_password = getattr(settings, "SMTP_PASSWORD")
 
     def send_email_with_attachment(self, to_email, subject, body, attachment, filename):
+        if not self.smtp_user or not self.smtp_password:
+            raise ValueError(
+                "SMTP user and password must be set in the settings.")
+
         msg = MIMEMultipart()
         msg["From"] = self.smtp_user
         msg["To"] = to_email
