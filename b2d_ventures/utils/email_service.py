@@ -1,5 +1,7 @@
 import os
 import smtplib
+from decimal import Decimal
+
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -59,5 +61,54 @@ class EmailService:
             body += f"There has been an update regarding your deal '{deal.name}'."
 
         body += "\n\nBest regards,\nThe B2D Ventures Team"
+
+        return subject, body
+
+    @staticmethod
+    def build_investment_notification_content(investment, recipient_type):
+        """Build the subject and body for an investment notification email."""
+        deal = investment.deal
+        investor = investment.investor
+        investment_amount = investment.investment_amount
+        platform_fee = investment_amount * Decimal("0.03")
+        net_investment = investment_amount - platform_fee
+
+        if recipient_type == "investor":
+            subject = f"Investment Confirmation: {deal.name}"
+            body = f"""
+                Dear {investor.username},
+
+                Your investment of ${investment_amount} in {deal.name} has been successfully processed.
+
+                Investment details:
+                - Deal: {deal.name}
+                - Amount: ${investment_amount}
+                - Platform fee: ${platform_fee}
+                - Net investment: ${net_investment}
+
+                Thank you for your investment!
+
+                Best regards,
+                The B2D Ventures Team
+                """
+        elif recipient_type == "startup":
+            subject = f"New Investment Received: {deal.name}"
+            body = f"""
+                Dear {deal.startup.username},
+
+                Great news! Your deal {deal.name} has received a new investment.
+
+                Investment details:
+                - Amount: ${net_investment} (after platform fee)
+                - Total raised: ${deal.raised}
+                - Total investors: {deal.investor_count}
+
+                Congratulations on your progress!
+
+                Best regards,
+                The B2D Ventures Team
+                """
+        else:
+            raise ValueError("Invalid recipient_type. Must be 'investor' or 'startup'.")
 
         return subject, body

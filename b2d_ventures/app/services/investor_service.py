@@ -1,7 +1,8 @@
 """The module defines the InvestorService class and InvestorError."""
 
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
+
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.db import transaction
 from rest_framework import status
@@ -13,8 +14,8 @@ from b2d_ventures.app.serializers import (
     InvestmentSerializer,
     MeetingSerializer,
 )
+from b2d_ventures.app.services import AuthService
 from b2d_ventures.app.services.calendar_service import CalendarService, CalendarError
-from b2d_ventures.app.services import AuthService, AuthError
 from b2d_ventures.utils import EmailService
 
 
@@ -61,7 +62,7 @@ class InvestorService:
         try:
             investor = Investor.objects.get(id=pk)
             deal = Deal.objects.get(id=deal_id, status="approved")
-            investment_amount = attributes.get("investment_amount")
+            investment_amount = Decimal(attributes.get("investment_amount"))
 
             if investment_amount < deal.minimum_investment:
                 raise InvestorError(
@@ -83,6 +84,26 @@ class InvestorService:
 
             investment = Investment.objects.create(
                 deal=deal, investor=investor, investment_amount=investment_amount
+            )
+
+            email_service = EmailService()
+
+            investor_subject, investor_body = (
+                email_service.build_investment_notification_content(
+                    investment, "investor"
+                )
+            )
+            email_service.send_email_with_attachment(
+                to_email=investor.email, subject=investor_subject, body=investor_body
+            )
+
+            startup_subject, startup_body = (
+                email_service.build_investment_notification_content(
+                    investment, "startup"
+                )
+            )
+            email_service.send_email_with_attachment(
+                to_email=deal.startup.email, subject=startup_subject, body=startup_body
             )
 
             serializer = InvestmentSerializer(investment)
