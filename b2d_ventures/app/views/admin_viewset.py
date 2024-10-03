@@ -127,9 +127,11 @@ class AdminViewSet(viewsets.ModelViewSet):
                 serializer = DealSerializer(deal)
                 response_data = {"attributes": serializer.data}
                 return Response(response_data, status=status.HTTP_200_OK)
+
             elif request.method == "DELETE":
                 service.delete_deal(pk)
                 return Response(status=status.HTTP_204_NO_CONTENT)
+
         except ObjectDoesNotExist:
             return Response(
                 {"errors": [{"detail": "Deal not found"}]},
