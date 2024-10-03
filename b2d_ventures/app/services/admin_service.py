@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.utils import timezone
 
 from b2d_ventures.app.models import User, Deal, Investment, Meeting
+from b2d_ventures.utils import EmailService
 
 
 class AdminError(Exception):
@@ -56,7 +57,7 @@ class AdminService:
     @staticmethod
     def approve_deal(deal_id):
         """
-        Approve a specific deal.
+        Approve a specific deal and send a notification email.
 
         :param deal_id: ID of the deal to approve.
         :return: Updated Deal object.
@@ -65,6 +66,17 @@ class AdminService:
             deal = Deal.objects.get(id=deal_id)
             deal.status = "approved"
             deal.save()
+
+            email_service = EmailService()
+            subject, body = email_service.build_deal_notification_content(
+                deal, "approved"
+            )
+            email_sent = email_service.send_email_with_attachment(
+                to_email=deal.startup.email, subject=subject, body=body
+            )
+            if not email_sent:
+                print(f"Warning: Failed to send notification email for deal {deal.id}")
+
             return deal
         except Deal.DoesNotExist:
             raise ObjectDoesNotExist(f"Deal with id {deal_id} does not exist")
@@ -74,7 +86,7 @@ class AdminService:
     @staticmethod
     def reject_deal(deal_id):
         """
-        Reject a specific deal.
+        Reject a specific deal and send a notification email.
 
         :param deal_id: ID of the deal to reject.
         :return: Updated Deal object.
@@ -83,6 +95,17 @@ class AdminService:
             deal = Deal.objects.get(id=deal_id)
             deal.status = "rejected"
             deal.save()
+
+            email_service = EmailService()
+            subject, body = email_service.build_deal_notification_content(
+                deal, "rejected"
+            )
+            email_sent = email_service.send_email_with_attachment(
+                to_email=deal.startup.email, subject=subject, body=body
+            )
+            if not email_sent:
+                print(f"Warning: Failed to send notification email for deal {deal.id}")
+
             return deal
         except Deal.DoesNotExist:
             raise ObjectDoesNotExist(f"Deal with id {deal_id} does not exist")
