@@ -141,7 +141,7 @@ class InvestorViewSetTest(APITestCase):
         data = {
             "data": {
                 "attributes": {
-                    "investment_amount": 500,  # Below minimum investment
+                    "investment_amount": 500,
                 }
             }
         }
@@ -239,7 +239,7 @@ class InvestorViewSetTest(APITestCase):
 
     def test_meetings(self):
         """Test getting all meetings that belong to the investor."""
-        # Create some meetings
+
         Meeting.objects.create(
             investor=self.investor,
             startup=self.startup,
@@ -261,7 +261,7 @@ class InvestorViewSetTest(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIsInstance(response.data, list)  # Should return a list
+        self.assertIsInstance(response.data, list)
         self.assertEqual(len(response.data), 2)
 
     def test_dashboard(self):
