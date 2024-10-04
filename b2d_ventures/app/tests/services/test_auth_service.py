@@ -40,7 +40,7 @@ class AuthServiceTestCase(TestCase):
         code = self.auth_service.extract_authorization_code(url)
         self.assertIsNone(code)
 
-    @patch('b2d_ventures.utils.HTTPRequestHandler.make_request')
+    @patch("b2d_ventures.utils.HTTPRequestHandler.make_request")
     def test_exchange_code_for_token(self, mock_make_request):
         """
         Test the exchange_code_for_token method.
@@ -52,21 +52,22 @@ class AuthServiceTestCase(TestCase):
         self.assertEqual(result, {"access_token": "test_token"})
         mock_make_request.assert_called_once()
 
-    @patch('b2d_ventures.utils.HTTPRequestHandler.make_request')
+    @patch("b2d_ventures.utils.HTTPRequestHandler.make_request")
     def test_get_user_profile(self, mock_make_request):
         """
         Test the get_user_profile method.
 
         Verifies that the method correctly retrieves a user profile using an access token.
         """
-        mock_make_request.return_value = {"name": "Test User",
-                                          "email": "test@example.com"}
+        mock_make_request.return_value = {
+            "name": "Test User",
+            "email": "test@example.com",
+        }
         result = self.auth_service.get_user_profile("test_token")
-        self.assertEqual(result,
-                         {"name": "Test User", "email": "test@example.com"})
+        self.assertEqual(result, {"name": "Test User", "email": "test@example.com"})
         mock_make_request.assert_called_once()
 
-    @patch('b2d_ventures.utils.HTTPRequestHandler.make_request')
+    @patch("b2d_ventures.utils.HTTPRequestHandler.make_request")
     def test_refresh_access_token_success(self, mock_make_request):
         """
         Test the refresh_access_token method for a successful case.
@@ -78,7 +79,7 @@ class AuthServiceTestCase(TestCase):
         self.assertEqual(result, "new_test_token")
         mock_make_request.assert_called_once()
 
-    @patch('b2d_ventures.utils.HTTPRequestHandler.make_request')
+    @patch("b2d_ventures.utils.HTTPRequestHandler.make_request")
     def test_refresh_access_token_failure(self, mock_make_request):
         """
         Test the refresh_access_token method for a failure case.
@@ -89,7 +90,7 @@ class AuthServiceTestCase(TestCase):
         with self.assertRaises(AuthError):
             self.auth_service.refresh_access_token("test_refresh_token")
 
-    @patch('b2d_ventures.utils.HTTPRequestHandler.make_request')
+    @patch("b2d_ventures.utils.HTTPRequestHandler.make_request")
     def test_refresh_access_token_exception(self, mock_make_request):
         """
         Test the refresh_access_token method when an exception occurs.
@@ -106,7 +107,7 @@ class AuthServiceTestCase(TestCase):
 
         Verifies that the required settings are properly configured.
         """
-        self.assertTrue(hasattr(settings, 'TOKEN_URL'))
-        self.assertTrue(hasattr(settings, 'GOOGLE_CLIENT_ID'))
-        self.assertTrue(hasattr(settings, 'GOOGLE_CLIENT_SECRET'))
-        self.assertTrue(hasattr(settings, 'REDIRECT_URI'))
+        self.assertTrue(hasattr(settings, "TOKEN_URL"))
+        self.assertTrue(hasattr(settings, "GOOGLE_CLIENT_ID"))
+        self.assertTrue(hasattr(settings, "GOOGLE_CLIENT_SECRET"))
+        self.assertTrue(hasattr(settings, "REDIRECT_URI"))

@@ -198,14 +198,16 @@ class InvestorViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["get"], url_path="dashboard")
     def dashboard(self, request, pk=None):
-        """
-        Get a comprehensive dashboard for the investor, including profile, investments, meetings, and other relevant data.
-        """
         try:
             investor = self.get_object()
             profile_response = self.get_profile(request, pk)
             investments_response = self.list_investments(request, pk)
             meetings_response = self.meetings(request, pk)
+
+            profile_data = profile_response.data.get("attributes", {})
+            investments_data = investments_response.data
+            meetings_data = meetings_response.data
+
             total_invested = (
                 Investment.objects.filter(investor=investor).aggregate(
                     Sum("investment_amount")
@@ -225,9 +227,9 @@ class InvestorViewSet(viewsets.ModelViewSet):
                 "type": "investor_dashboard",
                 "id": str(investor.id),
                 "attributes": {
-                    "profile": profile_response.get("data", {}).get("attributes", {}),
-                    "investments": investments_response.get("data", []),
-                    "meetings": meetings_response.get("data", []),
+                    "profile": profile_data,
+                    "investments": investments_data,
+                    "meetings": meetings_data,
                     "total_invested": float(total_invested),
                     "investment_count": investment_count,
                     "available_funds": float(investor.available_funds),
