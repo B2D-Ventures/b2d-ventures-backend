@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework import status
@@ -78,7 +79,8 @@ class AdminViewSetTest(APITestCase):
         )
 
         self.investment = Investment.objects.create(
-            deal=self.deal, investor=self.investor_user, investment_amount=10000.00
+            deal=self.deal, investor=self.investor_user,
+            investment_amount=10000.00
         )
 
         self.meeting = Meeting.objects.create(
@@ -114,7 +116,8 @@ class AdminViewSetTest(APITestCase):
         self.assertTrue(isinstance(response.data, list))
         self.assertEqual(len(response.data), Deal.objects.count())
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_approve_deal(self, mock_email):
         """Test approving a deal."""
         mock_email.return_value = "email"
@@ -125,7 +128,8 @@ class AdminViewSetTest(APITestCase):
         self.deal.refresh_from_db()
         self.assertEqual(self.deal.status, "approved")
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_reject_deal(self, mock_email):
         """Test rejecting a deal."""
         mock_email.return_value = "email"
@@ -173,7 +177,8 @@ class AdminViewSetTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(isinstance(response.data.get("data"), list))
-        self.assertEqual(len(response.data.get("data")), Meeting.objects.count())
+        self.assertEqual(len(response.data.get("data")),
+                         Meeting.objects.count())
 
     def test_dashboard(self):
         """Test retrieving the admin dashboard."""

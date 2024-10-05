@@ -1,14 +1,13 @@
 from datetime import datetime, timedelta
-from django.test import TestCase
-from unittest.mock import patch, MagicMock
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.response import Response
-from rest_framework import status
 from decimal import Decimal
+from unittest.mock import patch
 
-from b2d_ventures.app.models import Investor, Deal, Investment, Startup, Meeting
+from django.core.exceptions import ObjectDoesNotExist
+from django.test import TestCase
+from rest_framework import status
+
+from b2d_ventures.app.models import Investor, Deal, Investment, Startup
 from b2d_ventures.app.services import InvestorService, InvestorError
-from icecream import ic
 
 
 class InvestorServiceTestCase(TestCase):
@@ -49,7 +48,8 @@ class InvestorServiceTestCase(TestCase):
     def test_list_investments(self):
         """Test listing investments made by the investor."""
         investment = Investment.objects.create(
-            deal=self.deal, investor=self.investor, investment_amount=Decimal("1500.00")
+            deal=self.deal, investor=self.investor,
+            investment_amount=Decimal("1500.00")
         )
         response = InvestorService.list_investments(self.investor.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -60,7 +60,8 @@ class InvestorServiceTestCase(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             InvestorService.list_investments(9999)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_create_investment(self, mock_email):
         """Test creating a new investment."""
         mock_email.return_value = "email"
@@ -70,7 +71,8 @@ class InvestorServiceTestCase(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn("attributes", response.data)
-        self.assertEqual(response.data["attributes"]["investment_amount"], "2000.00")
+        self.assertEqual(response.data["attributes"]["investment_amount"],
+                         "2000.00")
 
     def test_create_investment_below_minimum(self):
         """Test creating an investment below the minimum amount."""
@@ -90,21 +92,25 @@ class InvestorServiceTestCase(TestCase):
         """Test creating an investment for a non-existent deal."""
         attributes = {"investment_amount": 2000}
         with self.assertRaises(ObjectDoesNotExist):
-            InvestorService.create_investment(self.investor.id, 9999, attributes)
+            InvestorService.create_investment(self.investor.id, 9999,
+                                              attributes)
 
     def test_get_investment(self):
         """Test getting details of a specific investment."""
         investment = Investment.objects.create(
-            deal=self.deal, investor=self.investor, investment_amount=Decimal("1500.00")
+            deal=self.deal, investor=self.investor,
+            investment_amount=Decimal("1500.00")
         )
-        response = InvestorService.get_investment(self.investor.id, investment.id)
+        response = InvestorService.get_investment(self.investor.id,
+                                                  investment.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("attributes", response.data)
 
     def test_get_investment_nonexistent_investor(self):
         """Test getting an investment for a non-existent investor."""
         investment = Investment.objects.create(
-            deal=self.deal, investor=self.investor, investment_amount=Decimal("1500.00")
+            deal=self.deal, investor=self.investor,
+            investment_amount=Decimal("1500.00")
         )
         with self.assertRaises(ObjectDoesNotExist):
             InvestorService.get_investment(9999, investment.id)
@@ -114,16 +120,19 @@ class InvestorServiceTestCase(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             InvestorService.get_investment(self.investor.id, 9999)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_request_dataroom(self, mock_email):
         """Test requesting access to a deal's dataroom."""
         mock_email = "email"
         self.deal.dataroom = "path/to/dataroom.pdf"
         self.deal.save()
-        response = InvestorService.request_dataroom(self.investor.id, self.deal.id)
+        response = InvestorService.request_dataroom(self.investor.id,
+                                                    self.deal.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            response.data["message"], "Dataroom sent successfully to your email"
+            response.data["message"],
+            "Dataroom sent successfully to your email"
         )
 
     def test_request_dataroom_no_file(self):
@@ -135,16 +144,17 @@ class InvestorServiceTestCase(TestCase):
         """Test scheduling a meeting between an investor and a startup."""
         attributes = {
             "start_time": (datetime.now() + timedelta(days=1)).isoformat(),
-            "end_time": (datetime.now() + timedelta(days=1, hours=1)).isoformat(),
+            "end_time": (datetime.now() + timedelta(days=1,
+                                                    hours=1)).isoformat(),
             "title": "Investor-Startup Meeting",
             "description": "Discuss investment opportunities",
         }
         with patch(
-            "b2d_ventures.app.services.AuthService.refresh_access_token"
+                "b2d_ventures.app.services.AuthService.refresh_access_token"
         ) as mock_refresh:
             mock_refresh.return_value = "mock_access_token"
             with patch(
-                "b2d_ventures.app.services.CalendarService.schedule_investor_startup_meeting"
+                    "b2d_ventures.app.services.CalendarService.schedule_investor_startup_meeting"
             ) as mock_schedule:
                 mock_schedule.return_value = {"id": "mock_event_id"}
                 response = InvestorService.schedule_meeting(
@@ -157,7 +167,8 @@ class InvestorServiceTestCase(TestCase):
         """Test scheduling a meeting for a non-existent investor."""
         attributes = {
             "start_time": (datetime.now() + timedelta(days=1)).isoformat(),
-            "end_time": (datetime.now() + timedelta(days=1, hours=1)).isoformat(),
+            "end_time": (datetime.now() + timedelta(days=1,
+                                                    hours=1)).isoformat(),
         }
         with self.assertRaises(ObjectDoesNotExist):
             InvestorService.schedule_meeting(9999, self.startup.id, attributes)
@@ -166,10 +177,12 @@ class InvestorServiceTestCase(TestCase):
         """Test scheduling a meeting for a non-existent startup."""
         attributes = {
             "start_time": (datetime.now() + timedelta(days=1)).isoformat(),
-            "end_time": (datetime.now() + timedelta(days=1, hours=1)).isoformat(),
+            "end_time": (datetime.now() + timedelta(days=1,
+                                                    hours=1)).isoformat(),
         }
         with self.assertRaises(ObjectDoesNotExist):
-            InvestorService.schedule_meeting(self.investor.id, 9999, attributes)
+            InvestorService.schedule_meeting(self.investor.id, 9999,
+                                             attributes)
 
     def test_schedule_meeting_no_refresh_token(self):
         """Test scheduling a meeting when the investor has no refresh token."""
@@ -177,7 +190,8 @@ class InvestorServiceTestCase(TestCase):
         self.investor.save()
         attributes = {
             "start_time": (datetime.now() + timedelta(days=1)).isoformat(),
-            "end_time": (datetime.now() + timedelta(days=1, hours=1)).isoformat(),
+            "end_time": (datetime.now() + timedelta(days=1,
+                                                    hours=1)).isoformat(),
         }
         with self.assertRaises(InvestorError):
             InvestorService.schedule_meeting(

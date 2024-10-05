@@ -1,12 +1,11 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
-from unittest.mock import patch, MagicMock
 
-from b2d_ventures.app.models import Admin, Investor, Startup, User
+from b2d_ventures.app.models import Admin, Investor, User
 from b2d_ventures.app.services import AuthError
-from icecream import ic
 
 User = get_user_model()
 
@@ -34,7 +33,7 @@ class AuthViewSetTest(APITestCase):
     @patch("b2d_ventures.app.services.AuthService.exchange_code_for_token")
     @patch("b2d_ventures.app.services.AuthService.get_user_profile")
     def test_create_new_user(
-        self, mock_get_profile, mock_exchange_token, mock_extract_code
+            self, mock_get_profile, mock_exchange_token, mock_extract_code
     ):
         """Test creating a new user via Google SSO."""
         mock_extract_code.return_value = "test_code"
@@ -154,4 +153,5 @@ class AuthViewSetTest(APITestCase):
         data = {"data": {"attributes": {"role": "investor"}}}
         response = self.client.put(url, data, format="vnd.api+json")
 
-        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code,
+                         status.HTTP_500_INTERNAL_SERVER_ERROR)

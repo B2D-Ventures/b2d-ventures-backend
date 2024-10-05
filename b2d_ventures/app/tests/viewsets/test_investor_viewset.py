@@ -1,11 +1,13 @@
 from unittest.mock import patch
-from django.core.files.base import ContentFile
+
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from b2d_ventures.app.models import Investor, Deal, Meeting, Investment, Startup
+from b2d_ventures.app.models import Investor, Deal, Meeting, Investment, \
+    Startup
 
 User = get_user_model()
 
@@ -53,7 +55,8 @@ class InvestorViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("attributes", response.data)
-        self.assertEqual(response.data["attributes"]["email"], self.investor.email)
+        self.assertEqual(response.data["attributes"]["email"],
+                         self.investor.email)
 
     def test_get_profile_not_found(self):
         """Test getting a profile for a non-existent investor."""
@@ -90,7 +93,8 @@ class InvestorViewSetTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(len(response.data), 1)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_create_investment(self, mock_email):
         """Test creating a new investment."""
         mock_email.return_value = "email"
@@ -121,7 +125,8 @@ class InvestorViewSetTest(APITestCase):
         self.assertEqual(investment.investment_amount, 5000)
         self.assertEqual(investment.deal, deal)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_create_investment_invalid_amount(self, mock_email):
         """Test creating an investment with amount below minimum investment."""
         mock_email.return_value = "email"
@@ -148,7 +153,8 @@ class InvestorViewSetTest(APITestCase):
         response = self.client.post(url, data, format="vnd.api+json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_create_investment_invalid_deal(self, mock_email):
         """Test creating an investment for a non-existent deal."""
         mock_email.return_value = "email"
@@ -164,7 +170,8 @@ class InvestorViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    @patch(
+        "b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
     def test_request_dataroom(self, mock_email):
         """Test requesting access to a deal's dataroom."""
         mock_email.return_value = "email"
@@ -188,7 +195,8 @@ class InvestorViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    @patch("b2d_ventures.app.services.auth_service.AuthService.refresh_access_token")
+    @patch(
+        "b2d_ventures.app.services.auth_service.AuthService.refresh_access_token")
     @patch(
         "b2d_ventures.app.services.calendar_service.CalendarService.schedule_investor_startup_meeting"
     )
@@ -204,7 +212,7 @@ class InvestorViewSetTest(APITestCase):
                     "description": "Discuss investment opportunities",
                     "start_time": timezone.now().isoformat(),
                     "end_time": (
-                        timezone.now() + timezone.timedelta(hours=1)
+                            timezone.now() + timezone.timedelta(hours=1)
                     ).isoformat(),
                 }
             }
@@ -228,7 +236,7 @@ class InvestorViewSetTest(APITestCase):
                     "description": "Discuss investment opportunities",
                     "start_time": timezone.now().isoformat(),
                     "end_time": (
-                        timezone.now() + timezone.timedelta(hours=1)
+                            timezone.now() + timezone.timedelta(hours=1)
                     ).isoformat(),
                 }
             }

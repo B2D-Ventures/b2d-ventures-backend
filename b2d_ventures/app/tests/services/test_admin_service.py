@@ -1,9 +1,11 @@
+from unittest.mock import patch
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.test import TestCase
 from django.utils import timezone
-from unittest.mock import patch
-from django.core.exceptions import ObjectDoesNotExist
 
-from b2d_ventures.app.models import User, Deal, Investment, Meeting, Investor, Startup
+from b2d_ventures.app.models import User, Deal, Investment, Meeting, Investor, \
+    Startup
 from b2d_ventures.app.services import AdminService
 
 
@@ -30,12 +32,14 @@ class AdminServiceTestCase(TestCase):
     def test_get_nonexistent_user_details(self):
         """Test retrieving details of a non-existent user."""
         with self.assertRaises(ObjectDoesNotExist):
-            self.service.get_user_details("00000000-0000-0000-0000-000000000000")
+            self.service.get_user_details(
+                "00000000-0000-0000-0000-000000000000")
 
     def test_list_deals(self):
         """Test listing all deals."""
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         Deal.objects.create(name="Deal 1", startup=startup)
         Deal.objects.create(name="Deal 2", startup=startup)
@@ -47,9 +51,11 @@ class AdminServiceTestCase(TestCase):
         """Test approving a deal."""
         mock_send_email.return_value = True
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
-        deal = Deal.objects.create(name="Test Deal", status="pending", startup=startup)
+        deal = Deal.objects.create(name="Test Deal", status="pending",
+                                   startup=startup)
         approved_deal = self.service.approve_deal(deal.id)
         self.assertEqual(approved_deal.status, "approved")
 
@@ -58,9 +64,11 @@ class AdminServiceTestCase(TestCase):
         """Test rejecting a deal."""
         mock_send_email.return_value = True
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
-        deal = Deal.objects.create(name="Test Deal", status="pending", startup=startup)
+        deal = Deal.objects.create(name="Test Deal", status="pending",
+                                   startup=startup)
         rejected_deal = self.service.reject_deal(deal.id)
         self.assertEqual(rejected_deal.status, "rejected")
 
@@ -70,11 +78,14 @@ class AdminServiceTestCase(TestCase):
             email="investor@example.com", username="investor"
         )
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         deal = Deal.objects.create(name="Test Deal", startup=startup)
-        Investment.objects.create(deal=deal, investor=investor, investment_amount=1000)
-        Investment.objects.create(deal=deal, investor=investor, investment_amount=2000)
+        Investment.objects.create(deal=deal, investor=investor,
+                                  investment_amount=1000)
+        Investment.objects.create(deal=deal, investor=investor,
+                                  investment_amount=2000)
         investments = self.service.list_investments()
         self.assertEqual(investments.count(), 2)
 
@@ -84,7 +95,8 @@ class AdminServiceTestCase(TestCase):
             email="investor@example.com", username="investor"
         )
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         Meeting.objects.create(investor=investor, startup=startup)
         Meeting.objects.create(investor=investor, startup=startup)
@@ -95,14 +107,16 @@ class AdminServiceTestCase(TestCase):
         """Test retrieving dashboard data."""
         User.objects.create(email="user@example.com", username="user")
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         Deal.objects.create(name="Deal", status="active", startup=startup)
         investor = Investor.objects.create(
             email="investor@example.com", username="investor"
         )
         deal = Deal.objects.create(name="Test Deal", startup=startup)
-        Investment.objects.create(deal=deal, investor=investor, investment_amount=1000)
+        Investment.objects.create(deal=deal, investor=investor,
+                                  investment_amount=1000)
         Meeting.objects.create(
             investor=investor,
             startup=startup,
@@ -135,7 +149,8 @@ class AdminServiceTestCase(TestCase):
             email="investor@example.com", username="investor"
         )
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         meeting = Meeting.objects.create(investor=investor, startup=startup)
         self.service.delete_meeting(meeting.id)
@@ -147,7 +162,8 @@ class AdminServiceTestCase(TestCase):
             email="investor@example.com", username="investor"
         )
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         deal = Deal.objects.create(name="Test Deal", startup=startup)
         investment = Investment.objects.create(
@@ -159,7 +175,8 @@ class AdminServiceTestCase(TestCase):
     def test_delete_deal(self):
         """Test deleting a deal."""
         startup = Startup.objects.create(
-            name="Test Startup", email="startup@example.com", username="teststartup"
+            name="Test Startup", email="startup@example.com",
+            username="teststartup"
         )
         deal = Deal.objects.create(name="Test Deal", startup=startup)
         self.service.delete_deal(deal.id)
