@@ -4,13 +4,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.response import Response
 
-from b2d_ventures.app.models import Startup, User, Deal, Investment
+from b2d_ventures.app.models import Startup, Deal, Investment
 from b2d_ventures.app.serializers import (
     StartupSerializer,
     DealSerializer,
     InvestmentSerializer,
 )
-from icecream import ic
 
 
 class StartupError(Exception):
@@ -64,6 +63,23 @@ class StartupService:
         except Exception as e:
             raise StartupError(f"Error listing startup deals: {str(e)}")
 
+    # @staticmethod
+    # def create_deal(pk, attributes):
+    #     """Create a new deal."""
+    #     try:
+    #         startup = Startup.objects.get(id=pk)
+    #         attributes["startup"] = startup.id
+    #         serializer = DealSerializer(data=attributes)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             response_data = {"attributes": serializer.data}
+    #             return Response(response_data, status=status.HTTP_201_CREATED)
+    #         else:
+    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     except Startup.DoesNotExist:
+    #         raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
+    #     except Exception as e:
+    #         raise StartupError(f"Error creating deal: {str(e)}")
     @staticmethod
     def create_deal(pk, attributes):
         """Create a new deal."""
@@ -125,7 +141,6 @@ class StartupService:
     @staticmethod
     def delete_deal(pk, deal_id):
         """Delete a specific deal."""
-        ic("deleting")
         try:
             startup = Startup.objects.get(id=pk)
             deal = Deal.objects.get(id=deal_id, startup=startup)

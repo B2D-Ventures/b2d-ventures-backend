@@ -6,8 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.test import APITestCase
 
-from b2d_ventures.app.models import Startup, Deal, Meeting, Investment, \
-    Investor
+from b2d_ventures.app.models import Startup, Deal, Meeting, Investment, Investor
 from b2d_ventures.app.services import StartupError
 
 User = get_user_model()
@@ -49,8 +48,7 @@ class StartupViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("attributes", response.data)
-        self.assertEqual(response.data["attributes"]["email"],
-                         self.startup.email)
+        self.assertEqual(response.data["attributes"]["email"], self.startup.email)
 
     def test_update_profile(self):
         """
@@ -68,8 +66,7 @@ class StartupViewSetTest(APITestCase):
         response = self.client.put(url, data, format="vnd.api+json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["attributes"]["name"],
-                         "Updated Startup Name")
+        self.assertEqual(response.data["attributes"]["name"], "Updated Startup Name")
         self.assertEqual(
             response.data["attributes"]["description"], "Updated description"
         )
@@ -144,10 +141,8 @@ class StartupViewSetTest(APITestCase):
         response = self.client.put(url, data, format="vnd.api+json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["data"]["attributes"]["name"],
-                         "Updated Deal")
-        self.assertEqual(response.data["data"]["attributes"]["allocation"],
-                         "15000.00")
+        self.assertEqual(response.data["data"]["attributes"]["name"], "Updated Deal")
+        self.assertEqual(response.data["data"]["attributes"]["allocation"], "15000.00")
         self.assertEqual(
             response.data["data"]["attributes"]["price_per_unit"], "150.00"
         )
@@ -195,8 +190,7 @@ class StartupViewSetTest(APITestCase):
             minimum_investment=1000,
         )
 
-        mock_delete_deal.return_value = Response(
-            status=status.HTTP_204_NO_CONTENT)
+        mock_delete_deal.return_value = Response(status=status.HTTP_204_NO_CONTENT)
 
         url = f"/api/startup/{self.startup.id}/deals/{deal.id}/"
         response = self.client.delete(url)
@@ -228,8 +222,7 @@ class StartupViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["attributes"]["investment_amount"],
-                         "5000.00")
+        self.assertEqual(response.data[0]["attributes"]["investment_amount"], "5000.00")
 
     def test_list_meetings(self):
         """
@@ -258,16 +251,14 @@ class StartupViewSetTest(APITestCase):
     @patch("b2d_ventures.app.services.StartupService.get_profile")
     @patch("b2d_ventures.app.services.StartupService.list_deals")
     @patch("b2d_ventures.app.services.StartupService.list_investments")
-    def test_dashboard(self, mock_list_investments, mock_list_deals,
-                       mock_get_profile):
+    def test_dashboard(self, mock_list_investments, mock_list_deals, mock_get_profile):
         """
         Test getting the startup's dashboard.
         """
         mock_get_profile.return_value = Response(
             {"attributes": {"name": "Test Startup"}}
         )
-        mock_list_deals.return_value = Response(
-            [{"attributes": {"name": "Test Deal"}}])
+        mock_list_deals.return_value = Response([{"attributes": {"name": "Test Deal"}}])
         mock_list_investments.return_value = Response(
             [{"attributes": {"investment_amount": "5000.00"}}]
         )
@@ -312,5 +303,4 @@ class StartupViewSetTest(APITestCase):
         url = f"/api/startup/{self.startup.id}/profile/"
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code,
-                         status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)

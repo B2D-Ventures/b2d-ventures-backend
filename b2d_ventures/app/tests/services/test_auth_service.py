@@ -64,8 +64,7 @@ class AuthServiceTestCase(TestCase):
             "email": "test@example.com",
         }
         result = self.auth_service.get_user_profile("test_token")
-        self.assertEqual(result,
-                         {"name": "Test User", "email": "test@example.com"})
+        self.assertEqual(result, {"name": "Test User", "email": "test@example.com"})
         mock_make_request.assert_called_once()
 
     @patch("b2d_ventures.utils.HTTPRequestHandler.make_request")

@@ -41,8 +41,7 @@ class CalendarServiceTestCase(TestCase):
         start_time = datetime.now(timezone.utc)
         end_time = start_time + timedelta(hours=1)
 
-        mock_service.events().list().execute.return_value = {
-            "items": [{"id": "1"}]}
+        mock_service.events().list().execute.return_value = {"items": [{"id": "1"}]}
         available = self.service.check_availability(
             mock_service, calendar_id, start_time, end_time
         )
@@ -61,8 +60,7 @@ class CalendarServiceTestCase(TestCase):
         end_time = start_time + timedelta(hours=1)
         attendees = ["attendee@example.com"]
 
-        mock_service.events().insert().execute.return_value = {
-            "id": "event_id"}
+        mock_service.events().insert().execute.return_value = {"id": "event_id"}
         event = self.service.schedule_meeting(
             mock_service,
             calendar_id,
@@ -132,8 +130,7 @@ class CalendarServiceTestCase(TestCase):
         end_time = start_time + timedelta(hours=1)
         startup_email = "startup@example.com"
 
-        mock_service.events().insert().execute.return_value = {
-            "id": "event_id"}
+        mock_service.events().insert().execute.return_value = {"id": "event_id"}
         event = self.service.schedule_investor_startup_meeting(
             token, title, description, start_time, end_time, startup_email
         )
@@ -141,7 +138,7 @@ class CalendarServiceTestCase(TestCase):
 
     @patch("b2d_ventures.app.services.CalendarService.get_service")
     def test_schedule_investor_startup_meeting_availability_error(
-            self, mock_get_service
+        self, mock_get_service
     ):
         """Test scheduling a meeting and handling availability error."""
         mock_service = MagicMock()
@@ -154,8 +151,7 @@ class CalendarServiceTestCase(TestCase):
         end_time = start_time + timedelta(hours=1)
         startup_email = "startup@example.com"
 
-        mock_service.events().list().execute.return_value = {
-            "items": [{"id": "1"}]}
+        mock_service.events().list().execute.return_value = {"items": [{"id": "1"}]}
 
         with self.assertRaises(CalendarError):
             self.service.schedule_investor_startup_meeting(
