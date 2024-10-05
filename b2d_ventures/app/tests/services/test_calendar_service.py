@@ -13,7 +13,7 @@ class CalendarServiceTestCase(TestCase):
     def setUp(self):
         """Set up the test environment."""
         self.service = CalendarService()
-        self.credentials = MagicMock()  # Mocking the credentials
+        self.credentials = MagicMock()
 
     @patch("b2d_ventures.app.services.CalendarService.get_service")
     def test_check_availability(self, mock_get_service):
