@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "b2d_ventures.stub_api",
     "corsheaders",
+    'cloudinary',
+    'cloudinary_storage',
 ]
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -182,3 +185,12 @@ SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = os.getenv('SMTP_PORT', 587)
 SMTP_USER = os.getenv('SMTP_USER', '')
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', '')
+
+# Cloudinary credentials
+CLOUDINARY_STORAGE = {
+  'CLOUD_NAME':  os.getenv('CLOUDINARY_CLOUD_NAME', 'default_secret_key'),
+  'API_KEY':  os.getenv('CLOUDINARY_API_KEY', 'default_secret_key'),
+  'API_SECRET':  os.getenv('CLOUDINARY_API_SECRET', 'default_secret_key')
+}
+# Set Cloudinary as the default file storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

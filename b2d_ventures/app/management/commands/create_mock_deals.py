@@ -3,7 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
+from cloudinary_storage.storage import MediaCloudinaryStorage, RawMediaCloudinaryStorage
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -14,25 +14,23 @@ class Command(BaseCommand):
     help = "Creates mock deals for a startup"
 
     def handle(self, *args, **options):
-        def create_placeholder_image(folder, filename):
-            with open(
-                f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
-                "rb",
-            ) as f:
-                content = ContentFile(f.read())
-            path = os.path.join("contentMockup", folder, filename)
-            full_path = default_storage.save(path, content)
-            return full_path
+        media_storage = MediaCloudinaryStorage()
+        raw_storage = RawMediaCloudinaryStorage()
 
-        def create_placeholder_pdf(folder, filename):
-            with open(
-                f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
-                "rb",
-            ) as f:
+        def upload_to_cloudinary(folder, filename, file_path, is_raw=False):
+            with open(file_path, 'rb') as f:
                 content = ContentFile(f.read())
-            path = os.path.join("contentMockup", folder, filename)
-            full_path = default_storage.save(path, content)
-            return full_path
+
+            path = f"{folder}/{filename}"
+            return raw_storage.save(path,
+                                    content) if is_raw else media_storage.save(
+                path, content)
+
+        def create_placeholder_file(folder, filename):
+            local_path = f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}"
+            is_raw = filename.lower().endswith('.pdf')
+            return upload_to_cloudinary(folder, filename, local_path,
+                                        is_raw=is_raw)
 
         def create_mock_deals(startup_id):
             startup = Startup.objects.get(id=startup_id)
@@ -45,12 +43,12 @@ class Command(BaseCommand):
                 name="NeurAI Series A",
                 description="Revolutionizing human-computer interaction with direct neural interfaces",
                 content="NeurAI is developing cutting-edge neural interface technology that allows direct communication between the human brain and computers. Our technology has applications in healthcare, gaming, and productivity tools.",
-                image_background=create_placeholder_image(
+                image_background=create_placeholder_file(
                     "NeurAI", "neurai_background.jpeg"
                 ),
-                image_logo=create_placeholder_image("NeurAI", "neurai_logo.png"),
-                image_content=create_placeholder_image("NeurAI", "neurai_content.jpeg"),
-                dataroom=create_placeholder_pdf("NeurAI", "neurai_dataroom.pdf"),
+                image_logo=create_placeholder_file("NeurAI", "neurai_logo.png"),
+                image_content=create_placeholder_file("NeurAI", "neurai_content.jpeg"),
+                dataroom=create_placeholder_file("NeurAI", "neurai_dataroom.pdf"),
                 allocation=Decimal("5000000.00"),
                 price_per_unit=Decimal("100.00"),
                 minimum_investment=Decimal("10000.00"),
@@ -66,16 +64,16 @@ class Command(BaseCommand):
                 name="SolarFlare Seed Round",
                 description="Efficient and affordable solar solutions for residential use",
                 content="SolarFlare is developing a new generation of solar panels that are 50% more efficient and 30% cheaper than current market leaders. Our technology will make solar energy accessible to millions of homeowners.",
-                image_background=create_placeholder_image(
+                image_background=create_placeholder_file(
                     "SolarFlare", "solarflare_background.png"
                 ),
-                image_logo=create_placeholder_image(
+                image_logo=create_placeholder_file(
                     "SolarFlare", "solarflare_logo.png"
                 ),
-                image_content=create_placeholder_image(
+                image_content=create_placeholder_file(
                     "SolarFlare", "solarflare_background.png"
                 ),
-                dataroom=create_placeholder_pdf(
+                dataroom=create_placeholder_file(
                     "SolarFlare", "solarflare_dataroom.pdf"
                 ),
                 allocation=Decimal("2000000.00"),
@@ -93,14 +91,14 @@ class Command(BaseCommand):
                 name="GeneCure Series B",
                 description="Advancing personalized medicine through innovative gene therapies",
                 content="GeneCure is at the forefront of personalized medicine, developing gene therapies tailored to individual genetic profiles. Our treatments show promise in addressing previously incurable genetic disorders.",
-                image_background=create_placeholder_image(
+                image_background=create_placeholder_file(
                     "GeneCure", "genecure_background.jpg"
                 ),
-                image_logo=create_placeholder_image("GeneCure", "genecure_logo.jpg"),
-                image_content=create_placeholder_image(
+                image_logo=create_placeholder_file("GeneCure", "genecure_logo.jpg"),
+                image_content=create_placeholder_file(
                     "GeneCure", "genecure_background.jpg"
                 ),
-                dataroom=create_placeholder_pdf("GeneCure", "genecure_dataroom.pdf"),
+                dataroom=create_placeholder_file("GeneCure", "genecure_dataroom.pdf"),
                 allocation=Decimal("20000000.00"),
                 price_per_unit=Decimal("500.00"),
                 minimum_investment=Decimal("50000.00"),
@@ -116,16 +114,16 @@ class Command(BaseCommand):
                 name="CryptoBank ICO",
                 description="Bringing traditional banking services to the blockchain",
                 content="CryptoBank is building a decentralized banking platform that offers traditional banking services using blockchain technology. Our platform will provide secure, transparent, and accessible financial services to anyone with an internet connection.",
-                image_background=create_placeholder_image(
+                image_background=create_placeholder_file(
                     "CryptoBank", "cryptobank_background.jpeg"
                 ),
-                image_logo=create_placeholder_image(
+                image_logo=create_placeholder_file(
                     "CryptoBank", "cryptobank_logo.jpeg"
                 ),
-                image_content=create_placeholder_image(
+                image_content=create_placeholder_file(
                     "CryptoBank", "cryptobank_content.jpeg"
                 ),
-                dataroom=create_placeholder_pdf(
+                dataroom=create_placeholder_file(
                     "CryptoBank", "cryptobank_dataroom.pdf"
                 ),
                 allocation=Decimal("10000000.00"),
@@ -143,14 +141,14 @@ class Command(BaseCommand):
                 name="VertiFarm Series A",
                 description="Revolutionizing urban agriculture with AI-powered vertical farms",
                 content="VertiFarm is developing AI-controlled vertical farming systems that can produce 100 times more food per square foot than traditional farming. Our technology enables fresh, local produce to be grown year-round in any urban environment.",
-                image_background=create_placeholder_image(
+                image_background=create_placeholder_file(
                     "VertiFarm", "vertifarm_background.png"
                 ),
-                image_logo=create_placeholder_image("VertiFarm", "vertifarm_logo.png"),
-                image_content=create_placeholder_image(
+                image_logo=create_placeholder_file("VertiFarm", "vertifarm_logo.png"),
+                image_content=create_placeholder_file(
                     "VertiFarm", "vertifarm_background.png"
                 ),
-                dataroom=create_placeholder_pdf("VertiFarm", "vertifarm_dataroom.pdf"),
+                dataroom=create_placeholder_file("VertiFarm", "vertifarm_dataroom.pdf"),
                 allocation=Decimal("8000000.00"),
                 price_per_unit=Decimal("200.00"),
                 minimum_investment=Decimal("20000.00"),
@@ -166,13 +164,13 @@ class Command(BaseCommand):
                 name="MediMind Pre-Series A",
                 description="AI-powered medical diagnosis and treatment planning",
                 content="MediMind leverages advanced AI algorithms to assist healthcare providers in diagnosis and treatment planning. Our system analyzes medical imaging, patient history, and latest research to provide accurate diagnostic suggestions and personalized treatment plans.",
-                image_background=create_placeholder_image("MediMind",
+                image_background=create_placeholder_file("MediMind",
                                                           "medimind_background.jpg"),
-                image_logo=create_placeholder_image("MediMind",
+                image_logo=create_placeholder_file("MediMind",
                                                     "medimind_logo.jpg"),
-                image_content=create_placeholder_image("MediMind",
+                image_content=create_placeholder_file("MediMind",
                                                        "medimind_content.png"),
-                dataroom=create_placeholder_pdf("MediMind",
+                dataroom=create_placeholder_file("MediMind",
                                                 "medimind_dataroom.pdf"),
                 allocation=Decimal("3000000.00"),
                 price_per_unit=Decimal("75.00"),
@@ -189,13 +187,13 @@ class Command(BaseCommand):
                 name="OrbitX Series B",
                 description="Democratizing satellite launch services",
                 content="OrbitX is developing reusable micro-satellite launch vehicles that reduce launch costs by 90%. Our innovative propulsion system and automated launch platform make space accessible for small to medium-sized satellite operators.",
-                image_background=create_placeholder_image("OrbitX",
+                image_background=create_placeholder_file("OrbitX",
                                                           "orbitx_background.png"),
-                image_logo=create_placeholder_image("OrbitX",
+                image_logo=create_placeholder_file("OrbitX",
                                                     "orbitx_logo.png"),
-                image_content=create_placeholder_image("OrbitX",
+                image_content=create_placeholder_file("OrbitX",
                                                        "orbitx_content.png"),
-                dataroom=create_placeholder_pdf("OrbitX",
+                dataroom=create_placeholder_file("OrbitX",
                                                 "orbitx_dataroom.pdf"),
                 allocation=Decimal("25000000.00"),
                 price_per_unit=Decimal("1000.00"),
@@ -212,13 +210,13 @@ class Command(BaseCommand):
                 name="LearnVerse Seed Round",
                 description="Virtual reality education platform",
                 content="LearnVerse creates immersive VR educational experiences that make learning engaging and effective. Our platform covers K-12 curriculum with interactive 3D models and virtual laboratories.",
-                image_background=create_placeholder_image("LearnVerse",
+                image_background=create_placeholder_file("LearnVerse",
                                                           "learnverse_background.jpg"),
-                image_logo=create_placeholder_image("LearnVerse",
+                image_logo=create_placeholder_file("LearnVerse",
                                                     "learnverse_logo.png"),
-                image_content=create_placeholder_image("LearnVerse",
+                image_content=create_placeholder_file("LearnVerse",
                                                        "learnverse_content.jpg"),
-                dataroom=create_placeholder_pdf("LearnVerse",
+                dataroom=create_placeholder_file("LearnVerse",
                                                 "learnverse_dataroom.pdf"),
                 allocation=Decimal("1500000.00"),
                 price_per_unit=Decimal("25.00"),
@@ -235,13 +233,13 @@ class Command(BaseCommand):
                 name="QuantumCore Series A",
                 description="Practical quantum computing solutions",
                 content="QuantumCore is developing room-temperature quantum computers for commercial applications. Our breakthrough in qubit stability enables practical quantum computing solutions for optimization, cryptography, and drug discovery.",
-                image_background=create_placeholder_image("QuantumCore",
+                image_background=create_placeholder_file("QuantumCore",
                                                           "quantumcore_background.png"),
-                image_logo=create_placeholder_image("QuantumCore",
+                image_logo=create_placeholder_file("QuantumCore",
                                                     "quantumcore_logo.png"),
-                image_content=create_placeholder_image("QuantumCore",
+                image_content=create_placeholder_file("QuantumCore",
                                                        "quantumcore_content.png"),
-                dataroom=create_placeholder_pdf("QuantumCore",
+                dataroom=create_placeholder_file("QuantumCore",
                                                 "quantumcore_dataroom.pdf"),
                 allocation=Decimal("15000000.00"),
                 price_per_unit=Decimal("300.00"),
@@ -258,13 +256,13 @@ class Command(BaseCommand):
                 name="EcoThread Bridge Round",
                 description="AI-powered sustainable fashion manufacturing",
                 content="EcoThread combines AI with sustainable manufacturing to revolutionize the fashion industry. Our technology optimizes fabric cutting, reduces waste by 60%, and uses recycled materials to create high-quality fashion items.",
-                image_background=create_placeholder_image("EcoThread",
+                image_background=create_placeholder_file("EcoThread",
                                                           "ecothread_background.jpg"),
-                image_logo=create_placeholder_image("EcoThread",
+                image_logo=create_placeholder_file("EcoThread",
                                                     "ecothread_logo.png"),
-                image_content=create_placeholder_image("EcoThread",
+                image_content=create_placeholder_file("EcoThread",
                                                        "ecothread_content.jpg"),
-                dataroom=create_placeholder_pdf("EcoThread",
+                dataroom=create_placeholder_file("EcoThread",
                                                 "ecothread_dataroom.pdf"),
                 allocation=Decimal("4000000.00"),
                 price_per_unit=Decimal("50.00"),
@@ -277,7 +275,7 @@ class Command(BaseCommand):
 
             return deals
 
-        startup_id = "7e737e1f-38ed-4285-8657-1ab3f41b2096"
+        startup_id = "8c81655e-eff1-4baa-8986-7179b394206f"
         mock_deals = create_mock_deals(startup_id)
         self.stdout.write(
             self.style.SUCCESS(
