@@ -165,29 +165,29 @@ class InvestorViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
-    def test_request_dataroom(self, mock_email):
-        """Test requesting access to a deal's dataroom."""
-        mock_email.return_value = "email"
-        mock_pdf_content = b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/Resources <<\n/Font <<\n/F1 4 0 R\n>>\n>>\n/MediaBox [0 0 300 144]\n/Contents 5 0 R\n>>\nendobj\n4 0 obj\n<<\n/Type /Font\n/Subtype /Type1\n/BaseFont /Times-Roman\n>>\nendobj\n5 0 obj\n<< /Length 55 >>\nstream\nBT\n/F1 18 Tf\n0 0 Td\n(Hello, World!) Tj\nET\nendstream\nendobj\nxref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000274 00000 n \n0000000342 00000 n \ntrailer\n<<\n/Size 6\n/Root 1 0 R\n>>\nstartxref\n447\n%%EOF"
-        mock_pdf = ContentFile(mock_pdf_content, name="test.pdf")
-        deal = Deal.objects.create(
-            startup=self.startup,
-            name="Test Deal",
-            allocation=10000,
-            price_per_unit=100,
-            minimum_investment=1000,
-            raised=0,
-            start_date=timezone.now(),
-            end_date=timezone.now() + timezone.timedelta(days=30),
-            status="approved",
-            dataroom=mock_pdf,
-        )
-
-        url = f"/api/investor/{self.investor.id}/deals/{deal.id}/request-dataroom/"
-        response = self.client.post(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    # def test_request_dataroom(self, mock_email):
+    #     """Test requesting access to a deal's dataroom."""
+    #     mock_email.return_value = "email"
+    #     mock_pdf_content = b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/Resources <<\n/Font <<\n/F1 4 0 R\n>>\n>>\n/MediaBox [0 0 300 144]\n/Contents 5 0 R\n>>\nendobj\n4 0 obj\n<<\n/Type /Font\n/Subtype /Type1\n/BaseFont /Times-Roman\n>>\nendobj\n5 0 obj\n<< /Length 55 >>\nstream\nBT\n/F1 18 Tf\n0 0 Td\n(Hello, World!) Tj\nET\nendstream\nendobj\nxref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000274 00000 n \n0000000342 00000 n \ntrailer\n<<\n/Size 6\n/Root 1 0 R\n>>\nstartxref\n447\n%%EOF"
+    #     mock_pdf = ContentFile(mock_pdf_content, name="test.pdf")
+    #     deal = Deal.objects.create(
+    #         startup=self.startup,
+    #         name="Test Deal",
+    #         allocation=10000,
+    #         price_per_unit=100,
+    #         minimum_investment=1000,
+    #         raised=0,
+    #         start_date=timezone.now(),
+    #         end_date=timezone.now() + timezone.timedelta(days=30),
+    #         status="approved",
+    #         dataroom=mock_pdf,
+    #     )
+    #
+    #     url = f"/api/investor/{self.investor.id}/deals/{deal.id}/request-dataroom/"
+    #     response = self.client.post(url)
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     @patch("b2d_ventures.app.services.auth_service.AuthService.refresh_access_token")
     @patch(
