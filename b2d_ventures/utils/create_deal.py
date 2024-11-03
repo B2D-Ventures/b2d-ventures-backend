@@ -88,7 +88,7 @@ def create_mock_deals(startup_id):
         ),
         image_logo=create_placeholder_image("GeneCure", "genecure_logo.jpg"),
         image_content=create_placeholder_image("GeneCure", "genecure_background.jpg"),
-        dataroom=create_placeholder_pdf("GeneCure", "genecure_dataroom.pdf"),
+        dataroom=create_placeholder_pdf("GeneCure", "medimind_dataroom.pdf"),
         allocation=Decimal("20000000.00"),
         price_per_unit=Decimal("500.00"),
         minimum_investment=Decimal("50000.00"),
