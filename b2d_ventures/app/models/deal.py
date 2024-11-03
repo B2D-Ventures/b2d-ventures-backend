@@ -1,6 +1,7 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 from b2d_ventures.app.models import Startup
 from b2d_ventures.app.models.abstract_model import AbstractModel
@@ -47,6 +48,7 @@ class Deal(AbstractModel):
     investor_count = models.PositiveIntegerField(default=0)
     dataroom = models.FileField(
         upload_to=dataroom_upload_path,
+        storage=RawMediaCloudinaryStorage(),
         validators=[FileExtensionValidator(allowed_extensions=["pdf"])],
         null=True,
         blank=True,
