@@ -3,7 +3,7 @@ from datetime import timedelta
 from decimal import Decimal
 
 from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
+from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
@@ -14,25 +14,22 @@ class Command(BaseCommand):
     help = "Creates mock deals for a startup"
 
     def handle(self, *args, **options):
-        def create_placeholder_image(folder, filename):
-            with open(
-                f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
-                "rb",
-            ) as f:
+        storage = MediaCloudinaryStorage()
+
+        def upload_to_cloudinary(folder, filename, file_path):
+            with open(file_path, 'rb') as f:
                 content = ContentFile(f.read())
-            path = os.path.join("contentMockup", folder, filename)
-            full_path = default_storage.save(path, content)
-            return full_path
+
+            path = f"{folder}/{filename}"
+            return storage.save(path, content)
+
+        def create_placeholder_image(folder, filename):
+            local_path = f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}"
+            return upload_to_cloudinary(folder, filename, local_path)
 
         def create_placeholder_pdf(folder, filename):
-            with open(
-                f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}",
-                "rb",
-            ) as f:
-                content = ContentFile(f.read())
-            path = os.path.join("contentMockup", folder, filename)
-            full_path = default_storage.save(path, content)
-            return full_path
+            local_path = f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}"
+            return upload_to_cloudinary(folder, filename, local_path)
 
         def create_mock_deals(startup_id):
             startup = Startup.objects.get(id=startup_id)
