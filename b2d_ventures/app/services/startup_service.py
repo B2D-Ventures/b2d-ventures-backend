@@ -63,23 +63,6 @@ class StartupService:
         except Exception as e:
             raise StartupError(f"Error listing startup deals: {str(e)}")
 
-    # @staticmethod
-    # def create_deal(pk, attributes):
-    #     """Create a new deal."""
-    #     try:
-    #         startup = Startup.objects.get(id=pk)
-    #         attributes["startup"] = startup.id
-    #         serializer = DealSerializer(data=attributes)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             response_data = {"attributes": serializer.data}
-    #             return Response(response_data, status=status.HTTP_201_CREATED)
-    #         else:
-    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #     except Startup.DoesNotExist:
-    #         raise ObjectDoesNotExist(f"Startup with id {pk} does not exist")
-    #     except Exception as e:
-    #         raise StartupError(f"Error creating deal: {str(e)}")
     @staticmethod
     def create_deal(pk, attributes):
         """Create a new deal."""
