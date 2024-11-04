@@ -1,17 +1,13 @@
-ARG PYTHON_VERSION=3.12-slim
-
-FROM python:${PYTHON_VERSION}
+FROM python:3.9-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies.
+# Install system dependencies including SQLite
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
+    sqlite3 \
+    libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /code
 
 WORKDIR /code
 
@@ -19,9 +15,12 @@ COPY requirements.txt /tmp/requirements.txt
 RUN set -ex && \
     pip install --upgrade pip && \
     pip install -r /tmp/requirements.txt && \
+    pip install gunicorn && \
     rm -rf /root/.cache/
+
 COPY . /code
 
 EXPOSE 8000
 
-CMD ["python","manage.py","runserver","0.0.0.0:8000"]
+# Use gunicorn instead of runserver
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "mysite.wsgi:application"]
