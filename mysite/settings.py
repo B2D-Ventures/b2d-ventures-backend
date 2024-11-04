@@ -78,13 +78,18 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASE_URL = os.getenv("DATABASE_URL")
-DATABASES = {
-       'default': dj_database_url.config(
-           default=DATABASE_URL,
-           conn_max_age=600,
-           conn_health_checks=True,
-       )
-   }
+
+if DATABASE_URL:
+  DATABASES = {
+      "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, conn_health_checks=True)
+  }
+else:
+  DATABASES = {
+      "default": {
+          "ENGINE": "django.db.backends.sqlite3",
+          "NAME": str(ROOT_DIR / "db.sqlite3"),
+      }
+  }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -170,7 +175,7 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", 'localhost,127.0.0.1,.fly.dev']
 INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
 # Google OAuth Configuration
@@ -182,9 +187,11 @@ REDIRECT_URI = os.getenv("REDIRECT_URI", "")
 # ALLOWED_HOSTS configuration
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(
     ',')
-CSRF_TRUSTED_ORIGINS = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS',
-                                 'http://localhost,http://127.0.0.1').split(
-    ',')
+
+CSRF_TRUSTED_ORIGINS = os.getenv(
+  'DJANGO_CSRF_TRUSTED_ORIGINS',
+  'http://localhost,http://127.0.0.1,https://*.fly.dev'
+).split(',')
 
 
 # SMTP
