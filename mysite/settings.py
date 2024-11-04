@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+import dj_database_url
 
 # Build paths inside the project like this: ROOT_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -76,17 +77,24 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+DATABASE_URL = os.getenv("DATABASE_URL")
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.getenv('DB_NAME', ROOT_DIR / 'db.sqlite3'),
-        'USER': os.getenv('DB_USER', ''),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', ''),
-    }
-}
+       'default': dj_database_url.config(
+           default=DATABASE_URL,
+           conn_max_age=600,
+           conn_health_checks=True,
+       )
+   }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+#         'NAME': os.getenv('DB_NAME', ROOT_DIR / 'db.sqlite3'),
+#         'USER': os.getenv('DB_USER', ''),
+#         'PASSWORD': os.getenv('DB_PASSWORD', ''),
+#         'HOST': os.getenv('DB_HOST', ''),
+#         'PORT': os.getenv('DB_PORT', ''),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
