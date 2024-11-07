@@ -184,6 +184,8 @@ ALLOWED_HOSTS = [
   "localhost",
   "127.0.0.1",
   ".onrender.com",
+    'b2d-ventures-backend.onrender.com',
+    '*'
 ]
 INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
@@ -199,7 +201,8 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
   'DJANGO_CSRF_TRUSTED_ORIGINS',
-  'http://localhost,http://127.0.0.1,https://*.fly.dev'
+  'http://localhost,http://127.0.0.1,https://b2d-ventures-backend.onrender.com',
+
 ).split(',')
 
 
