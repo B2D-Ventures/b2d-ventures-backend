@@ -17,6 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 from django.http import HttpResponse
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path('api/stub/', include('b2d_ventures.stub_api.urls')),
     path('health/', health_check, name='health_check'),
 ]
+urlpatterns += staticfiles_urlpatterns()
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
