@@ -18,11 +18,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.http import HttpResponse
+
+def health_check(request):
+  return HttpResponse("OK")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("mysite.api_router", namespace="users")),
     path('api/stub/', include('b2d_ventures.stub_api.urls')),
+    path('health/', health_check, name='health_check'),
 ]
 
 if settings.DEBUG:
