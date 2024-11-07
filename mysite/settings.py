@@ -48,6 +48,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -133,7 +134,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles')
+
+# Simplified static file serving
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -175,7 +180,13 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", 'localhost,127.0.0.1,.fly.dev']
+ALLOWED_HOSTS = [
+  "localhost",
+  "127.0.0.1",
+  ".onrender.com",
+    'b2d-ventures-backend.onrender.com',
+    '*'
+]
 INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
 # Google OAuth Configuration
@@ -190,7 +201,8 @@ ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
   'DJANGO_CSRF_TRUSTED_ORIGINS',
-  'http://localhost,http://127.0.0.1,https://*.fly.dev'
+  'http://localhost,http://127.0.0.1,https://b2d-ventures-backend.onrender.com',
+
 ).split(',')
 
 
