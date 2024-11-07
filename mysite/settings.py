@@ -175,7 +175,11 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", 'localhost,127.0.0.1,.fly.dev']
+ALLOWED_HOSTS = [
+  "localhost",
+  "127.0.0.1",
+  ".onrender.com",
+]
 INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
 # Google OAuth Configuration
