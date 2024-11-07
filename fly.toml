@@ -21,21 +21,21 @@ console_command = '/code/manage.py shell'
   processes = ['app']
 
   [[http_service.checks]]
-    grace_period = "30s"     # Increased from 10s
-    interval = "45s"         # Increased from 30s
+    grace_period = "30s"
+    interval = "45s"
     method = "GET"
     path = "/health/"
     protocol = "http"
-    timeout = "10s"          # Increased from 5s
-    restart_limit = 3        # Added restart limit
+    timeout = "10s"
+    restart_limit = 3
     [http_service.checks.headers]
-      Host = "localhost"     # Changed from b2d-ventures-backend.fly.dev
+      Host = "localhost"
 
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-  swap_size_mb = 512        # Added swap memory
+  swap_size_mb = 512
 
 [services]
   [[services.ports]]
