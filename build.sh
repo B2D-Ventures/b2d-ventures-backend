@@ -12,7 +12,7 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 # Load initial data if needed
-python manage.py loaddata db_dump.json
+#python manage.py loaddata db_dump.json
 
 # Create mock data if needed (optional)
 # python manage.py create_mock_deals
