@@ -29,4 +29,4 @@ RUN python manage.py collectstatic --noinput
 EXPOSE 8000
 
 # Use gunicorn instead of development server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--threads", "4", "b2d_ventures_backend.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--threads", "4", "mysite.wsgi:application"]
