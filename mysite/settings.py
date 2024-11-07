@@ -15,7 +15,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 # GENERAL
 # -----------------------------------------------------------------------------
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = True#os.getenv('DJANGO_DEBUG', 'False') == 'True'
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default_secret_key')
 
 TIME_ZONE = "Asia/Bangkok"
