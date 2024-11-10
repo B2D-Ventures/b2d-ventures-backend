@@ -19,7 +19,6 @@ from b2d_ventures.app.serializers import (
 from b2d_ventures.app.services import AuthService, AuthError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
@@ -100,7 +99,6 @@ class AuthViewSet(viewsets.ViewSet):
         detail=True,
         methods=["put"],
         url_path="update-role",
-        permission_classes=[IsAuthenticated],
     )
     def update_role(self, request, pk=None):
         """

@@ -14,6 +14,8 @@ from b2d_ventures.app.serializers import (
     MeetingSerializer,
     InvestmentSerializer,
 )
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from b2d_ventures.app.services import StartupService, StartupError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
@@ -24,6 +26,8 @@ class StartupViewSet(viewsets.ModelViewSet):
     queryset = Startup.objects.all()
     serializer_class = StartupSerializer
     parser_classes = [JSONParser, VndJsonParser, MultiPartParser, FormParser]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get", "put"], url_path="profile")
     def profile(self, request, pk=None):
