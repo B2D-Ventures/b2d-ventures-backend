@@ -17,13 +17,14 @@ from b2d_ventures.app.serializers import (
     UserSerializer,
 )
 from b2d_ventures.app.services import AuthService, AuthError
-from b2d_ventures.utils import JSONParser, VndJsonParser
+from b2d_ventures.utils import JSONParser, VndJsonParser, IsAuthenticatedAndAssignedRole, IsAdmin
 
 
 class AuthViewSet(viewsets.ViewSet):
     """ViewSet for handling User authentication and creation."""
 
     parser_classes = [JSONParser, VndJsonParser]
+    permission_classes = [IsAuthenticatedAndAssignedRole]
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -90,7 +91,7 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["put"], url_path="update-role")
+    @action(detail=True, methods=["put"], url_path="update-role", permission_classes=[IsAdmin])
     def update_role(self, request, pk=None):
         """
         Update a user's role by deleting the existing User and creating a new role-specific user.
