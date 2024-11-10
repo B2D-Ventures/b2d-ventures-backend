@@ -217,5 +217,5 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Encryption key
 FIELD_ENCRYPTION_KEY = os.getenv(
-    "FIELD_ENCRYPTION_KEY", "your-32-byte-encryption-key-here"
+    "FIELD_ENCRYPTION_KEY", "C2BchIU-wIOZIbvLjz0rPoa8SFLESFwSTgl6zVvnErU="
 )
