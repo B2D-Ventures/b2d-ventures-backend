@@ -21,4 +21,4 @@ class User(AbstractUser, AbstractModel):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
     role = models.CharField(max_length=20, choices=TYPE_CHOICES, default="unassigned")
-    refresh_token = EncryptedCharField(max_length=64, null=False)
+    refresh_token = EncryptedCharField(max_length=64, null=True)
