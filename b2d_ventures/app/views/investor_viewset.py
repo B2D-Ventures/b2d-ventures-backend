@@ -6,7 +6,9 @@ from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from b2d_ventures.app.models import Investor, Deal, Meeting, Investment
 from b2d_ventures.app.serializers import (
@@ -18,12 +20,15 @@ from b2d_ventures.app.services import InvestorService, InvestorError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
+
 class InvestorViewSet(viewsets.ModelViewSet):
     """ViewSet for handling Investor-related operations."""
 
     queryset = Investor.objects.all()
     serializer_class = InvestorSerializer
     parser_classes = [JSONParser, VndJsonParser, MultiPartParser, FormParser]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=["get"], url_path="profile")
     def get_profile(self, request, pk=None):

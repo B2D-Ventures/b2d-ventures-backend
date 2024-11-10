@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from datetime import timedelta
 
 from dotenv import load_dotenv
 import dj_database_url
@@ -164,6 +165,9 @@ REST_FRAMEWORK = {
         "rest_framework_json_api.django_filters.DjangoFilterBackend",
         "rest_framework.filters.SearchFilter",
     ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
     "SEARCH_PARAM": "filter[search]",
     "TEST_REQUEST_RENDERER_CLASSES": (
         "rest_framework_json_api.renderers.JSONRenderer",
@@ -171,6 +175,15 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": os.getenv("SIGNING_KEY", "your-secret-key"),
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
