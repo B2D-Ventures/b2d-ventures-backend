@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -21,17 +22,18 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
 from django.http import HttpResponse
 
+
 def health_check(request):
-  return HttpResponse("OK")
+    return HttpResponse("OK")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("mysite.api_router", namespace="users")),
-    path('api/stub/', include('b2d_ventures.stub_api.urls')),
-    path('health/', health_check, name='health_check'),
+    path("api/stub/", include("b2d_ventures.stub_api.urls")),
+    path("health/", health_check, name="health_check"),
 ]
 urlpatterns += staticfiles_urlpatterns()
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,3 +19,4 @@ dj-database-url
 whitenoise
 gunicorn
 psycopg
+django-encrypted-model-fields

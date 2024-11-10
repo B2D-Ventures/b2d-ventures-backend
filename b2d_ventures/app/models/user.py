@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from encrypted_model_fields.fields import EncryptedCharField
 
 from b2d_ventures.app.models.abstract_model import AbstractModel
 
@@ -20,6 +21,4 @@ class User(AbstractUser, AbstractModel):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
     role = models.CharField(max_length=20, choices=TYPE_CHOICES, default="unassigned")
-    refresh_token = models.CharField(
-        max_length=150, unique=False, null=True, default=""
-    )
+    refresh_token = EncryptedCharField()
