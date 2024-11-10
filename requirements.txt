@@ -20,3 +20,5 @@ whitenoise
 gunicorn
 psycopg
 django-encrypted-model-fields
+djangorestframework-simplejwt
+

@@ -17,14 +17,17 @@ from b2d_ventures.app.serializers import (
     UserSerializer,
 )
 from b2d_ventures.app.services import AuthService, AuthError
-from b2d_ventures.utils import JSONParser, VndJsonParser, IsAuthenticatedAndAssignedRole, IsAdmin
+from b2d_ventures.utils import JSONParser, VndJsonParser
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class AuthViewSet(viewsets.ViewSet):
     """ViewSet for handling User authentication and creation."""
 
     parser_classes = [JSONParser, VndJsonParser]
-    permission_classes = [IsAuthenticatedAndAssignedRole]
+    authentication_classes = [JWTAuthentication]
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -64,10 +67,12 @@ class AuthViewSet(viewsets.ViewSet):
                 role, user_email, user_profile, refresh_token
             )
             serializer = self._get_serializer_for_role(actual_role, user)
+            jwt_tokens = self._generate_jwt_tokens(user)
 
             response_data = {
                 "attributes": serializer.data,
                 "is_new_user": created,
+                "jwt_tokens": jwt_tokens,
             }
 
             return Response(
@@ -91,7 +96,12 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-    @action(detail=True, methods=["put"], url_path="update-role", permission_classes=[IsAdmin])
+    @action(
+        detail=True,
+        methods=["put"],
+        url_path="update-role",
+        permission_classes=[IsAuthenticated],
+    )
     def update_role(self, request, pk=None):
         """
         Update a user's role by deleting the existing User and creating a new role-specific user.
@@ -157,6 +167,29 @@ class AuthViewSet(viewsets.ViewSet):
                     ]
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    @action(detail=False, methods=["post"], url_path="refresh-token")
+    def refresh_token(self, request: Request) -> Response:
+        """Endpoint to refresh JWT access token."""
+        refresh_token = (
+            request.data.get("data", {}).get("attributes", {}).get("refresh-token")
+        )
+        if not refresh_token:
+            return Response(
+                {"errors": [{"detail": "Refresh token is required"}]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            refresh = RefreshToken(refresh_token)
+            new_access_token = str(refresh.access_token)
+            return Response({"access": new_access_token}, status=status.HTTP_200_OK)
+        except Exception as e:
+            logging.error(f"Token refresh error: {e}")
+            return Response(
+                {"errors": [{"detail": "Token refresh failed"}]},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
     def _create_or_update_user(
@@ -237,3 +270,11 @@ class AuthViewSet(viewsets.ViewSet):
             return StartupSerializer(user)
         else:
             return UserSerializer(user)
+
+    def _generate_jwt_tokens(self, user: User) -> Dict[str, str]:
+        """Generate access and refresh tokens for a user."""
+        refresh = RefreshToken.for_user(user)
+        return {
+            "jwt_refresh_token": str(refresh),
+            "jwt_access_token": str(refresh.access_token),
+        }
