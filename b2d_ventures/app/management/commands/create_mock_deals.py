@@ -18,19 +18,20 @@ class Command(BaseCommand):
         raw_storage = RawMediaCloudinaryStorage()
 
         def upload_to_cloudinary(folder, filename, file_path, is_raw=False):
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 content = ContentFile(f.read())
 
             path = f"{folder}/{filename}"
-            return raw_storage.save(path,
-                                    content) if is_raw else media_storage.save(
-                path, content)
+            return (
+                raw_storage.save(path, content)
+                if is_raw
+                else media_storage.save(path, content)
+            )
 
         def create_placeholder_file(folder, filename):
             local_path = f"/Users/krittinsetdhavanich/Downloads/b2d-ventures-backend/contentMockup/{folder}/{filename}"
-            is_raw = filename.lower().endswith('.pdf')
-            return upload_to_cloudinary(folder, filename, local_path,
-                                        is_raw=is_raw)
+            is_raw = filename.lower().endswith(".pdf")
+            return upload_to_cloudinary(folder, filename, local_path, is_raw=is_raw)
 
         def create_mock_deals(startup_id):
             startup = Startup.objects.get(id=startup_id)
@@ -67,9 +68,7 @@ class Command(BaseCommand):
                 image_background=create_placeholder_file(
                     "SolarFlare", "solarflare_background.png"
                 ),
-                image_logo=create_placeholder_file(
-                    "SolarFlare", "solarflare_logo.png"
-                ),
+                image_logo=create_placeholder_file("SolarFlare", "solarflare_logo.png"),
                 image_content=create_placeholder_file(
                     "SolarFlare", "solarflare_background.png"
                 ),
@@ -164,14 +163,14 @@ class Command(BaseCommand):
                 name="MediMind Pre-Series A",
                 description="AI-powered medical diagnosis and treatment planning",
                 content="MediMind leverages advanced AI algorithms to assist healthcare providers in diagnosis and treatment planning. Our system analyzes medical imaging, patient history, and latest research to provide accurate diagnostic suggestions and personalized treatment plans.",
-                image_background=create_placeholder_file("MediMind",
-                                                          "medimind_background.jpg"),
-                image_logo=create_placeholder_file("MediMind",
-                                                    "medimind_logo.jpg"),
-                image_content=create_placeholder_file("MediMind",
-                                                       "medimind_content.png"),
-                dataroom=create_placeholder_file("MediMind",
-                                                "medimind_dataroom.pdf"),
+                image_background=create_placeholder_file(
+                    "MediMind", "medimind_background.jpg"
+                ),
+                image_logo=create_placeholder_file("MediMind", "medimind_logo.jpg"),
+                image_content=create_placeholder_file(
+                    "MediMind", "medimind_content.png"
+                ),
+                dataroom=create_placeholder_file("MediMind", "medimind_dataroom.pdf"),
                 allocation=Decimal("3000000.00"),
                 price_per_unit=Decimal("75.00"),
                 minimum_investment=Decimal("15000.00"),
@@ -187,14 +186,12 @@ class Command(BaseCommand):
                 name="OrbitX Series B",
                 description="Democratizing satellite launch services",
                 content="OrbitX is developing reusable micro-satellite launch vehicles that reduce launch costs by 90%. Our innovative propulsion system and automated launch platform make space accessible for small to medium-sized satellite operators.",
-                image_background=create_placeholder_file("OrbitX",
-                                                          "orbitx_background.png"),
-                image_logo=create_placeholder_file("OrbitX",
-                                                    "orbitx_logo.png"),
-                image_content=create_placeholder_file("OrbitX",
-                                                       "orbitx_content.png"),
-                dataroom=create_placeholder_file("OrbitX",
-                                                "orbitx_dataroom.pdf"),
+                image_background=create_placeholder_file(
+                    "OrbitX", "orbitx_background.png"
+                ),
+                image_logo=create_placeholder_file("OrbitX", "orbitx_logo.png"),
+                image_content=create_placeholder_file("OrbitX", "orbitx_content.png"),
+                dataroom=create_placeholder_file("OrbitX", "orbitx_dataroom.pdf"),
                 allocation=Decimal("25000000.00"),
                 price_per_unit=Decimal("1000.00"),
                 minimum_investment=Decimal("100000.00"),
@@ -210,14 +207,16 @@ class Command(BaseCommand):
                 name="LearnVerse Seed Round",
                 description="Virtual reality education platform",
                 content="LearnVerse creates immersive VR educational experiences that make learning engaging and effective. Our platform covers K-12 curriculum with interactive 3D models and virtual laboratories.",
-                image_background=create_placeholder_file("LearnVerse",
-                                                          "learnverse_background.jpg"),
-                image_logo=create_placeholder_file("LearnVerse",
-                                                    "learnverse_logo.png"),
-                image_content=create_placeholder_file("LearnVerse",
-                                                       "learnverse_content.jpg"),
-                dataroom=create_placeholder_file("LearnVerse",
-                                                "learnverse_dataroom.pdf"),
+                image_background=create_placeholder_file(
+                    "LearnVerse", "learnverse_background.jpg"
+                ),
+                image_logo=create_placeholder_file("LearnVerse", "learnverse_logo.png"),
+                image_content=create_placeholder_file(
+                    "LearnVerse", "learnverse_content.jpg"
+                ),
+                dataroom=create_placeholder_file(
+                    "LearnVerse", "learnverse_dataroom.pdf"
+                ),
                 allocation=Decimal("1500000.00"),
                 price_per_unit=Decimal("25.00"),
                 minimum_investment=Decimal("5000.00"),
@@ -233,14 +232,18 @@ class Command(BaseCommand):
                 name="QuantumCore Series A",
                 description="Practical quantum computing solutions",
                 content="QuantumCore is developing room-temperature quantum computers for commercial applications. Our breakthrough in qubit stability enables practical quantum computing solutions for optimization, cryptography, and drug discovery.",
-                image_background=create_placeholder_file("QuantumCore",
-                                                          "quantumcore_background.png"),
-                image_logo=create_placeholder_file("QuantumCore",
-                                                    "quantumcore_logo.png"),
-                image_content=create_placeholder_file("QuantumCore",
-                                                       "quantumcore_content.png"),
-                dataroom=create_placeholder_file("QuantumCore",
-                                                "quantumcore_dataroom.pdf"),
+                image_background=create_placeholder_file(
+                    "QuantumCore", "quantumcore_background.png"
+                ),
+                image_logo=create_placeholder_file(
+                    "QuantumCore", "quantumcore_logo.png"
+                ),
+                image_content=create_placeholder_file(
+                    "QuantumCore", "quantumcore_content.png"
+                ),
+                dataroom=create_placeholder_file(
+                    "QuantumCore", "quantumcore_dataroom.pdf"
+                ),
                 allocation=Decimal("15000000.00"),
                 price_per_unit=Decimal("300.00"),
                 minimum_investment=Decimal("30000.00"),
@@ -256,14 +259,14 @@ class Command(BaseCommand):
                 name="EcoThread Bridge Round",
                 description="AI-powered sustainable fashion manufacturing",
                 content="EcoThread combines AI with sustainable manufacturing to revolutionize the fashion industry. Our technology optimizes fabric cutting, reduces waste by 60%, and uses recycled materials to create high-quality fashion items.",
-                image_background=create_placeholder_file("EcoThread",
-                                                          "ecothread_background.jpg"),
-                image_logo=create_placeholder_file("EcoThread",
-                                                    "ecothread_logo.png"),
-                image_content=create_placeholder_file("EcoThread",
-                                                       "ecothread_content.jpg"),
-                dataroom=create_placeholder_file("EcoThread",
-                                                "ecothread_dataroom.pdf"),
+                image_background=create_placeholder_file(
+                    "EcoThread", "ecothread_background.jpg"
+                ),
+                image_logo=create_placeholder_file("EcoThread", "ecothread_logo.png"),
+                image_content=create_placeholder_file(
+                    "EcoThread", "ecothread_content.jpg"
+                ),
+                dataroom=create_placeholder_file("EcoThread", "ecothread_dataroom.pdf"),
                 allocation=Decimal("4000000.00"),
                 price_per_unit=Decimal("50.00"),
                 minimum_investment=Decimal("10000.00"),

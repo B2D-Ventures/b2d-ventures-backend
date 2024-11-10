@@ -172,7 +172,7 @@ class InvestorServiceTestCase(TestCase):
 
     def test_schedule_meeting_no_refresh_token(self):
         """Test scheduling a meeting when the investor has no refresh token."""
-        self.investor.refresh_token = None
+        self.investor.refresh_token = ""
         self.investor.save()
         attributes = {
             "start_time": (datetime.now() + timedelta(days=1)).isoformat(),

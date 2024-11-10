@@ -7,16 +7,16 @@ import dj_database_url
 # Build paths inside the project like this: ROOT_DIR / 'subdir'.
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
 APPS_DIR = ROOT_DIR / "b2d_ventures"
-MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(ROOT_DIR, "media")
+MEDIA_URL = "/media/"
 
 # Load environment variables from .env file
-load_dotenv(ROOT_DIR / '.env')
+load_dotenv(ROOT_DIR / ".env")
 
 # GENERAL
 # -----------------------------------------------------------------------------
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'default_secret_key')
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "default_secret_key")
 
 TIME_ZONE = "Asia/Bangkok"
 LANGUAGE_CODE = "en-us"
@@ -39,58 +39,60 @@ INSTALLED_APPS = [
     "rest_framework",
     "b2d_ventures.stub_api",
     "corsheaders",
-    'cloudinary',
-    'cloudinary_storage',
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = "mysite.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'mysite.wsgi.application'
+WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
-  DATABASES = {
-      "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, conn_health_checks=True)
-  }
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL, conn_max_age=600, conn_health_checks=True
+        )
+    }
 else:
-  DATABASES = {
-      "default": {
-          "ENGINE": "django.db.backends.sqlite3",
-          "NAME": str(ROOT_DIR / "db.sqlite3"),
-      }
-  }
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": str(ROOT_DIR / "db.sqlite3"),
+        }
+    }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
@@ -104,46 +106,46 @@ else:
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = 'app.User'
+AUTH_USER_MODEL = "app.User"
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(ROOT_DIR, 'staticfiles')
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(ROOT_DIR, "staticfiles")
 
 # Simplified static file serving
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # REST Framework Configuration
 # django-rest-framework
@@ -167,8 +169,8 @@ REST_FRAMEWORK = {
         "rest_framework_json_api.renderers.JSONRenderer",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -189,28 +191,31 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 REDIRECT_URI = os.getenv("REDIRECT_URI", "")
 
 # ALLOWED_HOSTS configuration
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(
-    ',')
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
-  'DJANGO_CSRF_TRUSTED_ORIGINS',
-  'http://localhost,http://127.0.0.1,https://b2d-ventures-backend.onrender.com',
-
-).split(',')
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    "http://localhost,http://127.0.0.1,https://b2d-ventures-backend.onrender.com",
+).split(",")
 
 
 # SMTP
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-SMTP_HOST = os.getenv('SMTP_HOST', 'smtp.gmail.com')
-SMTP_PORT = os.getenv('SMTP_PORT', 587)
-SMTP_USER = os.getenv('SMTP_USER', '')
-SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', '')
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = os.getenv("SMTP_PORT", 587)
+SMTP_USER = os.getenv("SMTP_USER", "")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 
 # Cloudinary credentials
 CLOUDINARY_STORAGE = {
-  'CLOUD_NAME':  os.getenv('CLOUDINARY_CLOUD_NAME', 'default_secret_key'),
-  'API_KEY':  os.getenv('CLOUDINARY_API_KEY', 'default_secret_key'),
-  'API_SECRET':  os.getenv('CLOUDINARY_API_SECRET', 'default_secret_key')
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME", "default_secret_key"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY", "default_secret_key"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", "default_secret_key"),
 }
 # Set Cloudinary as the default file storage
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# Encryption key
+FIELD_ENCRYPTION_KEY = os.getenv(
+    "FIELD_ENCRYPTION_KEY", "C2BchIU-wIOZIbvLjz0rPoa8SFLESFwSTgl6zVvnErU="
+)
