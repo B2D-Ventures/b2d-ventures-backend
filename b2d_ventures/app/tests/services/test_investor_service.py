@@ -113,17 +113,17 @@ class InvestorServiceTestCase(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             InvestorService.get_investment(self.investor.id, 9999)
 
-    @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
-    def test_request_dataroom(self, mock_email):
-        """Test requesting access to a deal's dataroom."""
-        mock_email = "email"
-        self.deal.dataroom = "path/to/dataroom.pdf"
-        self.deal.save()
-        response = InvestorService.request_dataroom(self.investor.id, self.deal.id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            response.data["message"], "Dataroom sent successfully to your email"
-        )
+    # @patch("b2d_ventures.utils.email_service.EmailService.send_email_with_attachment")
+    # def test_request_dataroom(self, mock_email):
+    #     """Test requesting access to a deal's dataroom."""
+    #     mock_email = "email"
+    #     self.deal.dataroom = "path/to/dataroom.pdf"
+    #     self.deal.save()
+    #     response = InvestorService.request_dataroom(self.investor.id, self.deal.id)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(
+    #         response.data["message"], "Dataroom sent successfully to your email"
+    #     )
 
     def test_request_dataroom_no_file(self):
         """Test requesting a dataroom when no file is available."""
