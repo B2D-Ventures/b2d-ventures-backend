@@ -20,7 +20,6 @@ from b2d_ventures.app.services import InvestorService, InvestorError
 from b2d_ventures.utils import JSONParser, VndJsonParser
 
 
-
 class InvestorViewSet(viewsets.ModelViewSet):
     """ViewSet for handling Investor-related operations."""
 

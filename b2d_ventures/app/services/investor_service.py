@@ -150,18 +150,22 @@ class InvestorService:
                 raise InvestorError("No dataroom file available for this deal.")
 
             investor_email = investor.email
-            dataroom_file = deal.dataroom
+            dataroom_url = deal.dataroom.url
 
             email_service = EmailService()
             email_subject = f"Dataroom Access for {deal.name}"
-            email_body = f"Dear {investor.username},\n\nPlease find attached the dataroom for the deal: {deal.name}."
+            email_body = (
+                f"Dear {investor.username},\n\n"
+                f"You have requested access to the dataroom for the deal: {deal.name}.\n"
+                f"Please download the file using the following link:\n\n"
+                f"{dataroom_url}\n\n"
+                f"Best regards,\nThe Team"
+            )
 
             email_service.send_email_with_attachment(
                 to_email=investor_email,
                 subject=email_subject,
                 body=email_body,
-                attachment=dataroom_file,
-                filename=f"{deal.name}_dataroom.pdf",
             )
 
             return Response(
