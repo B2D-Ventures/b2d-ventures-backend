@@ -1,1 +1,818 @@
-[{"model": "app.user", "pk": "44477c0c-b214-4e62-b80c-9f4e910e41d4", "fields": {"password": "", "last_login": null, "is_superuser": false, "first_name": "", "last_name": "", "is_staff": false, "is_active": true, "date_joined": "2024-11-04T13:37:19.890Z", "username": "Yanatchara JERAJA", "email": "yanatchara.j@ku.th", "role": "investor", "refresh_token": "1//0g_7dXYuJ4HHzCgYIARAAGBASNwF-L9IrlOhb97IBRG0Asxjhq32lv57dlPXImNtyvaKRaH5EbQjRnBBCMp1swgi8mRaPUdJZzpA", "groups": [], "user_permissions": []}}, {"model": "app.user", "pk": "8768268c-ed51-4b98-9dca-7734e889f1f9", "fields": {"password": "", "last_login": null, "is_superuser": false, "first_name": "", "last_name": "", "is_staff": false, "is_active": true, "date_joined": "2024-11-04T13:36:41.225Z", "username": "Krittin SETDHAVANICH", "email": "krittin.set@ku.th", "role": "startup", "refresh_token": "1//0gMpk3Vmal2HPCgYIARAAGBASNwF-L9IrneXeanu7I2mWRm0VeCzK0Hiou0DwEX3m_8qyd-y0zFFdC0UFr5ajPJT95PCZyOAI9u8", "groups": [], "user_permissions": []}}, {"model": "app.investor", "pk": "44477c0c-b214-4e62-b80c-9f4e910e41d4", "fields": {"available_funds": "0.00", "total_invested": "0.00"}}, {"model": "app.startup", "pk": "8768268c-ed51-4b98-9dca-7734e889f1f9", "fields": {"name": "Krittin SETDHAVANICH", "description": "", "fundraising_goal": "0.00", "total_raised": "0.00"}}, {"model": "app.deal", "pk": "0f1b3260-2f0b-4365-8f11-2d3acfc51760", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "MediMind Pre-Series A", "description": "AI-powered medical diagnosis and treatment planning", "content": "MediMind leverages advanced AI algorithms to assist healthcare providers in diagnosis and treatment planning. Our system analyzes medical imaging, patient history, and latest research to provide accurate diagnostic suggestions and personalized treatment plans.", "image_background": "media/MediMind/medimind_background_zddgot", "image_logo": "media/MediMind/medimind_logo_nfkvoq", "image_content": "media/MediMind/medimind_content_dpment", "allocation": "3000000.00", "price_per_unit": "75.00", "minimum_investment": "15000.00", "type": "SAFE", "raised": "0.00", "start_date": "2024-10-25T13:40:03.647Z", "end_date": "2025-01-23T13:40:03.647Z", "investor_count": 0, "dataroom": "media/MediMind/medimind_dataroom_p0oyg6.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "423b6ad9-796e-4320-abe5-a76886fb93a3", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "QuantumCore Series A", "description": "Practical quantum computing solutions", "content": "QuantumCore is developing room-temperature quantum computers for commercial applications. Our breakthrough in qubit stability enables practical quantum computing solutions for optimization, cryptography, and drug discovery.", "image_background": "media/QuantumCore/quantumcore_background_llzshz", "image_logo": "media/QuantumCore/quantumcore_logo_w2v0mk", "image_content": "media/QuantumCore/quantumcore_content_lvyzah", "allocation": "15000000.00", "price_per_unit": "300.00", "minimum_investment": "30000.00", "type": "Equity", "raised": "0.00", "start_date": "2024-10-30T13:40:11.753Z", "end_date": "2025-01-28T13:40:11.753Z", "investor_count": 0, "dataroom": "media/QuantumCore/quantumcore_dataroom_qnlfnb.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "5e281535-a748-401a-babe-c1686409c7d4", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "CryptoBank ICO", "description": "Bringing traditional banking services to the blockchain", "content": "CryptoBank is building a decentralized banking platform that offers traditional banking services using blockchain technology. Our platform will provide secure, transparent, and accessible financial services to anyone with an internet connection.", "image_background": "media/CryptoBank/cryptobank_background_dgrdf6", "image_logo": "media/CryptoBank/cryptobank_logo_qeno0i", "image_content": "media/CryptoBank/cryptobank_content_clepau", "allocation": "10000000.00", "price_per_unit": "1.00", "minimum_investment": "1000.00", "type": "Token Sale", "raised": "0.00", "start_date": "2024-10-20T13:39:57.830Z", "end_date": "2024-11-19T13:39:57.830Z", "investor_count": 0, "dataroom": "media/CryptoBank/cryptobank_dataroom_lumhow.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "942174e3-fed1-4de2-9f55-78b3922fc765", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "LearnVerse Seed Round", "description": "Virtual reality education platform", "content": "LearnVerse creates immersive VR educational experiences that make learning engaging and effective. Our platform covers K-12 curriculum with interactive 3D models and virtual laboratories.", "image_background": "media/LearnVerse/learnverse_background_kizdtn", "image_logo": "media/LearnVerse/learnverse_logo_i4ugar", "image_content": "media/LearnVerse/learnverse_content_w3odny", "allocation": "1500000.00", "price_per_unit": "25.00", "minimum_investment": "5000.00", "type": "Convertible Note", "raised": "0.00", "start_date": "2024-11-04T13:40:09.224Z", "end_date": "2025-01-03T13:40:09.224Z", "investor_count": 0, "dataroom": "media/LearnVerse/learnverse_dataroom_jixqcx.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "c789a907-835a-4629-9654-dc81490e976f", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "SolarFlare Seed Round", "description": "Efficient and affordable solar solutions for residential use", "content": "SolarFlare is developing a new generation of solar panels that are 50% more efficient and 30% cheaper than current market leaders. Our technology will make solar energy accessible to millions of homeowners.", "image_background": "media/SolarFlare/solarflare_background_zh167j", "image_logo": "media/SolarFlare/solarflare_logo_czm6tg", "image_content": "media/SolarFlare/solarflare_background_smiraf", "allocation": "2000000.00", "price_per_unit": "50.00", "minimum_investment": "5000.00", "type": "Convertible Note", "raised": "0.00", "start_date": "2024-10-05T13:39:52.456Z", "end_date": "2025-01-03T13:39:52.456Z", "investor_count": 0, "dataroom": "media/SolarFlare/solarflare_dataroom_anpjlc.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "e24aa028-acb7-405e-a0d4-045761012273", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "VertiFarm Series A", "description": "Revolutionizing urban agriculture with AI-powered vertical farms", "content": "VertiFarm is developing AI-controlled vertical farming systems that can produce 100 times more food per square foot than traditional farming. Our technology enables fresh, local produce to be grown year-round in any urban environment.", "image_background": "media/VertiFarm/vertifarm_background_khls6e", "image_logo": "media/VertiFarm/vertifarm_logo_rylymr", "image_content": "media/VertiFarm/vertifarm_background_ly9hlc", "allocation": "8000000.00", "price_per_unit": "200.00", "minimum_investment": "20000.00", "type": "Equity", "raised": "0.00", "start_date": "2024-09-20T13:40:00.515Z", "end_date": "2024-12-19T13:40:00.515Z", "investor_count": 0, "dataroom": "media/VertiFarm/vertifarm_dataroom_ibie27.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "ebc8b89f-3616-491a-9ae4-cf0b41161548", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "NeurAI Series A", "description": "Revolutionizing human-computer interaction with direct neural interfaces", "content": "NeurAI is developing cutting-edge neural interface technology that allows direct communication between the human brain and computers. Our technology has applications in healthcare, gaming, and productivity tools.", "image_background": "media/NeurAI/neurai_background_yu0upj", "image_logo": "media/NeurAI/neurai_logo_hygs3b", "image_content": "media/NeurAI/neurai_content_j6xrit", "allocation": "5000000.00", "price_per_unit": "100.00", "minimum_investment": "10000.00", "type": "Equity", "raised": "0.00", "start_date": "2024-11-04T13:39:49.491Z", "end_date": "2025-02-02T13:39:49.491Z", "investor_count": 0, "dataroom": "media/NeurAI/neurai_dataroom_r1tydy.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "ef36f7bf-d2a2-4a38-b752-27b6876b7f72", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "GeneCure Series B", "description": "Advancing personalized medicine through innovative gene therapies", "content": "GeneCure is at the forefront of personalized medicine, developing gene therapies tailored to individual genetic profiles. Our treatments show promise in addressing previously incurable genetic disorders.", "image_background": "media/GeneCure/genecure_background_basvu9", "image_logo": "media/GeneCure/genecure_logo_dyjm96", "image_content": "media/GeneCure/genecure_background_gasoev", "allocation": "20000000.00", "price_per_unit": "500.00", "minimum_investment": "50000.00", "type": "Equity", "raised": "0.00", "start_date": "2024-09-05T13:39:55.215Z", "end_date": "2024-12-04T13:39:55.215Z", "investor_count": 0, "dataroom": "media/GeneCure/genecure_dataroom_slumkw.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "f460a577-5deb-4dd5-86aa-e4d749c08f54", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "EcoThread Bridge Round", "description": "AI-powered sustainable fashion manufacturing", "content": "EcoThread combines AI with sustainable manufacturing to revolutionize the fashion industry. Our technology optimizes fabric cutting, reduces waste by 60%, and uses recycled materials to create high-quality fashion items.", "image_background": "media/EcoThread/ecothread_background_fcedyp", "image_logo": "media/EcoThread/ecothread_logo_gpngv6", "image_content": "media/EcoThread/ecothread_content_pzkbgd", "allocation": "4000000.00", "price_per_unit": "50.00", "minimum_investment": "10000.00", "type": "SAFE", "raised": "0.00", "start_date": "2024-10-20T13:40:15.004Z", "end_date": "2024-12-19T13:40:15.004Z", "investor_count": 0, "dataroom": "media/EcoThread/ecothread_dataroom_mymilb.pdf", "status": "pending"}}, {"model": "app.deal", "pk": "fa0582cb-032b-421b-a652-775df271228e", "fields": {"startup": "8768268c-ed51-4b98-9dca-7734e889f1f9", "name": "OrbitX Series B", "description": "Democratizing satellite launch services", "content": "OrbitX is developing reusable micro-satellite launch vehicles that reduce launch costs by 90%. Our innovative propulsion system and automated launch platform make space accessible for small to medium-sized satellite operators.", "image_background": "media/OrbitX/orbitx_background_gglnjk", "image_logo": "media/OrbitX/orbitx_logo_xyznlw", "image_content": "media/OrbitX/orbitx_content_j5pfe2", "allocation": "25000000.00", "price_per_unit": "1000.00", "minimum_investment": "100000.00", "type": "Equity", "raised": "0.00", "start_date": "2024-10-15T13:40:06.484Z", "end_date": "2025-01-13T13:40:06.484Z", "investor_count": 0, "dataroom": "media/OrbitX/orbitx_dataroom_tg3sro.pdf", "status": "pending"}}, {"model": "auth.permission", "pk": 1, "fields": {"name": "Can add user", "content_type": 1, "codename": "add_user"}}, {"model": "auth.permission", "pk": 2, "fields": {"name": "Can change user", "content_type": 1, "codename": "change_user"}}, {"model": "auth.permission", "pk": 3, "fields": {"name": "Can delete user", "content_type": 1, "codename": "delete_user"}}, {"model": "auth.permission", "pk": 4, "fields": {"name": "Can view user", "content_type": 1, "codename": "view_user"}}, {"model": "auth.permission", "pk": 5, "fields": {"name": "Can add user", "content_type": 2, "codename": "add_admin"}}, {"model": "auth.permission", "pk": 6, "fields": {"name": "Can change user", "content_type": 2, "codename": "change_admin"}}, {"model": "auth.permission", "pk": 7, "fields": {"name": "Can delete user", "content_type": 2, "codename": "delete_admin"}}, {"model": "auth.permission", "pk": 8, "fields": {"name": "Can view user", "content_type": 2, "codename": "view_admin"}}, {"model": "auth.permission", "pk": 9, "fields": {"name": "Can add user", "content_type": 3, "codename": "add_investor"}}, {"model": "auth.permission", "pk": 10, "fields": {"name": "Can change user", "content_type": 3, "codename": "change_investor"}}, {"model": "auth.permission", "pk": 11, "fields": {"name": "Can delete user", "content_type": 3, "codename": "delete_investor"}}, {"model": "auth.permission", "pk": 12, "fields": {"name": "Can view user", "content_type": 3, "codename": "view_investor"}}, {"model": "auth.permission", "pk": 13, "fields": {"name": "Can add user", "content_type": 4, "codename": "add_startup"}}, {"model": "auth.permission", "pk": 14, "fields": {"name": "Can change user", "content_type": 4, "codename": "change_startup"}}, {"model": "auth.permission", "pk": 15, "fields": {"name": "Can delete user", "content_type": 4, "codename": "delete_startup"}}, {"model": "auth.permission", "pk": 16, "fields": {"name": "Can view user", "content_type": 4, "codename": "view_startup"}}, {"model": "auth.permission", "pk": 17, "fields": {"name": "Can add deal", "content_type": 5, "codename": "add_deal"}}, {"model": "auth.permission", "pk": 18, "fields": {"name": "Can change deal", "content_type": 5, "codename": "change_deal"}}, {"model": "auth.permission", "pk": 19, "fields": {"name": "Can delete deal", "content_type": 5, "codename": "delete_deal"}}, {"model": "auth.permission", "pk": 20, "fields": {"name": "Can view deal", "content_type": 5, "codename": "view_deal"}}, {"model": "auth.permission", "pk": 21, "fields": {"name": "Can add meeting", "content_type": 6, "codename": "add_meeting"}}, {"model": "auth.permission", "pk": 22, "fields": {"name": "Can change meeting", "content_type": 6, "codename": "change_meeting"}}, {"model": "auth.permission", "pk": 23, "fields": {"name": "Can delete meeting", "content_type": 6, "codename": "delete_meeting"}}, {"model": "auth.permission", "pk": 24, "fields": {"name": "Can view meeting", "content_type": 6, "codename": "view_meeting"}}, {"model": "auth.permission", "pk": 25, "fields": {"name": "Can add investment", "content_type": 7, "codename": "add_investment"}}, {"model": "auth.permission", "pk": 26, "fields": {"name": "Can change investment", "content_type": 7, "codename": "change_investment"}}, {"model": "auth.permission", "pk": 27, "fields": {"name": "Can delete investment", "content_type": 7, "codename": "delete_investment"}}, {"model": "auth.permission", "pk": 28, "fields": {"name": "Can view investment", "content_type": 7, "codename": "view_investment"}}, {"model": "auth.permission", "pk": 29, "fields": {"name": "Can add log entry", "content_type": 8, "codename": "add_logentry"}}, {"model": "auth.permission", "pk": 30, "fields": {"name": "Can change log entry", "content_type": 8, "codename": "change_logentry"}}, {"model": "auth.permission", "pk": 31, "fields": {"name": "Can delete log entry", "content_type": 8, "codename": "delete_logentry"}}, {"model": "auth.permission", "pk": 32, "fields": {"name": "Can view log entry", "content_type": 8, "codename": "view_logentry"}}, {"model": "auth.permission", "pk": 33, "fields": {"name": "Can add permission", "content_type": 9, "codename": "add_permission"}}, {"model": "auth.permission", "pk": 34, "fields": {"name": "Can change permission", "content_type": 9, "codename": "change_permission"}}, {"model": "auth.permission", "pk": 35, "fields": {"name": "Can delete permission", "content_type": 9, "codename": "delete_permission"}}, {"model": "auth.permission", "pk": 36, "fields": {"name": "Can view permission", "content_type": 9, "codename": "view_permission"}}, {"model": "auth.permission", "pk": 37, "fields": {"name": "Can add group", "content_type": 10, "codename": "add_group"}}, {"model": "auth.permission", "pk": 38, "fields": {"name": "Can change group", "content_type": 10, "codename": "change_group"}}, {"model": "auth.permission", "pk": 39, "fields": {"name": "Can delete group", "content_type": 10, "codename": "delete_group"}}, {"model": "auth.permission", "pk": 40, "fields": {"name": "Can view group", "content_type": 10, "codename": "view_group"}}, {"model": "auth.permission", "pk": 41, "fields": {"name": "Can add content type", "content_type": 11, "codename": "add_contenttype"}}, {"model": "auth.permission", "pk": 42, "fields": {"name": "Can change content type", "content_type": 11, "codename": "change_contenttype"}}, {"model": "auth.permission", "pk": 43, "fields": {"name": "Can delete content type", "content_type": 11, "codename": "delete_contenttype"}}, {"model": "auth.permission", "pk": 44, "fields": {"name": "Can view content type", "content_type": 11, "codename": "view_contenttype"}}, {"model": "auth.permission", "pk": 45, "fields": {"name": "Can add session", "content_type": 12, "codename": "add_session"}}, {"model": "auth.permission", "pk": 46, "fields": {"name": "Can change session", "content_type": 12, "codename": "change_session"}}, {"model": "auth.permission", "pk": 47, "fields": {"name": "Can delete session", "content_type": 12, "codename": "delete_session"}}, {"model": "auth.permission", "pk": 48, "fields": {"name": "Can view session", "content_type": 12, "codename": "view_session"}}, {"model": "contenttypes.contenttype", "pk": 1, "fields": {"app_label": "app", "model": "user"}}, {"model": "contenttypes.contenttype", "pk": 2, "fields": {"app_label": "app", "model": "admin"}}, {"model": "contenttypes.contenttype", "pk": 3, "fields": {"app_label": "app", "model": "investor"}}, {"model": "contenttypes.contenttype", "pk": 4, "fields": {"app_label": "app", "model": "startup"}}, {"model": "contenttypes.contenttype", "pk": 5, "fields": {"app_label": "app", "model": "deal"}}, {"model": "contenttypes.contenttype", "pk": 6, "fields": {"app_label": "app", "model": "meeting"}}, {"model": "contenttypes.contenttype", "pk": 7, "fields": {"app_label": "app", "model": "investment"}}, {"model": "contenttypes.contenttype", "pk": 8, "fields": {"app_label": "admin", "model": "logentry"}}, {"model": "contenttypes.contenttype", "pk": 9, "fields": {"app_label": "auth", "model": "permission"}}, {"model": "contenttypes.contenttype", "pk": 10, "fields": {"app_label": "auth", "model": "group"}}, {"model": "contenttypes.contenttype", "pk": 11, "fields": {"app_label": "contenttypes", "model": "contenttype"}}, {"model": "contenttypes.contenttype", "pk": 12, "fields": {"app_label": "sessions", "model": "session"}}]
+[
+  {
+    "model": "app.user",
+    "pk": "762f4173-6f1f-45f4-951a-40b113024e3e",
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-12T03:09:43.602Z",
+      "username": "Krittin SETDHAVANICH",
+      "email": "krittin.set@ku.th",
+      "role": "investor",
+      "refresh_token": "1//0gGw7xCjLYnhbCgYIARAAGBASNwF-L9IrZksuFpTrs7-yimrShA-mK4a5S-ueA_D_fGoEsXOieCBD5k9QpUpvHI24n7_E-isyFNA",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.user",
+    "pk": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-11-12T03:08:17.443Z",
+      "username": "Yanatchara JERAJA",
+      "email": "yanatchara.j@ku.th",
+      "role": "startup",
+      "refresh_token": "1//0gQ9EQor4oRHlCgYIARAAGBASNwF-L9Ir0IpodjAapX1ugTCT4v5JZjzCG6yDxCtufnWF7HVkzBa21E98Ww1UcpCrcJNm5g2vWPo",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "app.investor",
+    "pk": "762f4173-6f1f-45f4-951a-40b113024e3e",
+    "fields": {
+      "available_funds": "0.00",
+      "total_invested": "0.00"
+    }
+  },
+  {
+    "model": "app.startup",
+    "pk": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+    "fields": {
+      "name": "Yanatchara JERAJA",
+      "description": "",
+      "fundraising_goal": "0.00",
+      "total_raised": "0.00"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "093cc2be-5ec4-4c25-90c5-d41b340600df",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "GeneCure Series B",
+      "description": "Advancing personalized medicine through innovative gene therapies",
+      "content": "GeneCure is at the forefront of personalized medicine, developing gene therapies tailored to individual genetic profiles. Our treatments show promise in addressing previously incurable genetic disorders.",
+      "image_background": "media/GeneCure/genecure_background_xhbaly",
+      "image_logo": "media/GeneCure/genecure_logo_vhg9eh",
+      "image_content": "media/GeneCure/genecure_background_ae0wer",
+      "allocation": "20000000.00",
+      "price_per_unit": "500.00",
+      "minimum_investment": "50000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-09-13T03:11:47.654Z",
+      "end_date": "2024-12-12T03:11:47.654Z",
+      "investor_count": 0,
+      "dataroom": "media/GeneCure/genecure_dataroom_id0wlm.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "60e4ed3a-cc11-4b72-bd79-a5c93a2a0178",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "CryptoBank ICO",
+      "description": "Bringing traditional banking services to the blockchain",
+      "content": "CryptoBank is building a decentralized banking platform that offers traditional banking services using blockchain technology. Our platform will provide secure, transparent, and accessible financial services to anyone with an internet connection.",
+      "image_background": "media/CryptoBank/cryptobank_background_plhqx6",
+      "image_logo": "media/CryptoBank/cryptobank_logo_klobal",
+      "image_content": "media/CryptoBank/cryptobank_content_mbxwbq",
+      "allocation": "10000000.00",
+      "price_per_unit": "1.00",
+      "minimum_investment": "1000.00",
+      "type": "Token Sale",
+      "raised": "0.00",
+      "start_date": "2024-10-28T03:11:50.831Z",
+      "end_date": "2024-11-27T03:11:50.831Z",
+      "investor_count": 0,
+      "dataroom": "media/CryptoBank/cryptobank_dataroom_cb8mkr.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "7efb9e9f-42ea-422a-992f-7d3e2aacd9d8",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "MediMind Pre-Series A",
+      "description": "AI-powered medical diagnosis and treatment planning",
+      "content": "MediMind leverages advanced AI algorithms to assist healthcare providers in diagnosis and treatment planning. Our system analyzes medical imaging, patient history, and latest research to provide accurate diagnostic suggestions and personalized treatment plans.",
+      "image_background": "media/MediMind/medimind_background_oj3mj0",
+      "image_logo": "media/MediMind/medimind_logo_rk5hcv",
+      "image_content": "media/MediMind/medimind_content_zwxurr",
+      "allocation": "3000000.00",
+      "price_per_unit": "75.00",
+      "minimum_investment": "15000.00",
+      "type": "SAFE",
+      "raised": "0.00",
+      "start_date": "2024-11-02T03:11:56.758Z",
+      "end_date": "2025-01-31T03:11:56.758Z",
+      "investor_count": 0,
+      "dataroom": "media/MediMind/medimind_dataroom_xzz4cg.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "ad0ef19b-5222-43bd-a369-050b8a62634d",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "LearnVerse Seed Round",
+      "description": "Virtual reality education platform",
+      "content": "LearnVerse creates immersive VR educational experiences that make learning engaging and effective. Our platform covers K-12 curriculum with interactive 3D models and virtual laboratories.",
+      "image_background": "media/LearnVerse/learnverse_background_eh7dct",
+      "image_logo": "media/LearnVerse/learnverse_logo_eglmwx",
+      "image_content": "media/LearnVerse/learnverse_content_xs4nnz",
+      "allocation": "1500000.00",
+      "price_per_unit": "25.00",
+      "minimum_investment": "5000.00",
+      "type": "Convertible Note",
+      "raised": "0.00",
+      "start_date": "2024-11-12T03:12:03.941Z",
+      "end_date": "2025-01-11T03:12:03.941Z",
+      "investor_count": 0,
+      "dataroom": "media/LearnVerse/learnverse_dataroom_y1an8b.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "b6651910-4381-4071-ac4a-01b738040645",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "VertiFarm Series A",
+      "description": "Revolutionizing urban agriculture with AI-powered vertical farms",
+      "content": "VertiFarm is developing AI-controlled vertical farming systems that can produce 100 times more food per square foot than traditional farming. Our technology enables fresh, local produce to be grown year-round in any urban environment.",
+      "image_background": "media/VertiFarm/vertifarm_background_zondbc",
+      "image_logo": "media/VertiFarm/vertifarm_logo_kzqtvu",
+      "image_content": "media/VertiFarm/vertifarm_background_ogf8tp",
+      "allocation": "8000000.00",
+      "price_per_unit": "200.00",
+      "minimum_investment": "20000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-09-28T03:11:53.718Z",
+      "end_date": "2024-12-27T03:11:53.718Z",
+      "investor_count": 0,
+      "dataroom": "media/VertiFarm/vertifarm_dataroom_ozdaso.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "c510db5a-9a5c-4cc7-9d8b-4cd172b584d4",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "EcoThread Bridge Round",
+      "description": "AI-powered sustainable fashion manufacturing",
+      "content": "EcoThread combines AI with sustainable manufacturing to revolutionize the fashion industry. Our technology optimizes fabric cutting, reduces waste by 60%, and uses recycled materials to create high-quality fashion items.",
+      "image_background": "media/EcoThread/ecothread_background_asmsnj",
+      "image_logo": "media/EcoThread/ecothread_logo_w7j2il",
+      "image_content": "media/EcoThread/ecothread_content_augyyf",
+      "allocation": "4000000.00",
+      "price_per_unit": "50.00",
+      "minimum_investment": "10000.00",
+      "type": "SAFE",
+      "raised": "0.00",
+      "start_date": "2024-10-28T03:12:09.163Z",
+      "end_date": "2024-12-27T03:12:09.163Z",
+      "investor_count": 0,
+      "dataroom": "media/EcoThread/ecothread_dataroom_jd6tew.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "e5902f69-898a-4887-8626-a0dabfe0467d",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "SolarFlare Seed Round",
+      "description": "Efficient and affordable solar solutions for residential use",
+      "content": "SolarFlare is developing a new generation of solar panels that are 50% more efficient and 30% cheaper than current market leaders. Our technology will make solar energy accessible to millions of homeowners.",
+      "image_background": "media/SolarFlare/solarflare_background_h3b3ki",
+      "image_logo": "media/SolarFlare/solarflare_logo_yhcady",
+      "image_content": "media/SolarFlare/solarflare_background_jwzvfc",
+      "allocation": "2000000.00",
+      "price_per_unit": "50.00",
+      "minimum_investment": "5000.00",
+      "type": "Convertible Note",
+      "raised": "0.00",
+      "start_date": "2024-10-13T03:11:44.799Z",
+      "end_date": "2025-01-11T03:11:44.799Z",
+      "investor_count": 0,
+      "dataroom": "media/SolarFlare/solarflare_dataroom_rgls1y.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "ed7c426b-4724-4fef-bbaa-3290b7c5b8ea",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "OrbitX Series B",
+      "description": "Democratizing satellite launch services",
+      "content": "OrbitX is developing reusable micro-satellite launch vehicles that reduce launch costs by 90%. Our innovative propulsion system and automated launch platform make space accessible for small to medium-sized satellite operators.",
+      "image_background": "media/OrbitX/orbitx_background_gpfj2q",
+      "image_logo": "media/OrbitX/orbitx_logo_k2rwal",
+      "image_content": "media/OrbitX/orbitx_content_hvoxb1",
+      "allocation": "25000000.00",
+      "price_per_unit": "1000.00",
+      "minimum_investment": "100000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-10-23T03:11:59.704Z",
+      "end_date": "2025-01-21T03:11:59.704Z",
+      "investor_count": 0,
+      "dataroom": "media/OrbitX/orbitx_dataroom_fi9kso.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "f8fcbffa-d5bc-4d63-82d7-88bbb135c82b",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "NeurAI Series A",
+      "description": "Revolutionizing human-computer interaction with direct neural interfaces",
+      "content": "NeurAI is developing cutting-edge neural interface technology that allows direct communication between the human brain and computers. Our technology has applications in healthcare, gaming, and productivity tools.",
+      "image_background": "media/NeurAI/neurai_background_dokszj",
+      "image_logo": "media/NeurAI/neurai_logo_xrpsf6",
+      "image_content": "media/NeurAI/neurai_content_coblab",
+      "allocation": "5000000.00",
+      "price_per_unit": "100.00",
+      "minimum_investment": "10000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-11-12T03:11:41.014Z",
+      "end_date": "2025-02-10T03:11:41.014Z",
+      "investor_count": 0,
+      "dataroom": "media/NeurAI/neurai_dataroom_k30ayw.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "app.deal",
+    "pk": "fa986b73-b8f2-4aa2-bfda-9a98e14cfee9",
+    "fields": {
+      "startup": "886a2bbc-6343-412b-ad2a-60b20371ca09",
+      "name": "QuantumCore Series A",
+      "description": "Practical quantum computing solutions",
+      "content": "QuantumCore is developing room-temperature quantum computers for commercial applications. Our breakthrough in qubit stability enables practical quantum computing solutions for optimization, cryptography, and drug discovery.",
+      "image_background": "media/QuantumCore/quantumcore_background_ru4xw4",
+      "image_logo": "media/QuantumCore/quantumcore_logo_gepevc",
+      "image_content": "media/QuantumCore/quantumcore_content_eoc4ej",
+      "allocation": "15000000.00",
+      "price_per_unit": "300.00",
+      "minimum_investment": "30000.00",
+      "type": "Equity",
+      "raised": "0.00",
+      "start_date": "2024-11-07T03:12:06.405Z",
+      "end_date": "2025-02-05T03:12:06.405Z",
+      "investor_count": 0,
+      "dataroom": "media/QuantumCore/quantumcore_dataroom_ypevwp.pdf",
+      "status": "pending"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 1,
+      "codename": "add_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 1,
+      "codename": "change_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 1,
+      "codename": "delete_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 1,
+      "codename": "view_user"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 2,
+      "codename": "add_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 2,
+      "codename": "change_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 2,
+      "codename": "delete_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 2,
+      "codename": "view_admin"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 3,
+      "codename": "add_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 3,
+      "codename": "change_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 3,
+      "codename": "delete_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 3,
+      "codename": "view_investor"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": {
+      "name": "Can add user",
+      "content_type": 4,
+      "codename": "add_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": {
+      "name": "Can change user",
+      "content_type": 4,
+      "codename": "change_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": {
+      "name": "Can delete user",
+      "content_type": 4,
+      "codename": "delete_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": {
+      "name": "Can view user",
+      "content_type": 4,
+      "codename": "view_startup"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": {
+      "name": "Can add deal",
+      "content_type": 5,
+      "codename": "add_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": {
+      "name": "Can change deal",
+      "content_type": 5,
+      "codename": "change_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": {
+      "name": "Can delete deal",
+      "content_type": 5,
+      "codename": "delete_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": {
+      "name": "Can view deal",
+      "content_type": 5,
+      "codename": "view_deal"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": {
+      "name": "Can add meeting",
+      "content_type": 6,
+      "codename": "add_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": {
+      "name": "Can change meeting",
+      "content_type": 6,
+      "codename": "change_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": {
+      "name": "Can delete meeting",
+      "content_type": 6,
+      "codename": "delete_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": {
+      "name": "Can view meeting",
+      "content_type": 6,
+      "codename": "view_meeting"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": {
+      "name": "Can add investment",
+      "content_type": 7,
+      "codename": "add_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": {
+      "name": "Can change investment",
+      "content_type": 7,
+      "codename": "change_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": {
+      "name": "Can delete investment",
+      "content_type": 7,
+      "codename": "delete_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": {
+      "name": "Can view investment",
+      "content_type": 7,
+      "codename": "view_investment"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": {
+      "name": "Can add log entry",
+      "content_type": 8,
+      "codename": "add_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": {
+      "name": "Can change log entry",
+      "content_type": 8,
+      "codename": "change_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": {
+      "name": "Can delete log entry",
+      "content_type": 8,
+      "codename": "delete_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": {
+      "name": "Can view log entry",
+      "content_type": 8,
+      "codename": "view_logentry"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": {
+      "name": "Can add permission",
+      "content_type": 9,
+      "codename": "add_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": {
+      "name": "Can change permission",
+      "content_type": 9,
+      "codename": "change_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": {
+      "name": "Can delete permission",
+      "content_type": 9,
+      "codename": "delete_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": {
+      "name": "Can view permission",
+      "content_type": 9,
+      "codename": "view_permission"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": {
+      "name": "Can add group",
+      "content_type": 10,
+      "codename": "add_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": {
+      "name": "Can change group",
+      "content_type": 10,
+      "codename": "change_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": {
+      "name": "Can delete group",
+      "content_type": 10,
+      "codename": "delete_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": {
+      "name": "Can view group",
+      "content_type": 10,
+      "codename": "view_group"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": {
+      "name": "Can add content type",
+      "content_type": 11,
+      "codename": "add_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": {
+      "name": "Can change content type",
+      "content_type": 11,
+      "codename": "change_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": {
+      "name": "Can delete content type",
+      "content_type": 11,
+      "codename": "delete_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": {
+      "name": "Can view content type",
+      "content_type": 11,
+      "codename": "view_contenttype"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 45,
+    "fields": {
+      "name": "Can add session",
+      "content_type": 12,
+      "codename": "add_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 46,
+    "fields": {
+      "name": "Can change session",
+      "content_type": 12,
+      "codename": "change_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 47,
+    "fields": {
+      "name": "Can delete session",
+      "content_type": 12,
+      "codename": "delete_session"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 48,
+    "fields": {
+      "name": "Can view session",
+      "content_type": 12,
+      "codename": "view_session"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+      "app_label": "app",
+      "model": "user"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+      "app_label": "app",
+      "model": "admin"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+      "app_label": "app",
+      "model": "investor"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+      "app_label": "app",
+      "model": "startup"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+      "app_label": "app",
+      "model": "deal"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+      "app_label": "app",
+      "model": "meeting"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+      "app_label": "app",
+      "model": "investment"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+      "app_label": "admin",
+      "model": "logentry"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+      "app_label": "auth",
+      "model": "permission"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+      "app_label": "auth",
+      "model": "group"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+      "app_label": "contenttypes",
+      "model": "contenttype"
+    }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": {
+      "app_label": "sessions",
+      "model": "session"
+    }
+  }
+]
