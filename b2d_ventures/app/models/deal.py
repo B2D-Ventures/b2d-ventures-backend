@@ -18,7 +18,6 @@ def deal_image_upload_path(instance, filename):
 class Deal(AbstractModel):
     startup = models.ForeignKey(Startup, on_delete=models.CASCADE, related_name="deals")
     name = models.CharField(max_length=255, default="")
-
     description = models.TextField(default="")
     content = models.TextField(default="")
     image_background = models.ImageField(
@@ -39,13 +38,13 @@ class Deal(AbstractModel):
         blank=True,
         null=True,
     )
-    allocation = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    target_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     minimum_investment = models.DecimalField(
         max_digits=15, decimal_places=2, default=0.00
     )
     type = models.TextField(default="")
-    raised = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    amount_raised = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
     investor_count = models.PositiveIntegerField(default=0)

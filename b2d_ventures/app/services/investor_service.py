@@ -78,7 +78,7 @@ class InvestorService:
             deal.startup.total_raised += net_investment
             deal.startup.save()
 
-            deal.raised += net_investment
+            deal.amount_raised += net_investment
             deal.investor_count += 1
             deal.save()
 
