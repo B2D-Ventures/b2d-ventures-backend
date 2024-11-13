@@ -100,7 +100,7 @@ class EmailService:
 
                 Investment details:
                 - Amount: ${net_investment} (after platform fee)
-                - Total raised: ${deal.raised}
+                - Total amount_raised: ${deal.amount_raised}
                 - Total investors: {deal.investor_count}
 
                 Congratulations on your progress!

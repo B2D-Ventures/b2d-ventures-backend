@@ -78,10 +78,10 @@ class StartupViewSetTest(APITestCase):
         Deal.objects.create(
             startup=self.startup,
             name="Test Deal",
-            allocation=10000,
+            target_amount=10000,
             price_per_unit=100,
             minimum_investment=1000,
-            raised=0,
+            amount_raised=0,
             start_date=timezone.now(),
             end_date=timezone.now() + timezone.timedelta(days=30),
         )
@@ -121,7 +121,7 @@ class StartupViewSetTest(APITestCase):
         deal = Deal.objects.create(
             startup=self.startup,
             name="Test Deal",
-            allocation=10000,
+            target_amount=10000,
             price_per_unit=100,
             minimum_investment=1000,
         )
@@ -133,7 +133,7 @@ class StartupViewSetTest(APITestCase):
                 "id": str(deal.id),
                 "attributes": {
                     "name": "Updated Deal",
-                    "allocation": "15000",
+                    "target_amount": "15000",
                     "price_per_unit": "150",
                 },
             }
@@ -142,7 +142,7 @@ class StartupViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["data"]["attributes"]["name"], "Updated Deal")
-        self.assertEqual(response.data["data"]["attributes"]["allocation"], "15000.00")
+        self.assertEqual(response.data["data"]["attributes"]["target_amount"], "15000.00")
         self.assertEqual(
             response.data["data"]["attributes"]["price_per_unit"], "150.00"
         )
@@ -155,7 +155,7 @@ class StartupViewSetTest(APITestCase):
         deal = Deal.objects.create(
             startup=self.startup,
             name="Test Deal",
-            allocation=10000,
+            target_amount=10000,
             price_per_unit=100,
             minimum_investment=1000,
         )
@@ -185,7 +185,7 @@ class StartupViewSetTest(APITestCase):
         deal = Deal.objects.create(
             startup=self.startup,
             name="Test Deal",
-            allocation=10000,
+            target_amount=10000,
             price_per_unit=100,
             minimum_investment=1000,
         )
@@ -204,7 +204,7 @@ class StartupViewSetTest(APITestCase):
         deal = Deal.objects.create(
             startup=self.startup,
             name="Test Deal",
-            allocation=10000,
+            target_amount=10000,
             price_per_unit=100,
             minimum_investment=1000,
         )
