@@ -142,7 +142,9 @@ class StartupViewSetTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["data"]["attributes"]["name"], "Updated Deal")
-        self.assertEqual(response.data["data"]["attributes"]["target_amount"], "15000.00")
+        self.assertEqual(
+            response.data["data"]["attributes"]["target_amount"], "15000.00"
+        )
         self.assertEqual(
             response.data["data"]["attributes"]["price_per_unit"], "150.00"
         )
