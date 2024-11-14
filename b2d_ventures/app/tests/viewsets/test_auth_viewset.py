@@ -142,7 +142,7 @@ class AuthViewSetTest(APITestCase):
         data = {"data": {"attributes": {"role": "investor"}}}
         response = self.client.put(url, data, format="vnd.api+json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["data"]["type"], "investor")
+        self.assertEqual(response.data["type"], "investor")
 
     @patch("b2d_ventures.app.models.User.objects.filter")
     def test_update_role_internal_error(self, mock_filter):
