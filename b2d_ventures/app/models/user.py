@@ -14,6 +14,8 @@ class User(AbstractUser, AbstractModel):
         ("investor", "Investor"),
         ("startup", "Startup"),
         ("unassigned", "Unassigned"),
+        ("pending_investor", "PendingInvestor"),
+        ("pending_startup", "PendingStartup"),
     )
 
     username = models.CharField(max_length=150, unique=False)

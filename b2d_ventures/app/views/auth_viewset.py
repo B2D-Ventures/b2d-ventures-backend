@@ -147,7 +147,6 @@ class AuthViewSet(viewsets.ViewSet):
                 )
 
                 serializer = self._get_serializer_for_role(new_role, new_user)
-
                 return Response(
                     {
                         "type": actual_role,
@@ -202,10 +201,10 @@ class AuthViewSet(viewsets.ViewSet):
         refresh_token: str,
     ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
-        existing_user, existing_role = self._check_existing_user(user_email)
+        existing_user, existing_role = self._check_existing_user(user_email, role)
 
         if existing_user:
-            return existing_user, False, existing_role
+            return existing_user, False, role
 
         if role == "admin":
             user = Admin.objects.create(
@@ -231,13 +230,14 @@ class AuthViewSet(viewsets.ViewSet):
                 email=user_email,
                 username=user_profile.get("name"),
                 refresh_token=refresh_token,
+                role=role
             )
             role = role
 
         return user, True, role
 
     def _check_existing_user(
-        self, user_email: str
+        self, user_email: str, role: str = "Unassigned"
     ) -> Tuple[Union[Admin, Investor, Startup, None], str]:
         """Check if a user exists and return their instance and role."""
         try:
@@ -258,7 +258,7 @@ class AuthViewSet(viewsets.ViewSet):
         except Startup.DoesNotExist:
             pass
 
-        return None, "Unassigned"
+        return None, role
 
     def _get_serializer_for_role(
         self, role: str, user: Union[Admin, Investor, Startup, User]
