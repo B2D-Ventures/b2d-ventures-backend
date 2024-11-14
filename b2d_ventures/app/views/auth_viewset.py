@@ -146,7 +146,7 @@ class AuthViewSet(viewsets.ViewSet):
                     new_role, email, user_profile, refresh_token
                 )
 
-                serializer = self._get_serializer_for_role(actual_role, new_user)
+                serializer = self._get_serializer_for_role(new_role, new_user)
 
                 return Response(
                     {
