@@ -149,9 +149,9 @@ class AuthViewSet(viewsets.ViewSet):
 
                 return Response(
                     {
-                            "type": actual_role,
-                            "id": new_user.id,
-                            "attributes": serializer.data,
+                        "type": actual_role,
+                        "id": new_user.id,
+                        "attributes": serializer.data,
                     },
                     status=status.HTTP_200_OK,
                 )
