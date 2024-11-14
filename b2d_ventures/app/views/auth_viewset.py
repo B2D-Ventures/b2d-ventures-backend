@@ -63,7 +63,7 @@ class AuthViewSet(viewsets.ViewSet):
             user_profile = self.auth_service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
             user, created, actual_role = self._create_or_update_user(
-                role, user_email, user_profile, refresh_token
+                role, user_email, user_profile, refresh_token, not_update=True
             )
             serializer = self._get_serializer_for_role(actual_role, user)
             jwt_tokens = self._generate_jwt_tokens(user)
@@ -199,12 +199,13 @@ class AuthViewSet(viewsets.ViewSet):
         user_email: str,
         user_profile: Dict[str, Any],
         refresh_token: str,
+        not_update: bool = False,
     ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
         existing_user, existing_role = self._check_existing_user(user_email, role)
 
         if existing_user:
-            if existing_role != role:
+            if existing_role != role and not not_update:
                 existing_user.role = role
                 existing_user.save()
             return existing_user, False, existing_role
