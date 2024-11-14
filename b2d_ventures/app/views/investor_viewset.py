@@ -41,7 +41,6 @@ class InvestorViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsInvestor]
 
-
     @action(detail=True, methods=["get"], url_path="profile")
     def get_profile(self, request, pk=None):
         """Get investor's profile."""
