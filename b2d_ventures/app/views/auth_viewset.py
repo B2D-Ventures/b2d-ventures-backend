@@ -118,6 +118,7 @@ class AuthViewSet(viewsets.ViewSet):
             "startup",
             "pending_investor",
             "pending_startup",
+            "unassigned"
         ]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
