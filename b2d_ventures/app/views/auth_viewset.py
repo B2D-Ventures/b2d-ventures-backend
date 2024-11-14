@@ -149,11 +149,9 @@ class AuthViewSet(viewsets.ViewSet):
 
                 return Response(
                     {
-                        "data": {
                             "type": actual_role,
                             "id": new_user.id,
                             "attributes": serializer.data,
-                        }
                     },
                     status=status.HTTP_200_OK,
                 )
@@ -233,7 +231,7 @@ class AuthViewSet(viewsets.ViewSet):
                 username=user_profile.get("name"),
                 refresh_token=refresh_token,
             )
-            role = "unassigned"
+            role = role
 
         return user, True, role
 
