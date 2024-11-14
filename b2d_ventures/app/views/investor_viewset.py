@@ -19,7 +19,7 @@ from b2d_ventures.app.serializers import (
     DealSerializer,
 )
 from b2d_ventures.app.services import InvestorService, InvestorError
-from b2d_ventures.utils import JSONParser, VndJsonParser
+from b2d_ventures.utils import JSONParser, VndJsonParser, IsInvestor
 
 
 class DataroomRequestThrottle(UserRateThrottle):
@@ -39,7 +39,8 @@ class InvestorViewSet(viewsets.ModelViewSet):
     serializer_class = InvestorSerializer
     parser_classes = [JSONParser, VndJsonParser, MultiPartParser, FormParser]
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]#, IsInvestor]
+
 
     @action(detail=True, methods=["get"], url_path="profile")
     def get_profile(self, request, pk=None):
