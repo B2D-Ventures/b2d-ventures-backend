@@ -39,20 +39,8 @@ class InvestorViewSet(viewsets.ModelViewSet):
     serializer_class = InvestorSerializer
     parser_classes = [JSONParser, VndJsonParser, MultiPartParser, FormParser]
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, IsInvestor]
+    permission_classes = [IsAuthenticated]#, IsInvestor]
 
-    def get_permissions(self):
-        """
-        Customize permissions for different actions.
-        For actions that access specific investor resources, ensure only the owner can access.
-        """
-        if self.action in ["retrieve", "update", "partial_update", "destroy",
-                           "get_profile", "list_investments", "meetings",
-                           "dashboard"]:
-            self.permission_classes = [IsAuthenticated, IsInvestor]
-        else:
-            self.permission_classes = [IsAuthenticated]
-        return super().get_permissions()
 
     @action(detail=True, methods=["get"], url_path="profile")
     def get_profile(self, request, pk=None):
