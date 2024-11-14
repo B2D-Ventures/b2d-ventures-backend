@@ -17,7 +17,7 @@ from b2d_ventures.app.serializers import (
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from b2d_ventures.app.services import StartupService, StartupError
-from b2d_ventures.utils import JSONParser, VndJsonParser
+from b2d_ventures.utils import JSONParser, VndJsonParser, IsStartup
 
 
 class StartupViewSet(viewsets.ModelViewSet):
@@ -27,7 +27,7 @@ class StartupViewSet(viewsets.ModelViewSet):
     serializer_class = StartupSerializer
     parser_classes = [JSONParser, VndJsonParser, MultiPartParser, FormParser]
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStartup]
 
     @action(detail=True, methods=["get", "put"], url_path="profile")
     def profile(self, request, pk=None):
