@@ -118,7 +118,7 @@ class AuthViewSet(viewsets.ViewSet):
             "startup",
             "pending_investor",
             "pending_startup",
-            "unassigned"
+            "unassigned",
         ]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
@@ -204,7 +204,10 @@ class AuthViewSet(viewsets.ViewSet):
         existing_user, existing_role = self._check_existing_user(user_email, role)
 
         if existing_user:
-            return existing_user, False, role
+            if existing_role != role:
+                existing_user.role = role
+                existing_user.save()
+            return existing_user, False, existing_role
 
         if role == "admin":
             user = Admin.objects.create(
@@ -230,15 +233,14 @@ class AuthViewSet(viewsets.ViewSet):
                 email=user_email,
                 username=user_profile.get("name"),
                 refresh_token=refresh_token,
-                role=role
+                role=role,
             )
-            role = role
 
         return user, True, role
 
     def _check_existing_user(
         self, user_email: str, role: str = "Unassigned"
-    ) -> Tuple[Union[Admin, Investor, Startup, None], str]:
+    ) -> Tuple[Union[Admin, Investor, Startup, User, None], str]:
         """Check if a user exists and return their instance and role."""
         try:
             admin = Admin.objects.get(email=user_email)
@@ -256,6 +258,12 @@ class AuthViewSet(viewsets.ViewSet):
             startup = Startup.objects.get(email=user_email)
             return startup, "startup"
         except Startup.DoesNotExist:
+            pass
+
+        try:
+            user = User.objects.get(email=user_email)
+            return user, user.role
+        except User.DoesNotExist:
             pass
 
         return None, role
