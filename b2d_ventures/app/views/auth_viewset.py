@@ -113,7 +113,12 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if new_role not in ["investor", "startup"]:
+        if new_role not in [
+            "investor",
+            "startup",
+            "pending_investor",
+            "pending_startup",
+        ]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -228,7 +233,7 @@ class AuthViewSet(viewsets.ViewSet):
                 username=user_profile.get("name"),
                 refresh_token=refresh_token,
             )
-            role = "Unassigned"
+            role = "unassigned"
 
         return user, True, role
 
