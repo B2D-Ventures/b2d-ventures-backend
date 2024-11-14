@@ -7,7 +7,7 @@ class IsInvestor(permissions.BasePermission):
   """
   def has_permission(self, request, view):
       try:
-          investor = Investor.objects.get(user=request.user)
+          investor = Investor.objects.get(id=request.user.id)
           if 'pk' in view.kwargs:
               return str(investor.id) == view.kwargs['pk']
           return True
@@ -16,7 +16,7 @@ class IsInvestor(permissions.BasePermission):
 
   def has_object_permission(self, request, view, obj):
       try:
-          investor = Investor.objects.get(user=request.user)
+          investor = Investor.objects.get(id=request.user.id)
           return obj.id == investor.id
       except Investor.DoesNotExist:
           return False
@@ -27,7 +27,7 @@ class IsStartup(permissions.BasePermission):
   """
   def has_permission(self, request, view):
       try:
-          startup = Startup.objects.get(user=request.user)
+          startup = Startup.objects.get(id=request.user.id)
           if 'pk' in view.kwargs:
               return str(startup.id) == view.kwargs['pk']
           return True
@@ -36,7 +36,7 @@ class IsStartup(permissions.BasePermission):
 
   def has_object_permission(self, request, view, obj):
       try:
-          startup = Startup.objects.get(user=request.user)
+          startup = Startup.objects.get(id=request.user.id)
           return obj.id == startup.id
       except Startup.DoesNotExist:
           return False
@@ -47,6 +47,6 @@ class IsInvestorOrStartup(permissions.BasePermission):
   """
   def has_permission(self, request, view):
       return (
-          Investor.objects.filter(user=request.user).exists() or
-          Startup.objects.filter(user=request.user).exists()
+          Investor.objects.filter(id=request.user.id).exists() or
+          Startup.objects.filter(id=request.user.id).exists()
       )

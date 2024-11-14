@@ -61,7 +61,7 @@ class InvestorViewSetTest(APITestCase):
         url = "/api/investor/00000000-0000-0000-0000-000000000000/profile/"
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_list_investments(self):
         """Test listing investments made by the investor."""
