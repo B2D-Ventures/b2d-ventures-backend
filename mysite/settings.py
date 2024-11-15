@@ -172,6 +172,11 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_RENDERER_CLASSES": (
         "rest_framework_json_api.renderers.JSONRenderer",
     ),
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "1000/day",
+        "dataroomrequest": "1/day",
+        "schedulemeeting": "1/30m",
+    },
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
@@ -188,7 +193,12 @@ SIMPLE_JWT = {
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
 CORS_URLS_REGEX = r"^/api/.*$"
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://b2d-ventures.vercel.app",
+    "http://localhost:3000",
+]
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "B2D-Ventures API",
     "DESCRIPTION": "Documentation of API endpoints of B2D-Ventures",

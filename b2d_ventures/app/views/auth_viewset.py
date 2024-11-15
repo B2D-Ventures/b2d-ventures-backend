@@ -63,7 +63,7 @@ class AuthViewSet(viewsets.ViewSet):
             user_profile = self.auth_service.get_user_profile(tokens["access_token"])
             user_email = user_profile.get("email")
             user, created, actual_role = self._create_or_update_user(
-                role, user_email, user_profile, refresh_token
+                role, user_email, user_profile, refresh_token, not_update=True
             )
             serializer = self._get_serializer_for_role(actual_role, user)
             jwt_tokens = self._generate_jwt_tokens(user)
@@ -113,7 +113,13 @@ class AuthViewSet(viewsets.ViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if new_role not in ["investor", "startup"]:
+        if new_role not in [
+            "investor",
+            "startup",
+            "pending_investor",
+            "pending_startup",
+            "unassigned",
+        ]:
             return Response(
                 {"errors": [{"detail": "Invalid role provided"}]},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -140,15 +146,12 @@ class AuthViewSet(viewsets.ViewSet):
                     new_role, email, user_profile, refresh_token
                 )
 
-                serializer = self._get_serializer_for_role(actual_role, new_user)
-
+                serializer = self._get_serializer_for_role(new_role, new_user)
                 return Response(
                     {
-                        "data": {
-                            "type": actual_role,
-                            "id": new_user.id,
-                            "attributes": serializer.data,
-                        }
+                        "type": actual_role,
+                        "id": new_user.id,
+                        "attributes": serializer.data,
                     },
                     status=status.HTTP_200_OK,
                 )
@@ -196,11 +199,15 @@ class AuthViewSet(viewsets.ViewSet):
         user_email: str,
         user_profile: Dict[str, Any],
         refresh_token: str,
+        not_update: bool = False,
     ) -> Tuple[Union[Admin, Investor, Startup, User], bool, str]:
         """Create or update a user based on their role."""
-        existing_user, existing_role = self._check_existing_user(user_email)
+        existing_user, existing_role = self._check_existing_user(user_email, role)
 
         if existing_user:
+            if existing_role != role and not not_update:
+                existing_user.role = role
+                existing_user.save()
             return existing_user, False, existing_role
 
         if role == "admin":
@@ -227,14 +234,14 @@ class AuthViewSet(viewsets.ViewSet):
                 email=user_email,
                 username=user_profile.get("name"),
                 refresh_token=refresh_token,
+                role=role,
             )
-            role = "Unassigned"
 
         return user, True, role
 
     def _check_existing_user(
-        self, user_email: str
-    ) -> Tuple[Union[Admin, Investor, Startup, None], str]:
+        self, user_email: str, role: str = "Unassigned"
+    ) -> Tuple[Union[Admin, Investor, Startup, User, None], str]:
         """Check if a user exists and return their instance and role."""
         try:
             admin = Admin.objects.get(email=user_email)
@@ -254,7 +261,13 @@ class AuthViewSet(viewsets.ViewSet):
         except Startup.DoesNotExist:
             pass
 
-        return None, "Unassigned"
+        try:
+            user = User.objects.get(email=user_email)
+            return user, user.role
+        except User.DoesNotExist:
+            pass
+
+        return None, role
 
     def _get_serializer_for_role(
         self, role: str, user: Union[Admin, Investor, Startup, User]
