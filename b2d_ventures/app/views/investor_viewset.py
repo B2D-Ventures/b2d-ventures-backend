@@ -1,5 +1,3 @@
-import logging
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 from django.utils import timezone
@@ -133,7 +131,7 @@ class InvestorViewSet(viewsets.ModelViewSet):
         detail=True,
         methods=["post"],
         url_path="deals/(?P<deal_id>[^/.]+)/request-dataroom",
-        throttle_classes=[DataroomRequestThrottle],
+        # throttle_classes=[DataroomRequestThrottle],
     )
     def request_dataroom(self, request, pk=None, deal_id=None):
         """Request access to a deal's dataroom."""
@@ -181,7 +179,7 @@ class InvestorViewSet(viewsets.ModelViewSet):
         detail=True,
         methods=["post"],
         url_path="schedule-meeting/(?P<startup_id>[^/.]+)",
-        throttle_classes=[ScheduleMeetingThrottle],
+#         throttle_classes=[ScheduleMeetingThrottle],
     )
     def schedule_meeting(self, request, pk=None, startup_id=None):
         """Schedule a meeting with a startup."""
