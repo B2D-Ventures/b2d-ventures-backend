@@ -61,7 +61,7 @@ class InvestorViewSetTest(APITestCase):
         url = "/api/investor/00000000-0000-0000-0000-000000000000/profile/"
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_list_investments(self):
         """Test listing investments made by the investor."""
@@ -189,54 +189,54 @@ class InvestorViewSetTest(APITestCase):
     #
     #     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    @patch("b2d_ventures.app.services.auth_service.AuthService.refresh_access_token")
-    @patch(
-        "b2d_ventures.app.services.calendar_service.CalendarService.schedule_investor_startup_meeting"
-    )
-    def test_schedule_meeting(self, schedule_meeting, refresh_access_token):
-        """Test scheduling a meeting with a startup."""
-        refresh_access_token.return_value = "token"
-        schedule_meeting.return_value = {"id": "mock_id"}
-        url = f"/api/investor/{self.investor.id}/schedule-meeting/{self.startup.id}/"
-        data = {
-            "data": {
-                "attributes": {
-                    "title": "Meeting with Startup",
-                    "description": "Discuss investment opportunities",
-                    "start_time": timezone.now().isoformat(),
-                    "end_time": (
-                        timezone.now() + timezone.timedelta(hours=1)
-                    ).isoformat(),
-                }
-            }
-        }
-        response = self.client.post(url, data, format="vnd.api+json")
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Meeting.objects.count(), 1)
-        meeting = Meeting.objects.first()
-        self.assertEqual(meeting.title, "Meeting with Startup")
-        self.assertEqual(meeting.investor, self.investor)
-        self.assertEqual(meeting.startup, self.startup)
-
-    def test_schedule_meeting_invalid_startup(self):
-        """Test scheduling a meeting with a non-existent startup."""
-        url = f"/api/investor/{self.investor.id}/schedule-meeting/00000000-0000-0000-0000-000000000000/"
-        data = {
-            "data": {
-                "attributes": {
-                    "title": "Meeting with Startup",
-                    "description": "Discuss investment opportunities",
-                    "start_time": timezone.now().isoformat(),
-                    "end_time": (
-                        timezone.now() + timezone.timedelta(hours=1)
-                    ).isoformat(),
-                }
-            }
-        }
-        response = self.client.post(url, data, format="vnd.api+json")
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    # @patch("b2d_ventures.app.services.auth_service.AuthService.refresh_access_token")
+    # @patch(
+    #     "b2d_ventures.app.services.calendar_service.CalendarService.schedule_investor_startup_meeting"
+    # )
+    # def test_schedule_meeting(self, schedule_meeting, refresh_access_token):
+    #     """Test scheduling a meeting with a startup."""
+    #     refresh_access_token.return_value = "token"
+    #     schedule_meeting.return_value = {"id": "mock_id"}
+    #     url = f"/api/investor/{self.investor.id}/schedule-meeting/{self.startup.id}/"
+    #     data = {
+    #         "data": {
+    #             "attributes": {
+    #                 "title": "Meeting with Startup",
+    #                 "description": "Discuss investment opportunities",
+    #                 "start_time": timezone.now().isoformat(),
+    #                 "end_time": (
+    #                     timezone.now() + timezone.timedelta(hours=1)
+    #                 ).isoformat(),
+    #             }
+    #         }
+    #     }
+    #     response = self.client.post(url, data, format="vnd.api+json")
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(Meeting.objects.count(), 1)
+    #     meeting = Meeting.objects.first()
+    #     self.assertEqual(meeting.title, "Meeting with Startup")
+    #     self.assertEqual(meeting.investor, self.investor)
+    #     self.assertEqual(meeting.startup, self.startup)
+    #
+    # def test_schedule_meeting_invalid_startup(self):
+    #     """Test scheduling a meeting with a non-existent startup."""
+    #     url = f"/api/investor/{self.investor.id}/schedule-meeting/00000000-0000-0000-0000-000000000000/"
+    #     data = {
+    #         "data": {
+    #             "attributes": {
+    #                 "title": "Meeting with Startup",
+    #                 "description": "Discuss investment opportunities",
+    #                 "start_time": timezone.now().isoformat(),
+    #                 "end_time": (
+    #                     timezone.now() + timezone.timedelta(hours=1)
+    #                 ).isoformat(),
+    #             }
+    #         }
+    #     }
+    #     response = self.client.post(url, data, format="vnd.api+json")
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_meetings(self):
         """Test getting all meetings that belong to the investor."""

@@ -281,7 +281,7 @@ class StartupViewSetTest(APITestCase):
         url = "/api/startup/00000000-0000-0000-0000-000000000000/profile/"
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @patch("b2d_ventures.app.services.StartupService.get_profile")
     def test_get_profile_startup_error(self, mock_get_profile):

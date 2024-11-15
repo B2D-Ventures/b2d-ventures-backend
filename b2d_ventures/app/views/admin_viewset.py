@@ -15,6 +15,9 @@ from b2d_ventures.app.serializers import (
 )
 from b2d_ventures.app.services import AdminService, AdminError
 from b2d_ventures.utils import JSONParser, VndJsonParser
+from b2d_ventures.utils.logger import CustomLogger
+
+logger = CustomLogger().logger
 
 
 class AdminViewSet(viewsets.ModelViewSet):
@@ -27,6 +30,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="users")
     def list_users(self, request):
         """List all users with their roles."""
+        logger.info("Listing all users with their roles")
         try:
             service = AdminService()
             users = service.list_users()
@@ -39,12 +43,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -53,6 +57,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["delete"], url_path="users")
     def delete_user(self, request, pk=None):
         """Get, update or delete a specific user."""
+        logger.info(f"Deleting user with ID: {pk}")
         try:
             service = AdminService()
             if request.method == "GET":
@@ -66,17 +71,18 @@ class AdminViewSet(viewsets.ModelViewSet):
                 service.delete_user(pk)
                 return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist:
+            logger.error(f"User with ID: {pk} not found")
             return Response(
                 {"errors": [{"detail": "User not found"}]},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -85,6 +91,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="deals")
     def list_deals(self, request):
         """List all deals."""
+        logger.info("Listing all deals")
         try:
             service = AdminService()
             deals = service.list_deals()
@@ -95,12 +102,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -109,6 +116,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["put", "delete"], url_path="deals")
     def deal_operations(self, request, pk=None):
         """Approve, reject or delete a deal."""
+        logger.info(f"Performing deal operation for deal ID: {pk}")
         try:
             service = AdminService()
             if request.method == "PUT":
@@ -133,17 +141,18 @@ class AdminViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
         except ObjectDoesNotExist:
+            logger.error(f"Deal with ID: {pk} not found")
             return Response(
                 {"errors": [{"detail": "Deal not found"}]},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -152,6 +161,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="investments")
     def list_investments(self, request):
         """List all investments."""
+        logger.info("Listing all investments")
         try:
             service = AdminService()
             investments = service.list_investments()
@@ -162,12 +172,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             ]
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -176,22 +186,24 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["delete"], url_path="investments")
     def delete_investment(self, request, pk=None):
         """Delete an investment."""
+        logger.info(f"Deleting investment with ID: {pk}")
         try:
             service = AdminService()
             service.delete_investment(pk)
             return Response(status=status.HTTP_204_NO_CONTENT)
         except ObjectDoesNotExist:
+            logger.error(f"Investment with ID: {pk} not found")
             return Response(
                 {"errors": [{"detail": "Investment not found"}]},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -200,6 +212,7 @@ class AdminViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="meetings")
     def list_meetings(self, request):
         """List all meetings."""
+        logger.info("Listing all meetings")
         try:
             service = AdminService()
             meetings = service.list_meetings()
@@ -212,12 +225,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             }
             return Response(response_data, status=status.HTTP_200_OK)
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {"errors": [{"detail": "Internal Server Error"}]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -228,6 +241,7 @@ class AdminViewSet(viewsets.ModelViewSet):
         """
         Get a comprehensive dashboard for the admin, including user statistics, deals, investments, meetings, and other relevant data.
         """
+        logger.info("Fetching admin dashboard")
         try:
             service = AdminService()
             dashboard_data = service.get_dashboard_data()
@@ -278,12 +292,12 @@ class AdminViewSet(viewsets.ModelViewSet):
             return Response(response_data, status=status.HTTP_200_OK)
 
         except AdminError as e:
-            logging.error(f"Admin error: {e}")
+            logger.error(f"Admin error: {e}")
             return Response(
                 {"errors": [{"detail": str(e)}]}, status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
-            logging.error(f"Internal Server Error: {e}")
+            logger.error(f"Internal Server Error: {e}")
             return Response(
                 {
                     "errors": [
